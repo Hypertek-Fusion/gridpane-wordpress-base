@@ -96,7 +96,7 @@ add_action( 'admin_bar_menu', 'add_custom_admin_bar_link', 999 );
 function add_custom_admin_bar_link( $admin_bar ) {
 	$admin_bar->add_menu( array(
 		'id'    => 'theme-editor',
-		'title' => 'Theme File Editor',
+		'title' => 'Theme File Editers',
 		'href'  => home_url($path = '/wp-admin/theme-editor.php', $scheme = 'https'),
 	) );
 }
