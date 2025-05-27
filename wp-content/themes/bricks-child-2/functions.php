@@ -101,4 +101,11 @@ function add_custom_admin_bar_link( $admin_bar ) {
 	) );
 }
 
+
+function enqueue_test_js() {
+    wp_enqueue_script('custom-script', get_stylesheet_directory_uri() . '/elements/test_folder/test.js');
+}
+
+add_action( 'wp_enqueue_scripts', 'enqueue_test_js' );
+
 add_filter( 'bricks/code/echo_function_names', function() {return ['get_author_initials','get_category_url','get_product_category','bl_get_loop_item_id','get_loop_index'];} );        
