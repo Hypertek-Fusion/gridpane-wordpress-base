@@ -1,0 +1,174 @@
+.brxe-wpvbu-team-member{
+    width: 100%;
+}
+.bultr-team-members{
+	display: grid;
+    grid-auto-flow: column;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.bultr-team-members.bultr-grid .bultr-team-member {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.bultr-team-members .bultr-team-member-inner {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+}
+.bultr-team-members .bultr-title{
+    color: var(--bu-text-dark);
+}
+.bultr-team-members .bultr-subtitle{
+    color: var(--bu-text-dark);
+}
+.bultr-team-members .bultr-description{
+    color: var(--bu-text-light);
+}
+.bultr-team-members .bultr-content-inner{
+    padding: 10px;
+}
+
+.bultr-team-members .bultr-team-member-inner .bultr-image{
+    display: flex;
+    overflow: hidden;
+}
+.bultr-team-members.bultr-slider .bultr-team-member-inner .bultr-image img{
+    width: 100%;
+}
+
+.bultr-team-members.bultr-grid .bultr-image.bultr-cover img, .bultr-team-members.bultr-slider .bultr-image.bultr-cover img{
+    height: 100%;
+    position: absolute;
+    top: calc(50% + 1px);
+    left: calc(50% + 1px);
+    -webkit-transform: scale(1.01) translate(-50%,-50%);
+    -ms-transform: scale(1.01) translate(-50%,-50%);
+    transform: scale(1.01) translate(-50%,-50%);
+    object-fit: cover;
+}    
+.bultr-team-members .bultr-image.bultr-cover{
+    position: relative;
+}    
+
+.bultr-image-top .bultr-css-filter, .bultr-image-bottom .bultr-css-filter{
+    width: 100%;
+}
+.bultr-image-left .bultr-css-filter, .bultr-image-right .bultr-css-filter{
+    width: 50%;
+}
+.bultr-image-top .bultr-content, .bultr-image-bottom .bultr-content{
+    width: 100%;
+}
+.bultr-image-left .bultr-content, .bultr-image-right .bultr-content{
+    width: 50%;
+}
+.bultr-grid .bultr-image.bultr-css-filter img{
+    height: auto;
+    width: 100%;
+}
+.bultr-team-members .bultr-team-member .bultr-image.ratio-16-9:before {
+    padding-top: 56.25%;
+}
+
+.bultr-team-members .bultr-team-member .bultr-image.ratio-4-3:before {
+    padding-top: 75%;
+}
+
+.bultr-team-members .bultr-team-member .bultr-image.ratio-4-3:before {
+    padding-top: 75%;
+}
+
+.bultr-team-members .bultr-team-member .bultr-image.ratio-circle{
+    border-radius: 50%;
+}
+.bultr-team-members.bultr-image-top .bultr-team-member-inner {
+    flex-direction: column;
+}
+
+.bultr-team-members.bultr-image-left .bultr-team-member-inner {
+    flex-direction: row;
+}
+
+.bultr-team-members.bultr-image-right .bultr-team-member-inner {
+    flex-direction: row-reverse;
+}
+
+.bultr-team-members.bultr-image-bottom .bultr-team-member-inner {
+    flex-direction: column-reverse;
+}
+.bultr-team-members.bultr-image-background.bultr-content-hover .bultr-content-inner{
+    opacity: 0;
+    transition: all 0.5s;
+}
+.bultr-team-members.bultr-image-background.bultr-content-hover .bultr-team-member:hover .bultr-content-inner{
+    opacity: 1;
+}
+.bultr-social-icons{
+	display: flex;
+	flex-direction: row;
+}
+
+.bultr-social-icons .bultr-social-icon{
+	margin-right: 10px;
+}
+
+.splide__slide > div {
+  width: 100%;
+  height: auto;
+}
+
+.bultr-team-members.bultr-slider{
+	display: block;
+}
+
+.bultr-team-members.bultr-slider .bultr-slider-progress-bar {
+  transition: width 500ms ease;
+  width: 0;
+}
+.bultr-team-members.bultr-slider .bultr-slider-progress{
+    background-color: var(--bu-bg-light);
+}
+.bultr-team-members.bultr-slider .bultr-slider-progress-bar{
+    background-color: var(--bu-primary-color);
+}
+.bultr-team-members .bultr-team-member .bultr-image.no-bg-padding:before {
+	padding: unset;
+}
+
+.bultr-team-members.bultr-image-background .bultr-team-member, .bultr-team-members.bultr-image-background .bultr-team-member .bultr-team-member-inner{
+	position: relative;
+}
+
+.bultr-team-members.bultr-image-background .bultr-image {
+    position: relative;
+}
+.bultr-team-members.bultr-image-background .bultr-content {
+	position: absolute;
+	bottom: 0;
+	z-index: 9;
+	
+	width: 100%;
+}
+.bultr-team-members.bultr-image-background .bultr-content-inner {
+	backdrop-filter: blur(7px);
+	border: 1px ;
+	border-style: solid;
+	border-color: #cbcbcb;
+}
+.bultr-team-members.bultr-grid.bultr-image-background .bultr-image{
+    width: 100%;
+}
+.bultr-image-left.bultr-team-members .bultr-team-member-inner .bultr-image {
+    margin-right: 5px;
+}
+
+.bultr-image-right.bultr-team-members .bultr-team-member-inner .bultr-image {
+    margin-left: 5px;
+}

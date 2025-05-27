@@ -1,0 +1,141 @@
+.bultr-alert-element{
+	width: 100%;
+}
+
+.bultr-alert-box{
+	position: relative;
+  display: flex;
+  overflow: hidden;
+  transition: all 0.3s linear;
+}
+
+.bultr-dismiss-content {
+  position: absolute;
+  top : 5px;
+  right: 5px;
+  display: inline-flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+.bultr-alert-icon-wrap{
+  display: flex;
+}
+
+.bultr-dismiss-content i{
+	color: var(--bu-bg-dark);
+	width: 1em;
+	height: 1em;
+	text-align: center;
+	cursor: pointer;
+}
+
+.bultr-alert-box.alert-dismiss {
+	animation: hideAlert;
+ 	animation-duration: 1s;
+ 	animation-timing-function: linear;
+ 	animation-fill-mode: forwards;
+}
+
+.bultr-alert-cta-pos-inline .bultr-alert-cta-wrapper{
+  align-self: center;
+}
+
+.bultr-button-text{
+  white-space: nowrap;
+}
+
+.bultr-alert-title{
+  color: var(--bu-text-dark);
+}
+
+.bultr-alert-desc{
+  color: var(--bu-text-dark);
+}
+
+.bultr-alert-button{
+    color: var(--bu-text-dark);
+    align-items: center;
+    display: inline-flex;
+    gap: 10px;
+    justify-content: center;
+    letter-spacing: .5px;
+    text-align: center;
+}
+
+  
+@keyframes hideAlert {
+	0% {
+	  opacity: 1;
+	}
+	100% {
+	  opacity: 0;
+    height: 0;
+    padding: 0;
+	}
+}
+
+.bultr-alert-cta-wrapper{
+  display: flex;
+}
+
+.bultr-button-content-wrapper{
+  display: flex;
+  gap : 4px;
+}
+
+.bultr-alert-cta-wrapper .bultr-button-icon, .bultr-alert-cta-wrapper .bultr-button-text{
+  line-height: 1;
+}
+.bultr-alert-cta-pos-inline .bultr-alert-msg-content{
+  justify-content: space-between;
+}
+.bultr-alert-button{
+  cursor : pointer;
+}
+
+@media (max-width: 768px) {
+  .bultr-alert-cta-pos-inline .bultr-alert-msg-content{
+    flex-direction: column;
+  }
+}
+
+
+.bultr-alert-box .bultr-alert-content-wrapper{
+  display: flex;
+  flex: 1 1 0;
+}
+
+.bultr-alert-content-wrapper{
+  display: flex;
+}
+.bultr-alert-icon{
+    display: inline-block;
+    line-height: 1;
+    transition: all 0.3s;
+    color: var(--bu-bg-dark);
+    text-align: center;
+    align-self: flex-start;
+}
+.bultr-icon-wrap{
+  display: flex;
+}
+.bultr-alert-content{
+  display: flex;
+  flex-direction: column;
+}
+.bultr-cta-wrapper{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.bultr-alert-icon svg{
+  height: 1em;
+  width: 1em;
+}
+
+.bultr-dismiss-content svg{
+  height: 1em;
+  width: 1em;
+}

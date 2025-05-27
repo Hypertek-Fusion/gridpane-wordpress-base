@@ -1,0 +1,186 @@
+/* comman css */
+  body a{
+    cursor: pointer;
+  }
+  .bultr-ih-image-hotspot{
+    overflow: hidden;
+  }
+  .bultr-ih-image-container {
+    position: relative;
+    max-width: 100%;
+  
+  }
+  .bultr-ih-image-container .bultr-ih-container-img {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+  .bultr-ih-marker-wrapper .bultr-ih-marker{
+    display: flex;
+    position: absolute;
+    cursor: pointer;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    color: aliceblue;
+    gap: 5px;
+  }
+  .bultr-ih-marker i{
+    font-size: 32px;
+    height: 1em;
+    width: 1em;
+    line-height: 1em;
+    display: flex;
+    justify-content: inherit;
+  }
+  .bultr-ih-marker-wrapper .bultr-ih-marker svg{
+    width: 1em;
+    height: 1em;
+  }
+  
+  .bultr-ih-marker i::before{
+    width: 1em;
+    height: 1em;
+  }
+
+  .bultr-ih-marker .bultr-ih-lottie {
+    height: 40px;
+    width: auto;
+  }
+  .bultr-ih-marker-wrapper .bultr-ih-marker.bultr-ih-marker-none{
+    padding: 8px;
+    border-radius: 50%;
+    background-color: rgb(0, 0, 0);
+  }
+  .bultr-ih-marker.bultr-ih-marker-icon-right{
+    flex-direction: row-reverse;
+  }
+  .bultr-ih-marker .bultr-ih-marker-img{
+    width: auto;
+  }
+  .bultr-ih-tooltip {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    }
+  .tippy-ih-content{
+    text-align: center;
+  }
+  .bultr-ih-tooltip-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+ .bultr-ih-tooltip-wrapper .bultr-ih-tooltip-content{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+ }
+
+.bultr-ih-tooltip-close{
+    position: absolute;
+    top: 10px;
+    right: 12px;
+   
+  }
+.bultr-ih-tooltip-close i{
+    font-size: 20px;
+    color: rgb(214 58 58);
+    height: 1em;
+    width: 1em;
+  }
+
+  /* tooltips */
+  .bultr-ih-tooltip-sub-content{
+    width: 100%;
+  }
+  .bultr-ih-tooltip-image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .bultr-ih-content-heading{
+    font-size: 20px;
+  }
+  .bultr-ih-tooltip-content .bultr-ih-content-description{
+    padding-bottom: 15px;
+  }
+  .bultr-ih-content-btn{
+    display: flex;
+  }
+  
+.bultr-ih-tooltip-btn{
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  padding: 12px 30px;
+  margin-top: 0px;
+  background-color: #383838;;
+  color: #e6b001;
+  gap: 5px;
+  width: 100%;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.bultr-ih-tooltip-btn-right{
+  flex-direction: row-reverse;
+}
+
+
+  /* tooltip tour */
+  .bultr-ih-image-container .bultr-ih-tooltip-tour {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+  .bultr-ih-tooltip-tour .bultr-ih-tour-content{
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+  }
+  .bultr-tooltip-pre-nxt-btn{
+    display: flex;
+    gap: 12px;
+  }
+  .bultr-ih-tooltip-tour .bultr-ih-next-tour{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .bultr-ih-tooltip-tour .bultr-ih-prev-tour{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .bultr-ih-end-tour-wrapper{
+    text-align: end;
+  }
+ /* tippy */
+ .bultr-marker-colleciton .tippy-box{
+  background: transparent;
+ }
+ .bultr-marker-colleciton .tippy-content{
+  padding: 0px;
+  overflow: hidden;
+ }
+ .bultr-add-tooltip{
+  pointer-events: all !important;
+}
+
+.bultr-ih-tooltip-icon svg, .bultr-tooltip-pre-nxt-btn svg , .bultr-ih-tooltip-close svg , .bultr-ih-tooltip-btn svg{
+width: 1em;
+height: 1em;
+}
+
+
+
+
+

@@ -1,0 +1,546 @@
+.bultr-flip-box-container{
+	height: 350px;
+    width: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    overflow: hidden;
+}
+.bultr-flip-box-container h3{
+    margin: 0;
+    line-height: 1;
+}
+.bultr-flip-box-container[data-effect="flip"],
+.bultr-flip-box-container[data-effect="flip-alt"]{
+    overflow: unset;
+}
+.bultr-flip-box { 
+    width: 100%;
+}
+
+.bultr-flip-box-panel {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    transform-style: preserve-3d;
+  	transition: transform 800ms cubic-bezier(0.455, 0.030, 0.515, 0.955),opacity 800ms cubic-bezier(0.455, 0.030, 0.515, 0.955);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+.bultr-flip-box-front,.bultr-flip-box-back{
+    padding: 20px;
+}
+.bultr-flip-box-front{
+    background-color: var(--bu-bg-light);
+}
+.bultr-flip-box-back{
+    background-color: var(--bu-bg-dark);
+}
+.bultr-flip-box-content-wrapper{
+    color: var(--bu-text-dark);
+}
+.bultr-flip-box-back .bultr-flip-box-content-wrapper{
+    color: var(--bu-text-light);
+}
+.bultr-flip-box-panel .bultr-inner-content{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+.fade .bultr-flip-box-panel {
+    transition: opacity 800ms cubic-bezier(0.455, 0.030, 0.515, 0.955);    
+}
+.bultr-flip-box-container[data-effect="flip-alt"] .bultr-flip-box-panel {
+    transition: transform 800ms cubic-bezier(0.455, 0.030, 0.515, 0.955),transform-origin 800ms cubic-bezier(0.455, 0.030, 0.515, 0.955);
+}
+.bultr-flip-box-panel.bultr-flip-box-back {
+    backface-visibility: hidden;
+}
+.bultr-flip-box-content-wrapper {
+	height: 100%;
+    width: 100%;
+    pointer-events: none;
+}
+.fb-3d .bultr-flip-box-content-wrapper{
+    transform: translateZ(90px) scale(0.91);
+    transform-style: preserve-3d;
+}
+
+.bultr-flip-box-container[data-trigger="click"] {
+    cursor: pointer;
+}
+
+.bultr-flip-box-content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  	overflow-wrap: break-word;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.bultr-flip-box-container .bultr-fb-image{
+    overflow: hidden;
+}
+.bultr-flip-box-content svg {
+    width: 1em;
+    height: 1em;
+    position: relative;
+    display: block;
+}
+
+.bultr-flip-box-back .bultr-button{
+	text-decoration:none;
+	transition:all 0.25s ease 0s;
+    text-align:center;
+    pointer-events: auto !important;
+    border: 2px solid;
+    padding: 15px 25px;
+}
+.bultr-fb-back-button-wrapper{
+    display: flex;
+}
+.bultr-button.bultr-fb-back-button{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:20px
+}
+.bultr-button.bultr-fb-back-button.bultr-icon-right{
+    flex-direction: row-reverse;
+}
+.bultr-flip-box-container .bultr-icon-wrapper{
+    pointer-events: auto !important;
+}
+
+/* 
+* Flip Down Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip_down .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip_down .bultr-flip-box-back {
+    transform: rotateX(180deg) rotateY(0);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip_down .bultr-flip-box-front {
+    transform: rotateX(-180deg) rotateY(0);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip_down .bultr-flip-box-back {
+    transform: none;
+}
+
+
+/* 
+* Flip Up Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip_up .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip_up .bultr-flip-box-back {
+    transform: rotateX(-180deg) rotateY(0);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip_up .bultr-flip-box-front {
+    transform: rotateX(180deg) rotateY(0);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip_up .bultr-flip-box-back {
+    transform: none;
+}
+
+/* 
+* Flip Right Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip_right .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip_right .bultr-flip-box-back {
+    transform: rotateY(-180deg);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip_right .bultr-flip-box-front {
+    transform: rotateY(180deg);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip_right .bultr-flip-box-back {
+    transform: none;
+}
+
+/* 
+* Flip Left Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip_left .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip_left .bultr-flip-box-back {
+    transform: rotateY(180deg);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip_left .bultr-flip-box-front {
+    transform: rotateY(-180deg);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip_left .bultr-flip-box-back {
+    transform: none;
+}
+
+/* 
+* Flip Alternative Down Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip-alt_down .bultr-flip-box-front {
+    transform: none;
+    transform-origin: 50% 0%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip-alt_down .bultr-flip-box-back {
+    transform: translateY(-100%) rotateX(180deg); 
+    transform-origin: 50% 100%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip-alt_down .bultr-flip-box-front {
+    transform: translateY(-100%) rotateX(-180deg); 
+    transform-origin: 50% 100%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip-alt_down .bultr-flip-box-back {
+    transform: none;
+  transform-origin: 50% 0%;
+}
+
+
+/* 
+* Flip Alternative Up Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip-alt_up .bultr-flip-box-front {
+    transform: none;
+    transform-origin: 0% 50%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip-alt_up .bultr-flip-box-back {
+    transform: translateY(100%) rotateX(-180deg);
+    transform-origin: 50% 0%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip-alt_up .bultr-flip-box-front {
+    transform: translateY(100%) rotateX(180deg);
+    transform-origin: 50% 0%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip-alt_up .bultr-flip-box-back {
+    transform: none;
+    transform-origin: 0% 50%;
+}
+
+/* 
+* Flip Alternative Right Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip-alt_right .bultr-flip-box-front {
+    transform: none;
+    transform-origin: 0% 50%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip-alt_right .bultr-flip-box-back {
+    transform: translateX(-100%) rotateY(-180deg);
+    transform-origin: 100% 0%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip-alt_right .bultr-flip-box-front {
+    transform: translateX(-100%) rotateY(180deg);
+    transform-origin: 100% 0%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip-alt_right .bultr-flip-box-back {
+    transform: none;
+    transform-origin: 0% 50%;
+}
+
+/* 
+* Flip Alternative Left Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip-alt_left .bultr-flip-box-front {
+    transform: none;
+    transform-origin: 100% 50%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.flip-alt_left .bultr-flip-box-back {
+    transform: translateX(100%) rotateY(180deg);
+    transform-origin: 0% 50%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip-alt_left .bultr-flip-box-front {
+    transform: translateX(100%) rotateY(-180deg);
+    transform-origin: 0% 50%;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.flip-alt_left .bultr-flip-box-back {
+    transform: none;
+    transform-origin: 100% 50%;
+}
+
+/* 
+* Push Down Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.push_down .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.push_down .bultr-flip-box-back {
+    transform: translateY(-100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.push_down .bultr-flip-box-front {
+    transform: translateY(100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.push_down .bultr-flip-box-back {
+    transform: none;
+}
+
+
+/* 
+* Push Up Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.push_up .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.push_up .bultr-flip-box-back {
+    transform: translateY(100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.push_up .bultr-flip-box-front {
+    transform: translateY(-100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.push_up .bultr-flip-box-back {
+    transform: none;
+}
+
+/* 
+* Push Right Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.push_right .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.push_right .bultr-flip-box-back {
+    transform: translateX(-100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.push_right .bultr-flip-box-front {
+    transform: translateX(100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.push_right .bultr-flip-box-back {
+    transform: none;
+}
+
+/* 
+* Push Left Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.push_left .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.push_left .bultr-flip-box-back {
+    transform: translateX(100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.push_left .bultr-flip-box-front {
+    transform: translateX(-100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.push_left .bultr-flip-box-back {
+    transform: none;
+}
+
+/* 
+* Slide Down Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.slide_down .bultr-flip-box-back {
+    transform: translateY(-100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.slide_down .bultr-flip-box-back {
+    transform: translateY(0);
+}
+
+/* 
+* Flip Up Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.slide_up .bultr-flip-box-back {
+    transform: translateY(100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.slide_up .bultr-flip-box-back {
+    transform: translateY(0);
+}
+
+/* 
+* Flip Right Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.slide_right .bultr-flip-box-back {
+    transform: translateX(100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.slide_right .bultr-flip-box-back {
+    transform: translateX(0);
+}
+
+/* 
+* Flip Left Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.slide_left .bultr-flip-box-back {
+    transform: translateX(-100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.slide_left .bultr-flip-box-back {
+    transform: translateX(0);
+}
+
+/* 
+* Swap Down Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.swap_down .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.swap_down .bultr-flip-box-back {
+    transform: translateY(-100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.swap_down .bultr-flip-box-front {
+    transform: translateY(-100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.swap_down .bultr-flip-box-back {
+    transform: none;
+}
+
+
+/* 
+* Swap Up Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.swap_up .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.swap_up .bultr-flip-box-back {
+    transform: translateY(100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.swap_up .bultr-flip-box-front {
+    transform: translateY(100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.swap_up .bultr-flip-box-back {
+    transform: none;
+}
+
+/* 
+* Swap Right Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.swap_right .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.swap_right .bultr-flip-box-back {
+    transform: translateX(-100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.swap_right .bultr-flip-box-front {
+    transform: translateX(-100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.swap_right .bultr-flip-box-back {
+    transform: none;
+}
+
+/* 
+* Swap Left Animation
+*/
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.swap_left .bultr-flip-box-front {
+    transform: none;
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-hide.swap_left .bultr-flip-box-back {
+    transform: translateX(100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.swap_left .bultr-flip-box-front {
+    transform: translateX(100%);
+}
+
+.bultr-flip-box .bultr-flip-box-container.bultr-show.swap_left .bultr-flip-box-back {
+    transform: none;
+}
+
+/* 
+  * Fade Animation
+  */
+.bultr-flip-box-container.bultr-hide.fade .bultr-flip-box-back {
+    opacity: 0;
+}
+
+.bultr-flip-box-container.bultr-show.fade .bultr-flip-box-back {
+    opacity: 1;
+}
+
+/* 
+  * Zoom In Animation
+  */
+.bultr-flip-box-container.bultr-hide.zoomin .bultr-flip-box-back {
+    opacity: 0; 
+    transform: scale(0.5);
+}
+
+.bultr-flip-box-container.bultr-show.zoomin .bultr-flip-box-back {
+    opacity: 1; 
+    transform: scale(1);
+}
+
+/* 
+  * Zoom Out Animation
+  */
+  .bultr-flip-box-container.zoomout .bultr-flip-box-front {
+    z-index: 1;
+  }
+ .bultr-flip-box-container.bultr-hide.zoomout .bultr-flip-box-front {
+    opacity: 1; 
+    transform: scale(1);
+}
+.bultr-flip-box-container.bultr-show.zoomout .bultr-flip-box-front {
+    opacity: 0; 
+    transform: scale(0.5);
+}
+
+/* 
+  * Zoom In/Out Animation
+  */
+.bultr-flip-box-container.bultr-hide.zoominout .bultr-flip-box-front{
+    opacity: 1; 
+    transform: scale(1);
+}
+.bultr-flip-box-container.bultr-hide.zoominout .bultr-flip-box-back {
+    opacity: 0; 
+    transform: scale(0.5);
+}
+.bultr-flip-box-container.bultr-show.zoominout .bultr-flip-box-front {
+    opacity: 0; 
+    transform: scale(0.5);
+}
+.bultr-flip-box-container.bultr-show.zoominout .bultr-flip-box-back{
+    opacity: 1; 
+    transform: scale(1);
+}
+

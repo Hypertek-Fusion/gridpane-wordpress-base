@@ -1,0 +1,47 @@
+.brxe-wpvbu-image-compare{
+  width: 100%;
+  height: 100%;
+}
+.bultr-ic-wrapper > div {
+  display: block;
+}
+
+.bultr-ic-wrapper img {
+  height: auto;
+  width: auto;
+}
+.bultr-ic-wrapper .bultr-ic-image img {
+  width: 100%;
+}
+.bultr-ic-text{
+  position: absolute;
+  top: 0;
+  border: 1px;
+  background: red;
+  padding: 5px;
+  color: white;
+  font-size: 20px;
+}
+.brxe-wpvbu-image-compare .bultr-ic-container .bultr-ic-label::before{
+  width: auto;
+  white-space: nowrap;
+}
+.bultr-ic-horizontal.bultr-ic-label-flex-start .bultr-ic-label::before{
+  top : 10px;
+  bottom: unset;
+  transform: unset;
+}
+.bultr-ic-horizontal.bultr-ic-label-flex-end .bultr-ic-label::before{
+  bottom : 10px;
+  top: unset;
+  transform: unset;
+}
+.bultr-ic-vertical.bultr-ic-label-flex-start .bultr-ic-label::before{
+  left : 10px;
+  transform: unset;
+}
+.bultr-ic-vertical.bultr-ic-label-flex-end .bultr-ic-label::before{
+  right : 10px;
+  left : unset;
+  transform: unset;
+}

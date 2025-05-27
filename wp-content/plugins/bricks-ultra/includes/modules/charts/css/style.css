@@ -1,0 +1,58 @@
+:root{
+    --size: 500px;
+}
+.bultr-charts-wrapper{
+    position: relative;
+    width: 100%;
+}
+.bultr-chart-wrap{
+    
+    width: 100%;
+    height: var(--size, 80%);
+    padding: 10px;
+}
+.bultr-tooltip-wrapper{
+    border-radius: 6px;
+    background-color: #000;
+    color:#fff;
+    padding:10px;
+    z-index: 2;
+    opacity: 0;
+    transition: all .1s ease;
+
+    
+}
+.bultr-tooltip-parent{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+}
+.bultr-tooltip-label{
+    font-size: 16px;
+    color: #fff;
+}
+.bultr-tooltip-value-wrap{
+    display: flex;
+    flex-direction: row;
+    gap:5px;
+}
+.bultr-tooltip-inner-box{
+    width: 14px;
+    height: 14px;
+    border-width: 2px;
+    border-style: solid;
+}
+.bultr-tooltip-value{
+    font-size: 14px;
+    color:#fff;
+}
+.bultr-tooltip-wrapper::after{
+    content: '';
+    position: absolute;
+    left: -24px;
+    border: 12px solid transparent;
+    border-left-color: #000;  
+    top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+} 

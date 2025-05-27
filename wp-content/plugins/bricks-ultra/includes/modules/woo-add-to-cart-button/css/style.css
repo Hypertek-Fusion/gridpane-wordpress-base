@@ -1,0 +1,185 @@
+.bultr-atc-wrapper{
+    width: 100%;
+}
+
+.bultr-qty-btns-wrapper{
+    width: 100%;
+    display: flex;
+    gap:5px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.bultr-atc-content-wrapper{
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+/* input field */
+.bultr-qty-btns-wrapper .bultr-atc-input{
+    width: 10%;
+    line-height: 2.5;
+}
+
+
+/* add to cart button */
+.bultr-add-to-cart{
+    border: 1px solid black;
+    padding: 10px 20px;
+    line-height: 1.15;
+    gap : 5px;
+    align-items: center;
+    background-color: #ffd64f;
+}
+
+
+/* before and after click icon */
+.bultr-qty-btns-wrapper .bultr-after-click-icon{
+    display: none;
+}
+.bultr-atc-content-wrapper .bultr-before {
+    display: flex;
+}
+.bultr-atc-before-icon-right .bultr-before{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.bultr-atc-after-icon-right .bultr-after{
+    display: flex;
+    flex-direction: row-reverse;
+}
+.bultr-atc-content-wrapper .bultr-after {
+    display: flex;
+}
+
+
+/* view cart button */
+
+.bultr-view-cart-button{
+    padding: 10px 20px;
+    line-height: 1.15;
+    display: none;
+    gap :5px;
+    align-items: center;
+}
+.bultr-view-btn-pos-right .bultr-atc-button-wrapper{
+    flex-direction: row;
+}
+.bultr-view-btn-pos-bottom .bultr-atc-button-wrapper{
+    flex-direction: column;
+}
+.bultr-view-btn-pos-top .bultr-atc-button-wrapper{
+    flex-direction: column-reverse;
+}
+.bultr-atc-content-wrapper .bultr-view-cart-button.bultr-view-cart-show{
+    display: flex!important; 
+}
+
+.bultr-atc-view-icon-right .bultr-view-cart-button {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+
+/* stock */
+.stock.in-stock{
+    display: flex;
+    align-items: center;
+    color: green;
+    font-size: 16px;
+    font-weight: 600;
+    gap: 5px;
+    overflow: hidden;
+    
+}
+.stock.out-of-stock{
+    display: flex;
+    align-items: center;
+    color: rgb(184, 4, 4);
+    font-size: 16px;
+    font-weight: 600;
+    gap: 5px;
+    overflow: hidden;
+   
+}
+
+/* custom stock */
+
+.bultr-stock-custom{
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 5px;
+}
+
+.bultr-stock-custom .stock{
+    width: fit-content;
+}
+.bultr-stock-custom-top{
+    display: flex;
+    flex-direction: column;
+}
+.bultr-stock-custom-bottom{
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.bultr-stock-custom-right{
+    display: flex;
+    flex-direction: row;
+}
+
+.bultr-atc-stock-icon-right .stock.in-stock{
+    flex-direction: row-reverse;
+}
+.bultr-atc-outStock-icon-right .stock.out-of-stock{
+    flex-direction: row-reverse;
+}
+
+/* default stock */
+.bultr-stock-default.bultr-hide-quantity{
+    display: flex;
+    flex-direction: column-reverse;
+    align-self: flex-start;
+}
+
+.bultr-stock-default{
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+
+.stock.available-on-backorder{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: rgb(9, 9, 9);
+    font-size: 16px;
+    font-weight: 600;
+    gap: 5px;
+}
+
+.bultr-stock-default-top{
+    display: flex;
+    flex-direction: column;
+}
+.bultr-stock-default-bottom{
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.bultr-stock-default-right{
+    display: flex;
+    flex-direction: row;
+}
+
+/* svg font-size */
+.bultr-atc-content-wrapper .bultr-view-cart-button svg {
+    height: 1em;
+    width: 1em;
+}
+
+.bultr-atc-content-wrapper .bultr-add-to-cart svg {
+    height: 1em;
+    width: 1em;
+}

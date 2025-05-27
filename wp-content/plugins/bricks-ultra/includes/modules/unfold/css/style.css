@@ -1,0 +1,130 @@
+:root{
+    --height: 100%;
+}
+.bultr-uf-wrapper{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+}
+
+.bultr-uf-wrapper.bultr-uf-btn-plc-top{
+    flex-direction: column-reverse;
+}
+.bultr-uf-wrapper.bultr-uf-btn-plc-bottom{
+    flex-direction: column;
+}
+.bultr-uf-content-wrap{
+    position: relative;
+    overflow: hidden;
+    height: var(--cheight, 150px);
+    transition: height 1s ease; 
+    display: flex;
+
+}
+.bultr-uf-sep-bg{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.bultr-uf-sep-bg .bultr-uf-seperator{
+    background-image: linear-gradient(
+         rgba(255, 255, 255, 0) 2%,
+         var(--color1,#fff) 75%); 
+  height: calc(var(--height) + var(--sepheight,50px));
+  position: absolute;
+  display: block;
+  width: 100%;
+  z-index: 2;
+  left:0;
+  filter: blur(0px);
+
+}
+.bultr-shadow{
+    bottom: 0;
+    transition: background-image 5s ease-in;
+}
+.bultr-uf-wrapper.bultr-uf-btn-plc-top .bultr-shadow{
+    top:0;
+    transform: rotate(180deg);
+}
+.bultr-uf-wrapper.bultr-uf-btn-plc-bottom .bultr-shadow{
+    bottom : 0;
+}
+.bultr-uf-button-wrap{
+    
+    position: relative;
+    display: flex;
+    justify-content: center;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out;
+    height: var(--height, 100%);
+}
+
+.bultr-uf-button{
+  border-radius: 1.5em;
+  text-decoration: none;
+  width: 30%;
+  height: fit-content;
+  text-align: center;
+  justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.bultr-uf-btn-show , .bultr-uf-btn-hide{
+   
+  z-index: 100;
+  padding: 0.5em;
+  text-align: center;
+  color: #fff;
+  background-color: #000;
+  gap: 10px;
+
+}
+.bultr-uf-btn-hide{
+    display: none;
+}
+.bultr-uf-btn-show{
+    display: flex;
+}
+.bultr-uf-icon-pst-left{
+    flex-direction: row;
+}
+.bultr-uf-icon-pst-right{
+    flex-direction: row-reverse;
+}
+
+/* expand */
+.bultr-uf-content-wrap.bultr-uf-expand{
+    height: auto !important;
+}
+.bultr-uf-content-wrap.bultr-uf-open + .bultr-uf-sep-bg .bultr-uf-button-wrap .bultr-uf-btn-show{
+    display: none;
+}
+.bultr-uf-content-wrap.bultr-uf-open + .bultr-uf-sep-bg .bultr-uf-button-wrap .bultr-uf-btn-hide{
+    display: flex;
+}
+.bultr-uf-content-wrap.bultr-uf-close + .bultr-uf-sep-bg .bultr-uf-button-wrap .bultr-uf-btn-show{
+    display: flex;
+}
+.bultr-uf-content-wrap.bultr-uf-close + .bultr-uf-sep-bg .bultr-uf-button-wrap .bultr-uf-btn-hide{
+    display: none;
+}
+
+.bultr-uf-content-wrap.bultr-uf-open + .bultr-uf-sep-bg .bultr-uf-seperator{
+    display: none;
+}
+.bultr-uf-content-wrap.bultr-uf-close + .bultr-uf-sep-bg .bultr-uf-seperator{
+    display: block;
+}
+
+
+
+.bultr-uf-button svg{  
+    fill: #fff;
+    height: 1em;
+    width: 1em;
+    font-size: 20px;
+}

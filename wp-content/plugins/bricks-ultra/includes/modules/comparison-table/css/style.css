@@ -1,0 +1,278 @@
+
+/* Comparison Table CSS Start*/
+
+  /* bu-comp-table-wrap */
+  
+.bultr-comp-table-wrap img {
+  max-width: 100%;
+}
+
+.bultr-comp-table {
+  position: relative;
+  -ms-scroll-chaining: none;
+  overscroll-behavior: contain;
+}
+
+.bultr-comp-table-wrap .sticky.bultr-table-header {
+  top: 0;
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 1;
+}
+
+.bultr-comp-table-wrap .bultr-table-header .bultr-scroller {
+  overflow-x: auto;
+  display: grid;
+}
+
+.bultr-comp-table-wrap .bultr-comp-items {
+  display: grid;
+}
+
+.bultr-comp-table-wrap .bultr-comp-items .col {
+  display: grid;
+}
+
+.bultr-comp-table-wrap .bultr-table-body .items {
+  overflow-x: auto;
+}
+
+.bultr-comp-table-wrap .bultr-scroller .header:nth-of-type(1) {
+  /* background-color: #fafafa; */
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.bultr-comp-table-wrap .bultr-headers .bultr-scroller::-webkit-scrollbar,
+.bultr-comp-table-wrap .bultr-table-body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.bultr-comp-table-wrap .bultr-headers .bultr-scroller,
+.bultr-comp-table-wrap .bultr-table-body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.bultr-comp-table-wrap .bultr-table-body .col.left {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+}
+
+.bultr-comp-table-wrap .table-navs a {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  /* replace text with image */
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+  color: transparent;
+  height: 60px;
+  width: 40px;
+  background-color: rgba(64, 64, 66, 0.8);
+  background-image:  url('../images/cd-arrow.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 3px;
+  
+  transition: background-color 0.3s, opacity 0.3s, visibility 0.3s,
+    transform 0.3s;
+  top: 50%;
+  transform: translate(0%, -50%);
+}
+
+.bultr-comp-table-wrap .table-navs a.next {
+  right: 15px;
+}
+
+.bultr-comp-table-wrap .table-navs a.prev {
+  left: 15px;
+  top: 50%;
+  transform: translate(0%, -50%) rotate(180deg);
+  opacity: 0;
+}
+
+.bultr-comp-table-wrap .bultr-headers .header .check {
+  position: relative;
+  display: block;
+  height: 16px;
+  width: 16px;
+  margin: 0 auto 1em;
+}
+
+.bultr-comp-table-wrap .bultr-headers .header .check::after,
+.bultr-comp-table-wrap .bultr-headers .header .check::before {
+  /* used to create the check icon and green circle dot - visible when product is selected */
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+  height: 100%;
+  width: 100%;
+}
+
+.bultr-comp-table-wrap .bultr-headers .header .check::before {
+  /* green circle dot */
+  border-radius: 50%;
+  border: 1px solid #b8b7b7;
+  background: #ffffff;
+  transition: background-color 0.3s, transform 0.3s, border-color 0.3s;
+}
+
+.bultr-comp-table-wrap .bultr-headers .header .check::after {
+  /* check icon */
+  background: url('../images/cd-check.svg') no-repeat center center;
+  background-size: 24px 24px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.bultr-comp-table-wrap .bultr-headers .header .check.selected::before {
+  /* green circle dot */
+  background: #9dc997;
+  border-color: #9dc997;
+  transform: scale(1.5);
+  -webkit-animation: cd-bounce 0.3s;
+  animation: cd-bounce 0.3s;
+}
+
+.bultr-comp-table-wrap .bultr-headers .header .check.selected::after {
+  opacity: 1;
+}
+
+.bultr-comp-table-wrap .bultr-headers .bultr-scroller .header {
+  border-left: 0 !important;
+  border-top: 0 !important;
+}
+
+.bultr-comp-table-wrap .bultr-item-cell {
+  padding: 20px 40px;
+  text-align: center;
+}
+
+.bultr-comp-table-wrap .bultr-table-body .items .col {
+  border: 0;
+}
+
+.bultr-comp-table-wrap .bultr-table-body .items .col .bultr-item-cell {
+  /* border-bottom: var(--border-width) solid var(--border-color); */
+}
+
+.bultr-comp-table-wrap .bultr-table-body .items .col .bultr-item-cell:last-child {
+  border-bottom: 0 !important;
+}
+.bultr-comp-table-wrap .bultr-comp-items .col:last-child, .bultr-table-header .bultr-scroller .bultr-plans-header:last-child{
+  border-right-width: 0 !important;
+}
+.bultr-comp-table-wrap .bultr-item-cell svg, .bultr-comp-table-wrap .bultr-item-cell i{
+  height: 1em !important;
+  width: 1em !important;
+}
+
+.bultr-comp-table-wrap .bultr-ct-price-wrapper {
+  display: flex;
+  justify-content: center
+}
+.bultr-comp-table-wrap .bultr-ct-original-price {
+  margin-right: 5px;
+  text-decoration: line-through;
+  align-self: flex-end;
+}
+.bultr-comp-table-wrap .bultr-ct-currency {
+  align-self: flex-start;
+  margin-right: 3px;
+}
+.bultr-comp-table-wrap .bultr-ct-price {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.bultr-comp-table-wrap .bultr-ct-fractional-price {
+  align-self: flex-start;
+  margin-left: 3px;
+}
+
+.bultr-comp-table-wrap .apply-filter, .bultr-comp-table-wrap .reset-filter {
+    padding: 0.6em 1.5em;
+    pointer-events: none;
+    border-radius: 3px;
+    margin-left: 1em;
+    cursor: not-allowed;
+    -webkit-transition: background-color .3s;
+    -moz-transition: background-color .3s;
+    transition: background-color .3s;
+}
+  
+.bultr-comp-table-wrap .bultr-cta-btn{
+  padding: 8px 16px;
+  border-radius: 3px;
+  background-color: var(--bu-primary-color);
+  color: var(--bu-text-dark);
+}
+
+.bultr-comp-table-wrap.active-filter .apply-filter , .bultr-comp-table-wrap.filtered .reset-filter{
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.bultr-comp-table-wrap .cta-wrap{
+  margin-top: 10px;
+}
+
+.bultr-comp-table-wrap .filter-wrap{
+  display: flex;
+  justify-content: flex-end;
+}
+.bultr-comp-table-wrap .bultr-headers img{
+  transition : all .5s;
+}
+.bultr-comp-table-wrap.is-sticky .bultr-headers.sticky .header img{
+  width: 100px;
+  transition : all .5s;
+}
+.bultr-comp-table-wrap .bultr-item-cell.bultr-ct-cell, .bultr-comp-table-wrap .bultr-item-cell.bultr-ct-feature, .bultr-comp-table-wrap .bultr-item-cell.bultr-cta-title, .bultr-comp-table-wrap .bultr-item-cell.bultr-ct-cta{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bultr-comp-table-wrap .cta-wrap, .bultr-comp-table-wrap .feature-title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.bultr-comp-table-wrap .bultr-ct-cta .bultr-button-icon i{
+  height: 1em;
+  width: 1em;
+}
+.bultr-comp-table-wrap .bultr-cta-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+.bultr-comp-table-wrap .bultr-cta-btn.bultr-button-icon-pos-right {
+  flex-direction: row-reverse;
+}
+/* Default Style */
+.bultr-scroller .bultr-item-cell.feature-title, .bultr-item-cell.bultr-ct-feature, .bultr-item-cell.bultr-cta-title{
+  background-color: var(--bu-bg-light);
+}
+.bultr-scroller .bultr-plans-header{
+  background-color: #ffffff;
+}
+
+.bultr-table-header.bultr-headers { 
+  position: relative; 
+}

@@ -1,0 +1,2407 @@
+[
+    {
+        "key": "group_651cdc90c001a",
+        "title": "Dumpsters",
+        "fields": [
+            {
+                "key": "field_651cdc905099c",
+                "label": "Product Title",
+                "name": "product_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "X Cubic Yard Dumpster",
+                "maxlength": 48,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_651cdd0f0fc37",
+                "label": "Product Summary",
+                "name": "product_summary_description",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Perfect for cleanups, move-outs & junk disposal",
+                "maxlength": 128,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_651cdd350fc38",
+                "label": "Dumpster Size In Cubic Yards",
+                "name": "dumpster_size_in_cubic_yards",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": 12,
+                "min": "",
+                "max": "",
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_651cdd560fc39",
+                "label": "Product Tag",
+                "name": "product_tag",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Available Today",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_651cdd8e0fc3a",
+                "label": "Product Image",
+                "name": "product_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "",
+                "preview_size": "medium"
+            },
+            {
+                "key": "field_651cddcd8cd49",
+                "label": "Product Price",
+                "name": "product_price",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_651d5fb2fc295",
+                "label": "Product Type",
+                "name": "product_type",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "product": "product",
+                    "addon": "addon"
+                },
+                "default_value": "product",
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 0,
+                "ui": 0,
+                "ajax": 0,
+                "placeholder": ""
+            },
+            {
+                "key": "field_651d60b38dbfa",
+                "label": "Product Description",
+                "name": "product_description",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "rows": "",
+                "placeholder": "",
+                "new_lines": ""
+            },
+            {
+                "key": "field_651d60e290f70",
+                "label": "Product Sale Price",
+                "name": "product_sale_price",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_651d6117c6131",
+                "label": "Product Price Title",
+                "name": "product_price_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_651d8723cc8c9",
+                "label": "Usage Type",
+                "name": "usage_type",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_651dba64917c6",
+                "label": "Additional Day Rate",
+                "name": "additional_day_rate",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": 50,
+                "min": "",
+                "max": "",
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_651dd1cfb4f45",
+                "label": "Featured Image 1",
+                "name": "featured_image_1",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "",
+                "preview_size": "medium"
+            },
+            {
+                "key": "field_651dd1f4b4f46",
+                "label": "Featured Image 2",
+                "name": "featured_image_2",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "",
+                "preview_size": "medium"
+            },
+            {
+                "key": "field_653be4ad237fe",
+                "label": "Product Details",
+                "name": "product_details",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Row",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_653be6d423800",
+                        "label": "Product Details Description",
+                        "name": "product_details_description",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_653be4ad237fe"
+                    }
+                ]
+            },
+            {
+                "key": "field_65403753e9134",
+                "label": "Stripe Product ID",
+                "name": "stripe_product_id",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6605961f24e17",
+                "label": "Default Stripe Price ID",
+                "name": "stripe_price_id",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_65c6c446eedba",
+                "label": "Dumpster Length",
+                "name": "dumpster_length",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": "'L"
+            },
+            {
+                "key": "field_65c6c46aeedbb",
+                "label": "Dumpster Width",
+                "name": "dumpster_width",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": "'W"
+            },
+            {
+                "key": "field_65c6c47ceedbc",
+                "label": "Dumpster Height",
+                "name": "dumpster_height",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": "'H"
+            },
+            {
+                "key": "field_65c6c64c2c620",
+                "label": "Days Included",
+                "name": "days_included",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_65e1082ca0f3d",
+                "label": "Price Per Pound",
+                "name": "price_per_pound",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_65dccee77581f",
+                "label": "Included Tonnage",
+                "name": "included_tonnage",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_65dcdce8492fd",
+                "label": "Times and Prices",
+                "name": "times_and_prices",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Row",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_65e0fde40b163",
+                        "label": "Time",
+                        "name": "time",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_65dcdce8492fd"
+                    },
+                    {
+                        "key": "field_65dcdcf8492fe",
+                        "label": "Hours",
+                        "name": "hours",
+                        "aria-label": "",
+                        "type": "number",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "min": "",
+                        "max": "",
+                        "placeholder": "",
+                        "step": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_65dcdce8492fd"
+                    },
+                    {
+                        "key": "field_65dcdcff492ff",
+                        "label": "Price",
+                        "name": "price",
+                        "aria-label": "",
+                        "type": "number",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "min": "",
+                        "max": "",
+                        "placeholder": "",
+                        "step": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_65dcdce8492fd"
+                    },
+                    {
+                        "key": "field_65e0fe1f0b164",
+                        "label": "Price ID",
+                        "name": "price_id",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_65dcdce8492fd"
+                    }
+                ]
+            },
+            {
+                "key": "field_660fad43d0003",
+                "label": "Category",
+                "name": "item_category",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "dumpster-rental": "Dumpster Rental",
+                    "dumpster-upsell": "Dumpster Upsell",
+                    "delivery-upsell": "Delivery Upsell",
+                    "delivery-surcharge": "Delivery Surcharge"
+                },
+                "default_value": "dumpster-rental",
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 0,
+                "ui": 0,
+                "ajax": 0,
+                "placeholder": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "hypertekproduct"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 1
+    },
+    {
+        "key": "group_6602b5eb77966",
+        "title": "Global Settings",
+        "fields": [
+            {
+                "key": "field_6602b5ec19038",
+                "label": "Global Information",
+                "name": "global_information",
+                "aria-label": "",
+                "type": "group",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "sub_fields": [
+                    {
+                        "key": "field_6602b72c54044",
+                        "label": "Logo",
+                        "name": "logo",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array",
+                        "library": "all",
+                        "min_width": "",
+                        "min_height": "",
+                        "min_size": "",
+                        "max_width": "",
+                        "max_height": "",
+                        "max_size": "",
+                        "mime_types": "",
+                        "preview_size": "medium"
+                    },
+                    {
+                        "key": "field_6602b74254045",
+                        "label": "White Logo",
+                        "name": "white_logo",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array",
+                        "library": "all",
+                        "min_width": "",
+                        "min_height": "",
+                        "min_size": "",
+                        "max_width": "",
+                        "max_height": "",
+                        "max_size": "",
+                        "mime_types": "",
+                        "preview_size": "medium"
+                    },
+                    {
+                        "key": "field_6602b62019039",
+                        "label": "Email",
+                        "name": "email",
+                        "aria-label": "",
+                        "type": "email",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": ""
+                    },
+                    {
+                        "key": "field_6602b63e1903a",
+                        "label": "Phone Number",
+                        "name": "phone_number",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": ""
+                    },
+                    {
+                        "key": "field_661c121a6c842",
+                        "label": "Phone Number Link",
+                        "name": "phone_number_link",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": ""
+                    },
+                    {
+                        "key": "field_6602b6521903b",
+                        "label": "Addres",
+                        "name": "addres",
+                        "aria-label": "",
+                        "type": "wysiwyg",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "tabs": "all",
+                        "toolbar": "full",
+                        "media_upload": 1,
+                        "delay": 0
+                    },
+                    {
+                        "key": "field_660d06da16228",
+                        "label": "Header 24\/7 Text",
+                        "name": "header_offer_text",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": ""
+                    },
+                    {
+                        "key": "field_66154d50882d4",
+                        "label": "Contact Page Address",
+                        "name": "contact_page_address",
+                        "aria-label": "",
+                        "type": "repeater",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "layout": "table",
+                        "pagination": 0,
+                        "min": 0,
+                        "max": 0,
+                        "collapsed": "",
+                        "button_label": "Add Row",
+                        "rows_per_page": 20,
+                        "sub_fields": [
+                            {
+                                "key": "field_66154d63882d5",
+                                "label": "Address Heading",
+                                "name": "address_heading",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_66154d50882d4"
+                            },
+                            {
+                                "key": "field_66154d6b882d6",
+                                "label": "Address",
+                                "name": "address",
+                                "aria-label": "",
+                                "type": "wysiwyg",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "tabs": "all",
+                                "toolbar": "full",
+                                "media_upload": 1,
+                                "delay": 0,
+                                "parent_repeater": "field_66154d50882d4"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "field_661c096af2845",
+                        "label": "Header Address",
+                        "name": "header_email",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": ""
+                    },
+                    {
+                        "key": "field_661c157179d20",
+                        "label": "Address Link",
+                        "name": "address_link",
+                        "aria-label": "",
+                        "type": "link",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array"
+                    }
+                ]
+            },
+            {
+                "key": "field_66578c4638fb3",
+                "label": "Do Don't List",
+                "name": "do_dont_list",
+                "aria-label": "",
+                "type": "group",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "sub_fields": [
+                    {
+                        "key": "field_66578cca4d860",
+                        "label": "Do List Items",
+                        "name": "do_list_items",
+                        "aria-label": "",
+                        "type": "repeater",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "layout": "table",
+                        "pagination": 0,
+                        "min": 0,
+                        "max": 0,
+                        "collapsed": "",
+                        "button_label": "Add Row",
+                        "rows_per_page": 20,
+                        "sub_fields": [
+                            {
+                                "key": "field_66578ce54d861",
+                                "label": "Category Name",
+                                "name": "category_name",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_66578cca4d860"
+                            },
+                            {
+                                "key": "field_66578cec4d862",
+                                "label": "Category Description",
+                                "name": "category_description",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_66578cca4d860"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "field_66578e2f00b63",
+                        "label": "Don't List Items",
+                        "name": "dont_list_items_copy",
+                        "aria-label": "",
+                        "type": "repeater",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "layout": "table",
+                        "pagination": 0,
+                        "min": 0,
+                        "max": 0,
+                        "collapsed": "",
+                        "button_label": "Add Row",
+                        "rows_per_page": 20,
+                        "sub_fields": [
+                            {
+                                "key": "field_66578e2f00b64",
+                                "label": "Category Name",
+                                "name": "category_name",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_66578e2f00b63"
+                            },
+                            {
+                                "key": "field_66578e2f00b65",
+                                "label": "Category Description",
+                                "name": "category_description",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_66578e2f00b63"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "key": "field_665de31452ec9",
+                "label": "Mapbox",
+                "name": "mapbox",
+                "aria-label": "",
+                "type": "group",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "sub_fields": [
+                    {
+                        "key": "field_665de31e52eca",
+                        "label": "API Key",
+                        "name": "api_key",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": ""
+                    },
+                    {
+                        "key": "field_665de32652ecb",
+                        "label": "GeoJSON",
+                        "name": "geojson",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "rows": "",
+                        "placeholder": "",
+                        "new_lines": ""
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "options_page",
+                    "operator": "==",
+                    "value": "global-settings"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_6659e1de8bc3e",
+        "title": "Locations",
+        "fields": [
+            {
+                "key": "field_6659e1de28e13",
+                "label": "City",
+                "name": "city",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6659e21328e14",
+                "label": "State",
+                "name": "state",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": 2,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6659ecdd87302",
+                "label": "Provided Dumpsters",
+                "name": "provided_dumpsters",
+                "aria-label": "",
+                "type": "relationship",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "hypertekproduct"
+                ],
+                "post_status": [
+                    "publish"
+                ],
+                "taxonomy": "",
+                "filters": [
+                    "search",
+                    "post_type",
+                    "taxonomy"
+                ],
+                "return_format": "object",
+                "min": "",
+                "max": "",
+                "elements": "",
+                "bidirectional": 0,
+                "bidirectional_target": []
+            },
+            {
+                "key": "field_6659ecf787303",
+                "label": "Junk Removal Services provided?",
+                "name": "is_junk_removal_provided",
+                "aria-label": "",
+                "type": "true_false",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "",
+                "default_value": 0,
+                "ui": 0,
+                "ui_on_text": "",
+                "ui_off_text": ""
+            },
+            {
+                "key": "field_6659ed2187304",
+                "label": "Demolition Services Provided?",
+                "name": "is_demolition_provided",
+                "aria-label": "",
+                "type": "true_false",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "",
+                "default_value": 0,
+                "ui": 0,
+                "ui_on_text": "",
+                "ui_off_text": ""
+            },
+            {
+                "key": "field_6659ed600ea25",
+                "label": "Location Specific Content",
+                "name": "location_specific_content",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "Please Select One",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "Blogs Grid": "Blogs Grid",
+                    "Article": "Article",
+                    "Gallery": "Gallery",
+                    "None": "None"
+                },
+                "default_value": false,
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 0,
+                "ui": 0,
+                "ajax": 0,
+                "placeholder": ""
+            },
+            {
+                "key": "field_6659eda51b775",
+                "label": "Blogs",
+                "name": "blogs",
+                "aria-label": "",
+                "type": "relationship",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_6659ed600ea25",
+                            "operator": "==",
+                            "value": "Blogs Grid"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "post"
+                ],
+                "post_status": [
+                    "publish"
+                ],
+                "taxonomy": "",
+                "filters": [
+                    "search",
+                    "post_type",
+                    "taxonomy"
+                ],
+                "return_format": "object",
+                "min": "",
+                "max": "",
+                "elements": "",
+                "bidirectional": 0,
+                "bidirectional_target": []
+            },
+            {
+                "key": "field_6659edfa1b776",
+                "label": "Location Images",
+                "name": "location_images",
+                "aria-label": "",
+                "type": "gallery",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_6659ed600ea25",
+                            "operator": "==",
+                            "value": "Gallery"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min": "",
+                "max": "",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "",
+                "insert": "append",
+                "preview_size": "medium"
+            },
+            {
+                "key": "field_6659ee2f1b777",
+                "label": "Article Heading",
+                "name": "article_heading",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_6659ed600ea25",
+                            "operator": "==",
+                            "value": "Article"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6659eed916a6f",
+                "label": "Article Body",
+                "name": "article_body",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_6659ed600ea25",
+                            "operator": "==",
+                            "value": "Article"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "rows": "",
+                "placeholder": "",
+                "new_lines": ""
+            },
+            {
+                "key": "field_6659ef0216a70",
+                "label": "Article Image",
+                "name": "article_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "File will be scaled to a 1:1 ratio",
+                "required": 1,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_6659ed600ea25",
+                            "operator": "==",
+                            "value": "Article"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min_width": 800,
+                "min_height": 800,
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "",
+                "preview_size": "full"
+            },
+            {
+                "key": "field_6659f185ff45a",
+                "label": "Coordinates",
+                "name": "coordinates",
+                "aria-label": "",
+                "type": "group",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "row",
+                "sub_fields": [
+                    {
+                        "key": "field_6659f19cff45b",
+                        "label": "Longitude",
+                        "name": "longitude",
+                        "aria-label": "",
+                        "type": "number",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "min": -180,
+                        "max": 180,
+                        "placeholder": "",
+                        "step": "",
+                        "prepend": "",
+                        "append": ""
+                    },
+                    {
+                        "key": "field_6659f1aaff45c",
+                        "label": "Latitude",
+                        "name": "latitude",
+                        "aria-label": "",
+                        "type": "number",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "min": -90,
+                        "max": 90,
+                        "placeholder": "",
+                        "step": "",
+                        "prepend": "",
+                        "append": ""
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "location"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_66576313a4e16",
+        "title": "Service Page Information",
+        "fields": [
+            {
+                "key": "field_665763135848f",
+                "label": "Description",
+                "name": "description",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_66577526f556b",
+                "label": "Process",
+                "name": "process",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Row",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_6657753ef556c",
+                        "label": "Process Name",
+                        "name": "process_name",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_66577526f556b"
+                    },
+                    {
+                        "key": "field_66577546f556d",
+                        "label": "Process Description",
+                        "name": "process_description",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_66577526f556b"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                },
+                {
+                    "param": "post_taxonomy",
+                    "operator": "==",
+                    "value": "page-type:services"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_661a2edf5419b",
+        "title": "Testimonial",
+        "fields": [
+            {
+                "key": "field_661a2ee303df8",
+                "label": "Name",
+                "name": "testimonial_name",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_661a2eef03df9",
+                "label": "Description",
+                "name": "description",
+                "aria-label": "",
+                "type": "wysiwyg",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "tabs": "all",
+                "toolbar": "full",
+                "media_upload": 1,
+                "delay": 0
+            },
+            {
+                "key": "field_661a2f0203dfa",
+                "label": "Platform Logo",
+                "name": "platform_logo",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "",
+                "preview_size": "medium"
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "testimonial"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "taxonomy_6657489a5f4ff",
+        "title": "Page-Types",
+        "menu_order": 0,
+        "active": true,
+        "taxonomy": "page-type",
+        "object_type": [
+            "page"
+        ],
+        "advanced_configuration": 1,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Page-Types",
+            "singular_name": "Page-Type",
+            "menu_name": "Types",
+            "all_items": "All Types",
+            "edit_item": "Edit Type",
+            "view_item": "View Type",
+            "update_item": "Update Type",
+            "add_new_item": "Add New Type",
+            "new_item_name": "New Type Name",
+            "search_items": "Search Types",
+            "popular_items": "Popular Types",
+            "separate_items_with_commas": "Separate types with commas",
+            "add_or_remove_items": "Add or remove types",
+            "choose_from_most_used": "Choose from the most used types",
+            "most_used": "",
+            "not_found": "No types found",
+            "no_terms": "No types",
+            "name_field_description": "",
+            "slug_field_description": "",
+            "desc_field_description": "",
+            "items_list_navigation": "Types list navigation",
+            "items_list": "Types list",
+            "back_to_items": "← Go to types",
+            "item_link": "Type Link",
+            "item_link_description": "A link to a type"
+        },
+        "description": "",
+        "capabilities": {
+            "manage_terms": "manage_categories",
+            "edit_terms": "manage_categories",
+            "delete_terms": "manage_categories",
+            "assign_terms": "edit_posts"
+        },
+        "public": 1,
+        "publicly_queryable": 1,
+        "hierarchical": 0,
+        "show_ui": 1,
+        "show_in_menu": 1,
+        "show_in_nav_menus": 1,
+        "show_in_rest": 1,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Terms_Controller",
+        "show_tagcloud": 1,
+        "show_in_quick_edit": 1,
+        "show_admin_column": 0,
+        "rewrite": {
+            "permalink_rewrite": "taxonomy_key",
+            "with_front": "1",
+            "rewrite_hierarchical": "0"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "default_term": {
+            "default_term_enabled": "0"
+        },
+        "sort": 0,
+        "meta_box": "default",
+        "meta_box_cb": "",
+        "meta_box_sanitize_cb": ""
+    },
+    {
+        "key": "taxonomy_6659f9c79a5a0",
+        "title": "States",
+        "menu_order": 0,
+        "active": true,
+        "taxonomy": "state",
+        "object_type": [
+            "location"
+        ],
+        "advanced_configuration": 1,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "States",
+            "singular_name": "State",
+            "menu_name": "States",
+            "all_items": "All States",
+            "edit_item": "Edit State",
+            "view_item": "View State",
+            "update_item": "Update State",
+            "add_new_item": "Add New State",
+            "new_item_name": "New State Name",
+            "search_items": "Search States",
+            "popular_items": "Popular States",
+            "separate_items_with_commas": "Separate states with commas",
+            "add_or_remove_items": "Add or remove states",
+            "choose_from_most_used": "Choose from the most used states",
+            "most_used": "",
+            "not_found": "No states found",
+            "no_terms": "No states",
+            "name_field_description": "",
+            "slug_field_description": "",
+            "desc_field_description": "",
+            "items_list_navigation": "States list navigation",
+            "items_list": "States list",
+            "back_to_items": "← Go to states",
+            "item_link": "State Link",
+            "item_link_description": "A link to a state"
+        },
+        "description": "",
+        "capabilities": {
+            "manage_terms": "manage_categories",
+            "edit_terms": "manage_categories",
+            "delete_terms": "manage_categories",
+            "assign_terms": "edit_posts"
+        },
+        "public": 1,
+        "publicly_queryable": 1,
+        "hierarchical": 0,
+        "show_ui": 1,
+        "show_in_menu": 1,
+        "show_in_nav_menus": 1,
+        "show_in_rest": 1,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Terms_Controller",
+        "show_tagcloud": 1,
+        "show_in_quick_edit": 1,
+        "show_admin_column": 1,
+        "rewrite": {
+            "permalink_rewrite": "taxonomy_key",
+            "with_front": "1",
+            "rewrite_hierarchical": "0"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "default_term": {
+            "default_term_enabled": "0"
+        },
+        "sort": 0,
+        "meta_box": "default",
+        "meta_box_cb": "",
+        "meta_box_sanitize_cb": ""
+    },
+    {
+        "key": "post_type_6523358bb69e1",
+        "title": "Addons",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "hypertekaddon",
+        "advanced_configuration": true,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Addons",
+            "singular_name": "Addon",
+            "menu_name": "Addons",
+            "all_items": "All Addons",
+            "edit_item": "Edit Addon",
+            "view_item": "View Addon",
+            "view_items": "View Addons",
+            "add_new_item": "Add New Addon",
+            "add_new": "",
+            "new_item": "New Addon",
+            "parent_item_colon": "Parent Addon:",
+            "search_items": "Search Addons",
+            "not_found": "No addons found",
+            "not_found_in_trash": "No addons found in Trash",
+            "archives": "Addon Archives",
+            "attributes": "Addon Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into addon",
+            "uploaded_to_this_item": "Uploaded to this addon",
+            "filter_items_list": "Filter addons list",
+            "filter_by_date": "Filter addons by date",
+            "items_list_navigation": "Addons list navigation",
+            "items_list": "Addons list",
+            "item_published": "Addon published.",
+            "item_published_privately": "Addon published privately.",
+            "item_reverted_to_draft": "Addon reverted to draft.",
+            "item_scheduled": "Addon scheduled.",
+            "item_updated": "Addon updated.",
+            "item_link": "Addon Link",
+            "item_link_description": "A link to a addon."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": false,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": "",
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "trackbacks",
+            "editor",
+            "excerpt",
+            "revisions",
+            "page-attributes",
+            "thumbnail",
+            "custom-fields",
+            "post-formats"
+        ],
+        "taxonomies": [
+            "post_format",
+            "post_tag",
+            "category"
+        ],
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "post_type_651cdbd448919",
+        "title": "Dumpsters",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "hypertekproduct",
+        "advanced_configuration": true,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Dumpsters",
+            "singular_name": "Dumpster",
+            "menu_name": "Dumpsters",
+            "all_items": "All Dumpsters",
+            "edit_item": "Edit Dumpster",
+            "view_item": "View Dumpster",
+            "view_items": "View Dumpsters",
+            "add_new_item": "Add New Dumpster",
+            "add_new": "",
+            "new_item": "New Dumpster",
+            "parent_item_colon": "Parent Dumpster:",
+            "search_items": "Search Dumpsters",
+            "not_found": "No dumpsters found",
+            "not_found_in_trash": "No dumpsters found in Trash",
+            "archives": "Dumpster Archives",
+            "attributes": "Dumpster Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into dumpster",
+            "uploaded_to_this_item": "Uploaded to this dumpster",
+            "filter_items_list": "Filter dumpsters list",
+            "filter_by_date": "Filter dumpsters by date",
+            "items_list_navigation": "Dumpsters list navigation",
+            "items_list": "Dumpsters list",
+            "item_published": "Dumpster published.",
+            "item_published_privately": "Dumpster published privately.",
+            "item_reverted_to_draft": "Dumpster reverted to draft.",
+            "item_scheduled": "Dumpster scheduled.",
+            "item_updated": "Dumpster updated.",
+            "item_link": "Dumpster Link",
+            "item_link_description": "A link to a dumpster."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": false,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": 5,
+        "menu_icon": "dashicons-store",
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "trackbacks",
+            "editor",
+            "excerpt",
+            "revisions",
+            "page-attributes",
+            "thumbnail",
+            "custom-fields",
+            "post-formats"
+        ],
+        "taxonomies": [
+            "post_format",
+            "post_tag",
+            "category"
+        ],
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "custom_permalink",
+            "slug": "dumpster-rental",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "post_type_6626be60d08a0",
+        "title": "FAQs",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "faq",
+        "advanced_configuration": false,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "FAQs",
+            "singular_name": "FAQs",
+            "menu_name": "FAQs",
+            "all_items": "All FAQs",
+            "edit_item": "Edit FAQs",
+            "view_item": "View FAQs",
+            "view_items": "View FAQs",
+            "add_new_item": "Add New FAQs",
+            "add_new": "",
+            "new_item": "New FAQs",
+            "parent_item_colon": "Parent FAQs:",
+            "search_items": "Search FAQs",
+            "not_found": "No faqs found",
+            "not_found_in_trash": "No faqs found in Trash",
+            "archives": "FAQs Archives",
+            "attributes": "FAQs Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into faqs",
+            "uploaded_to_this_item": "Uploaded to this faqs",
+            "filter_items_list": "Filter faqs list",
+            "filter_by_date": "Filter faqs by date",
+            "items_list_navigation": "FAQs list navigation",
+            "items_list": "FAQs list",
+            "item_published": "FAQs published.",
+            "item_published_privately": "FAQs published privately.",
+            "item_reverted_to_draft": "FAQs reverted to draft.",
+            "item_scheduled": "FAQs scheduled.",
+            "item_updated": "FAQs updated.",
+            "item_link": "FAQs Link",
+            "item_link_description": "A link to a faqs."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": false,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": "",
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "thumbnail"
+        ],
+        "taxonomies": [
+            "category",
+            "post_tag"
+        ],
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "post_type_6659ded7ac60e",
+        "title": "Locations",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "location",
+        "advanced_configuration": false,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Locations",
+            "singular_name": "Location",
+            "menu_name": "Locations",
+            "all_items": "All Locations",
+            "edit_item": "Edit Location",
+            "view_item": "View Location",
+            "view_items": "View Locations",
+            "add_new_item": "Add New Location",
+            "add_new": "Add New Location",
+            "new_item": "New Location",
+            "parent_item_colon": "Parent Location:",
+            "search_items": "Search Locations",
+            "not_found": "No locations found",
+            "not_found_in_trash": "No locations found in Trash",
+            "archives": "Location Archives",
+            "attributes": "Location Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into location",
+            "uploaded_to_this_item": "Uploaded to this location",
+            "filter_items_list": "Filter locations list",
+            "filter_by_date": "Filter locations by date",
+            "items_list_navigation": "Locations list navigation",
+            "items_list": "Locations list",
+            "item_published": "Location published.",
+            "item_published_privately": "Location published privately.",
+            "item_reverted_to_draft": "Location reverted to draft.",
+            "item_scheduled": "Location scheduled.",
+            "item_updated": "Location updated.",
+            "item_link": "Location Link",
+            "item_link_description": "A link to a location."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": false,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": "",
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "thumbnail"
+        ],
+        "taxonomies": [
+            "state"
+        ],
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "post_type_6626be4030e83",
+        "title": "Testimonial",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "testimonial",
+        "advanced_configuration": false,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Testimonial",
+            "singular_name": "Testimonial",
+            "menu_name": "Testimonial",
+            "all_items": "All Testimonial",
+            "edit_item": "Edit Testimonial",
+            "view_item": "View Testimonial",
+            "view_items": "View Testimonial",
+            "add_new_item": "Add New Testimonial",
+            "add_new": "",
+            "new_item": "New Testimonial",
+            "parent_item_colon": "Parent Testimonial:",
+            "search_items": "Search Testimonial",
+            "not_found": "No testimonial found",
+            "not_found_in_trash": "No testimonial found in Trash",
+            "archives": "Testimonial Archives",
+            "attributes": "Testimonial Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into testimonial",
+            "uploaded_to_this_item": "Uploaded to this testimonial",
+            "filter_items_list": "Filter testimonial list",
+            "filter_by_date": "Filter testimonial by date",
+            "items_list_navigation": "Testimonial list navigation",
+            "items_list": "Testimonial list",
+            "item_published": "Testimonial published.",
+            "item_published_privately": "Testimonial published privately.",
+            "item_reverted_to_draft": "Testimonial reverted to draft.",
+            "item_scheduled": "Testimonial scheduled.",
+            "item_updated": "Testimonial updated.",
+            "item_link": "Testimonial Link",
+            "item_link_description": "A link to a testimonial."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": false,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": "",
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "thumbnail"
+        ],
+        "taxonomies": [
+            "category",
+            "post_tag"
+        ],
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "ui_options_page_6619561d8ca19",
+        "title": "Global Settings",
+        "active": true,
+        "menu_order": 0,
+        "page_title": "Global Settings",
+        "menu_slug": "global-settings",
+        "parent_slug": "none",
+        "advanced_configuration": 0,
+        "icon_url": "",
+        "menu_title": "",
+        "position": "",
+        "redirect": 0,
+        "description": "",
+        "menu_icon": [],
+        "update_button": "Update",
+        "updated_message": "Options Updated",
+        "capability": "edit_posts",
+        "data_storage": "options",
+        "post_id": "",
+        "autoload": 0
+    }
+]

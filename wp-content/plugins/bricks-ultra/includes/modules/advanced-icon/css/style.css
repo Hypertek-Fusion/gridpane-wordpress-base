@@ -1,0 +1,577 @@
+.bultr-ai-wrapper , .bultr-icon-view-default{
+    display:inline-flex;
+    padding: 5px;
+    transition: 0.2s ease-in;
+}
+.bultr-ai-wrapper svg{
+    height: 2em;
+    width: 2em;
+    font-size: 40px;
+    
+}
+.bultr-ai-wrapper i{
+    color:#ddd;
+    font-size: 40px;
+    transition: 0.2s ease-in;
+    text-align: center;
+    position: relative;
+    display: block;
+    height: 1em;
+    width: 1em;
+}
+.bultr-ai-wrapper i::before{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.bultr-icon-view-framed{
+    border: 3px solid #dddddd;
+    background-color:transparent; 
+    color: #dddddd;   
+    padding: 25px;
+
+
+}
+.bultr-icon-view-framed i{
+    color: #ddd;
+
+}
+.bultr-icon-view-framed svg{
+    fill: #ddd;
+
+}
+ .bultr-icon-view-stacked{
+    background-color:#dddddd;
+    border: none;
+    color: #000;
+    padding: 25px;
+
+}
+.bultr-icon-view-stacked.bultr-ai-wrapper i{
+    color:#000;
+}
+.bultr-icon-view-stacked.bultr-ai-wrapper svg{
+    fill:#000;
+}
+
+
+.bultr-icon-shape-square{
+    border-radius: none !important;
+}
+.bultr-icon-shape-circle{
+    border-radius: 50%;
+}
+
+.bultr-icon-anim-grow{
+    transition: transform 0.3s;
+
+}
+.bultr-icon-anim-grow:hover{
+    transform: scale(1.1);
+}
+.bultr-icon-anim-shrink{
+    transition: transform 0.3s;
+
+}
+.bultr-ai-wrapper:hover.bultr-icon-anim-shrink{
+    transform: scale(0.9) !important;
+}
+
+.bultr-icon-anim-pulse:hover{
+    animation: bultr-anim-pulse 1s linear infinite;
+}
+.bultr-icon-anim-pulse-grow:hover{
+    animation: bultr-anim-pulse-grow 1s linear infinite;
+
+}
+.bultr-icon-anim-pulse-shrink:hover{
+    animation: bultr-anim-pulse-shrink 1s linear infinite;
+}
+.bultr-icon-anim-push:hover{
+    animation: bultr-anim-push 0.3s linear 1;
+}
+.bultr-ai-wrapper:hover.bultr-icon-anim-pop{
+    animation: bultr-anim-pop 0.3s linear 1;
+}
+.bultr-icon-anim-bounce-in{
+    transition: 0.5s cubic-bezier(0.47, 2.02, 0.31,-0.36);
+}
+.bultr-ai-wrapper:hover.bultr-icon-anim-bounce-in{
+    transform: scale(1.2);
+}
+.bultr-icon-anim-bounce-out{
+    transition: 0.5s cubic-bezier(0.47, 2.02, 0.31,-0.36);
+}
+.bultr-icon-anim-bounce-out:hover{
+    transform: scale(0.8) ;
+}
+.bultr-icon-anim-rotate{
+    transition: transform 0.5s;
+}
+.bultr-icon-anim-rotate:hover{
+    transform: rotate(6deg) !important;
+}
+.bultr-icon-anim-grow-rotate{
+    transition: transform 0.5s;
+}
+.bultr-icon-anim-grow-rotate:hover{
+    transform: scale(1.1) rotate(6deg);
+}
+.bultr-icon-anim-float{
+    transition: transform 0.5s ease-out;
+}
+.bultr-icon-anim-float:hover{
+    transform: translateY(-8px);
+}
+.bultr-icon-anim-sink{
+    transition: transform 0.5s ease-out;
+}
+.bultr-icon-anim-sink:hover{
+    transform: translateY(8px);
+}
+.bultr-icon-anim-bob:hover{
+    animation-name: bultr-anim-bob-float, bultr-anim-bob;
+    animation-duration:.3s,1.5s;
+    animation-delay:0s,.3s;
+    animation-timing-function:ease-out,ease-in-out;animation-iteration-count:1,infinite;animation-fill-mode:forwards;
+    animation-direction:normal,alternate
+}
+.bultr-icon-anim-hang:hover{
+    animation-name: bultr-anim-hang-sink, bultr-anim-hang;
+    animation-duration:.3s,1.5s;
+    animation-delay:0s,.3s;
+    animation-timing-function:ease-out,ease-in-out;animation-iteration-count:1,infinite;animation-fill-mode:forwards;
+    animation-direction:normal,alternate
+}
+.bultr-icon-anim-skew{
+    transition: transform 0.3s;
+}
+.bultr-icon-anim-skew:hover{
+    transform: skew(10deg);
+}
+.bultr-icon-anim-skew-forward{
+    transition: transform 0.3s;
+    transform-origin: 0% 100%;
+}
+.bultr-icon-anim-skew-forward:hover{
+    transform: skew(-10deg);
+}
+.bultr-icon-anim-skew-backward{
+    transition: transform 0.3s;
+    transform-origin: 0% 100%;
+
+}
+.bultr-icon-anim-skew-backward:hover{
+    transform: skew(10deg);
+}
+.bultr-icon-anim-wobble-vertical:hover{
+    animation: bultr-anim-wobble-vertical 1s ease-in-out 1;
+}
+.bultr-icon-anim-wobble-horizontal:hover{
+    animation: bultr-anim-wobble-horizontal 1s ease-in-out 1;
+}
+
+.bultr-icon-anim-wobble-bottom-right:hover{
+    animation: bultr-anim-wobble-bottom-right 1s ease-in-out 1;
+}
+.bultr-icon-anim-wobble-top-right:hover{
+    animation: bultr-anim-wobble-top-right 1s ease-in-out 1;
+}
+.bultr-icon-anim-wobble-top{
+    transform-origin: 0% 100%;
+}
+.bultr-icon-anim-wobble-top:hover{
+    animation: bultr-anim-wobble-skew 1s ease-in-out 1;
+
+}
+.bultr-icon-anim-wobble-bottom{
+    transform-origin: 100% 0%;
+}
+.bultr-icon-anim-wobble-bottom:hover{
+    animation: bultr-anim-wobble-skew 1s ease-in-out 1;
+
+}
+.bultr-icon-anim-wobble-skew:hover{
+    animation: bultr-anim-wobble-skew 1s ease-in-out 1;
+
+}
+.bultr-icon-anim-buzz:hover{
+    animation: bultr-anim-buzz 1s ease-in-out 1;
+}
+.bultr-icon-anim-buzz-out:hover{
+    animation: bultr-anim-buzz-out 1s ease-in-out 1;
+}
+
+
+@keyframes bultr-anim-pulse{
+    25%{
+        transform: scale(1.1);
+    }
+    75%{
+        transform:scale(0.9);
+    }
+}
+@keyframes bultr-anim-pulse-grow{
+    to{
+        transform: scale(1.1);
+    }
+    
+}
+@keyframes bultr-anim-pulse-shrink{
+    to{
+        transform: scale(0.9);
+    }
+    
+}
+@keyframes bultr-anim-push{
+    50%{
+        transform: scale(0.8);
+    }
+    100%{
+        transform: scale(1);
+    }
+    
+}
+@keyframes bultr-anim-pop{
+    50%{
+        transform: scale(1.1);
+    }
+    100%{
+        transform: scale(1);
+    }
+    
+}
+@keyframes bultr-anim-bob{
+    0%{
+        transform: translateY(-8px);
+    }
+    50%{
+        transform: translateY(-4px);
+    }
+    100%{
+        transform: translateY(-8px);
+    }
+    
+}
+@keyframes bultr-anim-bob-float{
+    100%{
+        transform:translateY(-8px);
+    }
+}
+@keyframes bultr-anim-hang{
+    0%{
+        transform: translateY(8px);
+    }
+    50%{
+        transform: translateY(4px);
+    }
+    100%{
+        transform: translateY(8px);
+    }
+    
+}
+@keyframes bultr-anim-hang-sink{
+    100%{
+        transform:translateY(8px);
+    }
+}
+@keyframes bultr-anim-wobble-vertical{
+    16%{
+        transform:translateY(8px)
+    }
+    33%{
+        transform:translateY(-6px)
+    }
+    49%{
+        transform:translateY(4px)
+    }
+    66%{
+        transform:translateY(-2px)
+    }
+    83%{
+        transform:translateY(1px)
+    }
+    100%{
+        transform:translateY(0)
+    }
+}
+@keyframes bultr-anim-wobble-horizontal{
+    16%{
+        transform:translateX(8px)
+    }
+    33%{
+        transform:translateX(-6px)
+    }
+    49%{
+        transform:translateX(4px)
+    }
+    66%{
+        transform:translateX(-2px)
+    }
+    83%{
+        transform:translateX(1px)
+    }
+    100%{
+        transform:translateX(0)
+    }
+}
+@keyframes bultr-anim-wobble-bottom-right{
+    16%{
+        transform:translate(8px,8px)
+    }
+    33%{
+        transform:translate(-6px,-6px)
+    }
+    49%{
+        transform:translate(4px,4px)
+    }
+    66%{
+        transform:translate(-2px,-2px)
+    }
+    83%{
+        transform:translate(1px,1px)
+    }
+    100%{
+        transform:translate(0,0)
+    }
+}
+@keyframes bultr-anim-wobble-top-right{
+    16%{
+        transform:translate(8px,-8px)
+    }
+    33%{
+        transform:translate(-6px,6px)
+    }
+    49%{
+        transform:translate(4px,-4px)
+    }
+    66%{
+        transform:translate(-2px,2px)
+    }
+    83%{
+        transform:translate(1px,-1px)
+    }
+    100%{
+        transform:translate(0,0)
+    }
+}
+
+@keyframes bultr-anim-wobble-skew{
+    16%{
+        transform:skew(-12deg)
+    }
+    33%{
+        transform:skew(10deg)
+    }
+    49%{
+        transform:skew(-6deg)
+    }
+    66%{
+        transform:skew(4deg)
+    }
+    83%{
+        transform:skew(-2deg)
+    }
+    100%{
+        transform:skew(0)
+    }
+}
+@keyframes bultr-anim-buzz{
+    50%{
+        transform:translateX(3px) rotate(2deg)
+    }
+    100%{
+        transform:translateX(-3px) rotate(-2deg)
+    }
+}
+@keyframes bultr-anim-buzz-out{
+    10%{
+        transform:translateX(3px) rotate(2deg)
+    }
+    20%{
+        transform:translateX(-3px) rotate(-2deg)
+    }
+    30%{
+        transform:translateX(3px) rotate(2deg)
+    }
+    40%{
+        transform:translateX(-3px) rotate(-2deg)
+    }
+    50%{
+        transform:translateX(2px) rotate(1deg)
+    }
+    60%{
+        transform:translateX(-2px) rotate(-1deg)
+    }
+    70%{
+        transform:translateX(2px) rotate(1deg)
+    }
+    80%{
+        transform:translateX(-2px) rotate(-1deg)
+    }
+    90%{
+        transform:translateX(1px) rotate(0)
+    }
+    100%{
+        transform:translateX(-1px) rotate(0)
+    }
+}
+
+
+/* icon animation */
+.bultr-icon-fromleft{
+    transition: background-color 0.2s, color 0.2s, box-shaodow 0.2s;
+    overflow: hidden;
+
+
+}
+.bultr-icon-fromleft:hover i{
+    animation: toRightFromLeft 0.3s forwards;
+
+}
+.bultr-icon-fromleft:hover svg{
+    animation: toRightFromLeft 0.3s forwards;
+
+}
+.bultr-icon-fromright{
+    transition: background-color 0.2s, color 0.2s, box-shaodow 0.2s;
+    overflow: hidden;
+
+
+}
+.bultr-icon-fromright:hover i{
+    animation: toleftfromright 0.3s forwards;
+
+}
+.bultr-icon-fromright:hover svg{
+    animation: toleftfromright 0.3s forwards;
+
+}
+.bultr-icon-fromtop{
+    transition: background-color 0.2s, color 0.2s, box-shaodow 0.2s;
+    overflow: hidden;
+
+
+}
+.bultr-icon-fromtop:hover i{
+    animation: tobottomfromtop 0.3s forwards;
+
+}
+.bultr-icon-fromtop:hover svg{
+    animation: tobottomfromtop 0.3s forwards;
+
+}
+.bultr-icon-frombottom{
+    transition: background-color 0.2s, color 0.2s, box-shaodow 0.2s;
+    overflow: hidden;
+
+
+}
+.bultr-icon-frombottom:hover i{
+    animation: totopfrombottom 0.3s forwards;
+
+}
+.bultr-icon-frombottom:hover svg{
+    animation: totopfrombottom 0.3s forwards;
+
+}
+
+@keyframes toRightFromLeft {
+    49% {
+      transform: translate(100%);
+    }
+    50% {
+      opacity: 0;
+      transform: translate(-100%);
+    }
+    51% {
+      opacity: 1;
+    }
+}
+@-webkit-keyframes toRightFromLeft {
+    49% {
+      transform: translate(100%);
+    }
+    50% {
+      opacity: 0;
+      transform: translate(-100%);
+    }
+    51% {
+      opacity: 1;
+    }
+}
+@keyframes toleftfromright {
+    49% {
+      transform: translate(-100%);
+    }
+    50% {
+      opacity: 0;
+      transform: translate(100%);
+    }
+    51% {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes toleftfromright {
+    49% {
+      transform: translate(-100%);
+    }
+    50% {
+      opacity: 0;
+      transform: translate(100%);
+    }
+    51% {
+      opacity: 1;
+    }
+  }
+  @keyframes totopfrombottom {
+    49% {
+      transform: translatey(-100%);
+    }
+    50% {
+      opacity: 0;
+      transform: translatey(100%);
+    }
+    51% {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes totopfrombottom {
+    49% {
+      transform: translatey(-100%);
+    }
+    50% {
+      opacity: 0;
+      transform: translatey(100%);
+    }
+    51% {
+      opacity: 1;
+    }
+  }
+  @keyframes tobottomfromtop {
+    49% {
+      transform: translatey(100%);
+    }
+    50% {
+      opacity: 0;
+      transform: translatey(-100%);
+    }
+    51% {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes tobottomfromtop {
+    49% {
+      transform: translatey(100%);
+    }
+    50% {
+      opacity: 0;
+      transform: translatey(-100%);
+    }
+    51% {
+      opacity: 1;
+    }
+  }
+/* icon animation end */
+  

@@ -1,0 +1,157 @@
+.bultr-insta-feed-wrapper{
+    display: block;
+    width: 100%;
+}
+/* layout  */
+.bultr-insta-layout-grid .bultr-insta-collection,.bultr-insta-layout-carousel .bultr-insta-collection{
+    display: grid;
+    grid-template-columns:repeat(var(--bu-insta-columns, 3), 1fr);
+    column-gap: 20px;
+    row-gap: 20px;
+}
+.bultr-insta-layout-grid .bultr-insta-collection{
+    align-items: center;
+}
+.bultr-insta-layout-carousel .bultr-insta-collection{
+    display: flex;
+}
+.bultr-insta-layout-flex .bultr-insta-collection{
+    display: flex;
+}
+.bultr-insta-link{
+    overflow: hidden;
+}
+/* masonory layout  */
+.bultr-insta-feed-wrapper .bultr-insta-layout-masonry .bultr-insta-collection{
+    display: grid;
+    grid-template-columns:repeat(var(--bu-insta-columns, 3), 1fr);
+    column-gap: 20px;
+    row-gap: 20px;
+}
+/* items */
+.bultr-insta-feed-wrapper .bultr-insta-layout-masonry .bultr-insta-items{
+    height: fit-content;
+
+}
+.bultr-insta-items{
+    overflow: hidden;
+    position: relative;
+}
+.bultr-insta-collection .bultr-insta-items .bultr-insta-img{
+    width: 100%;
+    object-fit: cover;
+    /* position: relative; */
+}
+.bultr-insta-link:not(a){
+    position: relative;
+}
+.bultr-insta-image-grayscale{
+    filter: grayscale(1);
+    transition: all 0.6s ease 0s;
+}
+.bultr-insta-items:hover .bultr-insta-img.bultr-insta-image-grayscale{
+    filter: none;
+}
+.bultr-insta-items:hover .bultr-insta-img.bultr-insta-image-grayscalehvr{
+    filter: grayscale(1);
+    transition: all 0.6s ease 0s;
+}
+/* caption */
+.bultr-insta-items .bultr-insta-caption{
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.bultr-insta-collection.bultr-insta-caption-onhover .bultr-insta-items .bultr-insta-caption{
+    display: none;
+}
+.bultr-insta-collection.bultr-insta-caption-onhover .bultr-insta-items:hover .bultr-insta-caption,
+.bultr-insta-collection.bultr-insta-caption-always .bultr-insta-items .bultr-insta-caption
+{
+  display: flex;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    z-index: 88;
+    background-color: #00000099;
+    color: #fff;    
+}
+.bultr-insta-caption.caption-overlay-full{
+    top: 0px;
+}
+.bultr-insta-items .bultr-insta-caption.caption-overlay-full.brx-animate-bounceInUp{
+    animation-name: bounceInUp;
+    animation-timing-function: linear;
+}
+/* post icon */
+.bultr-insta-feed-icon{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: inline-block;
+    color: #fff;
+    font-size: 16px;
+    z-index: 99;
+}
+/* profile Link & icon */
+.bultr-profile-link-wrap{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+}
+.bultr-insta-profile{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: #202020;
+    font-weight: 600;
+}
+.bultr-profile-link-wrap.bultr-insta-icon-pst-before .bultr-insta-profile{
+    flex-direction: row;
+}
+.bultr-profile-link-wrap.bultr-insta-icon-pst-after .bultr-insta-profile{
+    flex-direction: row-reverse;
+}
+/* carousel album */
+.bultr-insta-album-children{
+    display: none;
+}
+
+.bultr-insta-layout-carousel .bultr-insta-posts{
+    align-items: center;
+}
+
+/* load more button  */
+/* .bultr-loadmore-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 12px;
+}
+.bultr-loadmore-wrapper button{
+    padding: 12px 24px;
+    font-size: 18px;
+    background: #000000;
+    color: #ffffff;
+    border-radius: 4px;
+    margin: 5px;
+}
+.bultr-load-hide{
+    display: none;
+} */
+
+/* icon alignment */
+.bultr-insta-profile-icon{
+    display: flex;
+    align-items: center;
+}
+/* svg size */
+.bultr-insta-feed-wrapper .bultr-profile-link-wrap .bultr-insta-profile svg{
+    width: 1em;
+    height: 1em;
+}

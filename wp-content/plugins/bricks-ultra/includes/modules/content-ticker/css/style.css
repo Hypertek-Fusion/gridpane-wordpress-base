@@ -1,0 +1,85 @@
+.brxe-wpvbu-content-ticker{
+	width: 100%;
+}
+.bultr-content-ticker{
+	position: relative;
+	display: flex;
+	flex-direction: row;
+    align-items: center;
+	background-color: var(--bu-bg-light);
+	overflow: hidden;
+}
+.bultr-ct-label{
+	display: flex;
+	background-color: var(--bu-bg-dark);
+	justify-content : center;
+	align-items: center;
+	color : var(--bu-text-light);
+	padding: 10px 25px;
+	height: 100%;
+}
+.bultr-ct-content{
+	display: flex;
+	height: 100%;
+	width: 100%;
+	align-items: center;
+	padding-left: 20px;
+	overflow: hidden;
+}
+.bultr-content-ticker .splide__arrows{
+	position: absolute;
+	display: flex;
+	flex-direction: row;
+	gap:5px;
+	right: 20px;
+	top :50%;
+	transform : translateY(-50%);
+	
+}
+.bultr-content-ticker .splide__arrow{
+	position: relative;
+	display: flex;
+	width: unset;
+	height: unset;
+	transform: unset;
+	text-align: center;
+	align-self: center;
+	vertical-align: middle;
+	padding: 10px;
+}
+.bultr-content-ticker .splide__arrows{
+	z-index: 9;
+}
+.bultr-ct-content .splide__slide{
+	display: flex ;
+    align-items: center;
+}
+.bultr-content-ticker .splide__arrows--ttb .splide__arrow{
+	left: unset;
+}
+.bultr-content-ticker.bultr-slider-vertical .splide__slide{
+	height: 100%;
+}
+.bultr-content-ticker .splide__arrow i{
+	width: 1em;
+	height: 1em;
+}
+.bultr-ct-label.bultr-icon-pos-left span{
+	flex-direction: row;
+}
+.bultr-ct-label.bultr-icon-pos-right span{
+	flex-direction: row-reverse;
+}
+.bultr-ct-label span{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+/* .fa-angle-left::before {
+	content: "";
+}
+
+.fa-angle-right::before {
+	content: "";
+} */

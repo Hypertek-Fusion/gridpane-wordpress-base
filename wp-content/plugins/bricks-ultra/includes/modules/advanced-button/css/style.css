@@ -1,0 +1,51 @@
+.bultr-advance-btn{
+    display: flex;
+ 
+   }
+   .bultr-advance-button{
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    transition-duration: 0.4s;
+   }
+   .bultr-advance-button-icon{
+    display: flex;
+    align-items: center;
+   }
+   .bultr-advance-button-icon svg {
+    height: 1em;
+    width: 1em;
+  }
+   .button_icon_position-left .bultr-advance-button-icon{
+    display: flex;
+    flex-direction: row;
+   }
+   .button_icon_position-right .bultr-advance-button-icon{
+    display: flex;
+    flex-direction: row-reverse;
+   }
+   .bultr-advance-icon-view-default{
+    display: flex;
+    align-items: center;
+   }
+
+  .bultr-advance-icon-view-stacked i, .bultr-advance-icon-view-stacked svg{
+    background-color: #df8d8d;
+  }
+  .bultr-advance-icon-shape-circle i, .bultr-advance-icon-shape-circle svg{
+    border-radius: 50%;
+  }
+  .bultr-advance-icon-view-framed i, .bultr-advance-icon-view-framed svg {
+    border: 1px solid #df8d8d;
+    background-color: #fff;
+  }
+.bultr-advance-separator-col{
+  border-bottom-color: black;
+  width: 100%;
+}
+.bultr-advance-separator-row{
+  border-right-color: black;
+  height:100%;
+}
+/* animation style */
+

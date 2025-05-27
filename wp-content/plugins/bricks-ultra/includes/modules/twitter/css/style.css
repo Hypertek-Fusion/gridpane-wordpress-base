@@ -1,0 +1,16 @@
+.brxe-wpvbu-twitter{
+	width: 100%;
+}
+.bu-notice{
+    align-items: stretch;
+    background-color: var(--bricks-bg-info);
+    color: var(--bricks-text-info);
+    display: flex;
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    opacity: 1!important;
+    justify-content: center;
+    padding: 15px 30px;
+ }

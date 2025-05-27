@@ -1,0 +1,213 @@
+/*  Filterable Gallery **/
+
+.brxe-wpvbu-filterable-gallery{
+    width: 100%;
+}
+
+.bultr-filters-title {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.bultr-filter-title {
+  padding: 5px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bultr-filter-title .bultr-filter-icon i{
+    line-height: 1;
+}
+.bultr-filter-title .bultr-filter-icon {
+    display: flex;
+    align-items: center;
+}
+.bultr-filter-title:first-child{
+    margin-left: 0;
+}
+.bultr-filter-title:last-child{
+    margin-left: 0;
+}
+.bultr-filter-title.icon-right {
+    flex-direction: row-reverse;
+}
+.bultr-filter-title i{
+    font-size: inherit;
+}
+.bultr-filter-title svg{
+    height: 1em;
+    width: 1em;
+    font-size: inherit;
+}
+.bultr-overlay .bultr-overlay-inner i , .bultr-overlay .bultr-overlay-inner svg{
+    font-size: inherit;
+}
+
+.bultr-full-width {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.bultr-filters-image .filter-image {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.bultr-gal-layout-grid .bultr-gallery{
+    display: grid;
+}
+
+
+.bultr-layout-item {
+  padding: 0;
+  overflow: hidden;
+}
+.bultr-layout-item img {
+    max-width: 100%;
+}
+
+[data-layout='grid'] .bultr-layout-item .bricks-layout-inner {
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.bultr-layout-item .bultr-layout-item-inner {
+    overflow: hidden;
+    position: relative;
+    display: block;
+}
+.bultr-layout-item.bultr-tilt .bultr-layout-item-inner img, .bultr-layout-item.bultr-tilt .bultr-layout-item-inner .image{
+    transition: all 0.5s ease
+}
+.bultr-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    z-index: 99;
+    background: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    width: 100%;
+    transition: all 500ms ease 0s;
+}
+.bultr-layout-item-inner img, .bultr-layout-item-inner .image {
+    transition: all 500ms ease 0s;
+}
+.bultr-layout-item-inner:hover img, .bultr-layout-item-inner:hover .image {
+    transition: all 500ms ease 0s;
+}
+.overlay-hide-on-hover .bultr-layout-item-inner .bultr-overlay,
+.overlay-always .bultr-layout-item-inner .bultr-overlay {
+	display: block;
+}
+
+.overlay-hover .bultr-layout-item-inner:hover .bultr-overlay {
+	display: block;
+}
+
+.overlay-hide-on-hover .bultr-layout-item-inner:hover .bultr-overlay {
+	display: none;
+}
+.bultr-overlay-inner {
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+.bultr-overlay-inner *{
+	pointer-events: none;
+}
+.bultr-overlay .bultr-overlay-inner svg{
+    height: 1em;
+    width: 1em;
+}
+.bultr-overlay .bultr-overlay-inner .bultr-overlay-icon{
+    display: inline-block;
+}
+
+.bultr-layout-item.bultr-img-ratio .bultr-layout-item-inner .bricks-layout-inner{
+    height: 100% !important;
+    position: absolute;
+    top: calc(50% + 1px);
+    left: calc(50% + 1px);
+    -webkit-transform: scale(1.01) translate(-50%,-50%);
+    -ms-transform: scale(1.01) translate(-50%,-50%);
+    transform: scale(1.01) translate(-50%,-50%);
+    object-fit: cover;
+    width: 100%;
+}
+
+
+.bultr-layout-item.transit-out
+    {
+    animation: bultrZoomIn ease .5s;
+}
+.bultr-layout-item.transit-in
+{
+    animation: bultrZoomOut ease .5s;
+}
+@keyframes bultrZoomOut {
+    0% {
+        opacity: 1;
+        transform: scale(1, 1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0,0);
+    } 
+}
+
+@keyframes bultrZoomIn {
+    0% {
+        opacity: 0;
+        transform: scale(0, 0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(0.1, 1);
+    } 
+} 
+
+@keyframes bultr-fade-In {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+}
+@keyframes bultr-fade-Out {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+} 
+
+
+:not(.bricks-is-frontend) .bultr-gal-layout-masonry .bultr-layout-item{
+    width: calc((100% - ((var(--bu-columns) - 1) * var(--bu-spacing))) / var(--bu-columns));
+}
+.bricks-is-frontend .bultr-gal-layout-masonry .bultr-layout-item{
+    width: calc((100% - ((var(--bu-columns) - 1) * (var(--bu-spacing) * 1px) )) / var(--bu-columns));
+}
+.bultr-layout-item-inner img{
+    width: 100%;
+}
+ .bu-notice{
+    align-items: stretch;
+    background-color: var(--bricks-bg-info);
+    color: var(--bricks-text-info);
+    display: flex;
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    opacity: 1!important;
+    justify-content: center;
+    padding: 15px 30px;
+ }
+ ul.bultr-gallery{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+ }

@@ -1,0 +1,246 @@
+.brxe-wpvbu-content-switcher{
+    width: 100%;
+}
+.bultr-cs-wrapper{
+	display: block;
+	text-align: center;
+}
+.bultr-cs-switcher-wrapper{
+	display: block;
+}
+.bultr-cs-switcher-wrapper svg{
+	width: 1em;
+    height: 1em;
+}
+.bultr-cs-layout_1 .bultr-cs-switcher-wrapper {
+    display: inline-flex;
+    flex-wrap: wrap;
+    padding: 8px;
+    border-radius: 50px;
+	justify-content: center;
+    overflow: hidden;
+}
+.bultr-cs-layout_1 .bultr-cs-label-wrapper {
+    display: inline-block;
+}
+.bultr-cs-layout_1 .bultr-content-switch-button {
+    border-radius: 50px;
+    padding: 15px 30px;
+    background-color: var(--bu-bg-dark);
+    color: #fff;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    text-align: center;
+    align-items: center;
+}
+.bultr-cs-layout_1 .bultr-content-switch-button svg{
+    position: relative;
+}
+
+.bultr-cs-layout_1 .bultr-content-switch-button:before {
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    content: "";
+    width: 0;
+    position: absolute;
+    right: 0;
+    transition: all .3s ease-out;
+}
+.bultr-cs-layout_1 .bultr-content-switch-button.active:before {
+    width: 100%;
+    left: 0;
+    right: auto;
+    background-color: var(--bu-primary-color);
+}
+.bultr-cs-layout_1 .bultr-content-switch-button span, .bultr-cs-layout_1 .bultr-content-switch-button i{
+	position: relative;
+}
+.bultr-cs-content-section {
+    display: none;
+}
+.bultr-cs-content-section.active{
+    display: block;
+}
+
+/* Layout 2 */
+.bultr-cs-layout_2 .bultr-cs-switcher-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.bultr-cs-layout_2 .bultr-content-switch-label.primary-label {
+    margin-right: 30px;
+}
+.bultr-cs-layout_2 .bultr-content-switch-label.secondary-label {
+    margin-left: 30px;
+}
+  
+.bultr-cs-layout_2 .bultr-content-switch-label {
+    /* display: inline-block; */
+    display: flex;
+    align-items: center;
+}
+.bultr-cs-layout_2 .bultr-cs-switch-label {
+    position: relative;
+    display: inline-block;
+    width: 70px;
+    height: 20px;
+    vertical-align: middle;
+}
+.bultr-cs-layout_2 .bultr-cs-label {
+    display: inline-block;
+}
+.bultr-cs-layout_2 .bultr-content-toggle-switch {
+    display: none;
+}
+.bultr-cs-layout_2 .bultr-content-toggle-switcher {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    -webkit-border-radius: 1.5em;
+    border-radius: 1.5em;
+    background: var(--bu-bg-dark);
+    border: 2px solid var(--bu-bg-dark);
+}
+.bultr-cs-layout_2 .bultr-cs-switch-button {
+    display: inline-block;
+}
+.bultr-cs-layout_2 .bultr-content-toggle-switcher:before {
+    position: absolute;
+    content: "";
+    height: 34px;
+    width: 34px;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    border: 2px solid var(--bu-primary-color);
+    background: var(--bu-primary-color);
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    -webkit-box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.2);
+}
+
+body.rtl .bultr-cs-layout_2 .bultr-content-toggle-switcher:before {
+    right: -12px !important;
+}
+.bultr-cs-layout_2 input:checked + .bultr-content-toggle-switcher:before {
+    transform: translate(55px, -50%);
+}
+  
+body.rtl
+.bultr-cs-layout_2
+input:checked
++ .bultr-content-toggle-switcher:before {
+    transform: translate(-55px, -50%);
+}
+
+.bultr-cs-layout_2 .bultr-cs-lable {
+    display: inline-block;
+}
+
+/* Layout 3 */
+.bultr-cs-layout_3 .bultr-cs-switch-wrapper{
+    display: block;
+    justify-content: center;
+    align-items: center;
+  }
+.bultr-cs-layout_3 .bultr-content-switch-label.primary-label{
+    margin-right : 30px;
+}
+.bultr-cs-layout_3 .bultr-content-switch-label.secondary-label{
+    margin-left :  30px;
+}
+.bultr-cs-layout_3 .bultr-cs-switch-label{
+    position: relative;
+    display: inline-block;
+    width: 4.5em;
+    height: 2em;
+    vertical-align: middle;
+}
+
+.bultr-cs-layout_3 .bultr-content-switch-label{
+    margin : 0px;
+    /* display : inline-block; */
+    display: flex;
+    align-items: center;
+
+}
+.bultr-cs-layout_3 .bultr-cs-switch-button {
+    display : inline-flex;
+}
+.bultr-cs-layout_3 .bultr-cs-label{
+    display : inline-block;
+}
+.bultr-cs-layout_3 .bultr-cs-switch-label input.bultr-content-toggle-switch{
+    display: none;
+}
+
+.bultr-cs-layout_3 .bultr-cs-switch-label input.bultr-content-toggle-switch + span {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-transition: .4s;
+    transition: .4s;
+    -webkit-border-radius: 1.5em;
+    border-radius: 1.5em;
+    background: #2e394d;
+}
+.bultr-cs-layout_3 .bultr-cs-switch-label input.bultr-content-toggle-switch + span:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 6px;
+    transform: translateY(-50%);
+    top: 50%;
+    transition: .4s;
+    transition: .4s;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: var(--bu-primary-color);
+}
+body.rtl .bultr-cs-layout_3 .bultr-cs-switch-label input.bultr-content-toggle-switch + span:before{
+    left : unset;
+    right : 4px;
+}
+
+.bultr-cs-layout_3 .bultr-cs-switch-label input:checked.bultr-content-toggle-switch + span:before{
+    transform: translate(37px,-50%)
+}
+body.rtl .bultr-cs-layout_3 .bultr-cs-switch-label input:checked.bultr-content-toggle-switch + span:before{
+    transform: translate(-30px,-50%)
+}
+
+.bultr-cs-wrapper:not(.bultr-cs-layout_1) .bultr-content-switch-label{
+    color : var(--bu-text-light);
+}
+
+.bultr-cs-wrapper:not(.bultr-cs-layout_1) .bultr-content-switch-label.active{
+    color : var(--bu-text-dark);
+}
+/* Layout 3 End */
+.brxe-wpvbu-content-switcher label{
+    margin-bottom: 0px;
+}
+.bultr-cs-layout_3 .bultr-cs-switch-container{
+    display: block;
+}
+.bultr-cs-layout_3 .bultr-cs-switcher-wrapper{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+}

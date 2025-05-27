@@ -1,0 +1,324 @@
+:root{
+  --bu-primary-color : #ffc400;
+  --bu-secondary-color : #fc5778;
+  --bu-text-light : #9e9e9e;
+  --bu-text-dark : #212121;
+  --bu-bg-light : #f5f6f7;
+  --bu-bg-dark : #263238;
+  --bu-border-light : #eaecf0;
+  --bu-border-dark : #212121;
+ 
+}
+
+/* Icon Widget */
+.bultr-icon-wrapper{
+  text-align: center;
+  position: relative;
+  display: block;
+}
+.bultr-icon i{
+  display: inline-block;
+  line-height: 1;
+  transition: all 0.3s;
+  color: var(--bu-bg-dark);
+  /* font-size: 50px; */
+  text-align: center;
+}
+.bultr-icon svg{
+  display: inline-block;
+  transition: all 0.3s;
+  color: var(--bu-bg-dark);
+  /* font-size: 50px; */
+  text-align: center;
+}
+/* .bultr-icon-wrapper .bultr-icon i {
+    width: 1em;
+    height: 1em;
+    display: block;
+} */
+.bultr-icon-wrapper .bultr-icon i {
+    width: auto;
+    height: auto;
+    display: block;
+}
+.bultr-icon-wrapper .bultr-icon svg , .bultr-icon-wrapper .bultr-icon i img {
+  /* top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  position: absolute; */
+  width: 1em;
+  height: auto;
+}
+
+.bultr-view-stacked .bultr-icon {
+    padding: 20px;
+    background-color: var(--bu-bg-dark);
+    color:var(--bu-bg-light);
+}
+
+.bultr-view-framed .bultr-icon {
+  padding: 17px;
+  border : 3px solid var(--bu-bg-dark);
+  background-color: var(--bu-bg-light);
+}
+
+.bultr-shape-circle .bultr-icon{
+  border-radius: 50%;
+}
+
+.bricks-add-element[data-element-name^="wpvbu"]::before {
+  background: #5d6369;
+  content: 'Ultra';
+  width: 38px;
+  height: 20px;
+  position: absolute;
+  left: -1;
+  top: -1;
+  border-radius: 2px 0 4px 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bricks-add-element[data-element-name^="wpvbu"]:hover:before{
+  background-color: #ffd64f;
+  color:#343c43;
+}
+
+
+/* Swiper override css */
+.bultr-swiper-outer-wrapper .swiper-slide {
+  height: auto;
+  overflow: inherit;
+}
+.bultr-swiper-outer-wrapper .swiper-slide-wrapper {
+  height: 100%;
+}
+
+.bultr-swiper-outer-wrapper{
+  position: relative;
+}
+.bultr-swiper-outer-wrapper .bultr-swiper-button-next, .bultr-swiper-outer-wrapper .bultr-swiper-button-prev{
+  position: absolute;
+  top: 50%;
+  z-index: 100;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  color: #ffd64f;
+
+}
+.bultr-swiper-outer-wrapper .bultr-swiper-button-prev{
+  left: 10px;
+  right: auto;
+}
+.bultr-swiper-outer-wrapper .bultr-swiper-button-next{
+  right: 10px;
+  left: auto;
+}
+.bultr-swiper-outer-wrapper .bultr-swiper-button-next, .bultr-swiper-outer-wrapper .bultr-swiper-button-prev{
+  background-image: none;
+  background-color: unset;
+  width: auto;
+  height: auto;
+  transform: translateY(-50%);
+  margin-top: 0px;
+
+}
+.bultr-swiper-outer-wrapper .bultr-swiper-button-prev i, .bultr-swiper-outer-wrapper .bultr-swiper-button-next i{
+    font-size: 32px;
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    position: relative;
+}
+.bultr-swiper-outer-wrapper .bultr-swiper-nav-wrapper {
+    display: flex;
+    position: absolute;
+    height: auto;
+    line-height: 0;
+}
+
+.bultr-hpos-right.bultr-vpos-top .bultr-swiper-nav-wrapper {
+    bottom: auto;
+    top: 0;
+    width: auto;
+    right: 0;
+}
+.bultr-vpos-top.bultr-hpos-left .bultr-swiper-nav-wrapper {
+    bottom: auto;
+    top: 0;
+    width: auto;
+    left: 0;
+}
+.bultr-hpos-right.bultr-vpos-bottom .bultr-swiper-nav-wrapper {
+  bottom: 0;
+  top: auto;
+  width: auto;
+  right: 0;
+}
+.bultr-vpos-bottom.bultr-hpos-left .bultr-swiper-nav-wrapper {
+    bottom: 0;
+    top: auto;
+    width: auto;
+    left: 0;
+}
+.bultr-hpos-right.bultr-vpos-middle .bultr-swiper-nav-wrapper {
+    bottom: auto;
+    top: 50%;
+    width: auto;
+    right: 0;
+}
+.bultr-hpos-left.bultr-vpos-middle .bultr-swiper-nav-wrapper {
+    bottom: auto;
+    top: 50%;
+    width: auto;
+    left: 0;
+}
+
+
+
+.bultr-swiper-outer-wrapper.bultr-hpos-right .bultr-swiper-button-prev,
+.bultr-swiper-outer-wrapper.bultr-hpos-left .bultr-swiper-button-prev,
+.bultr-swiper-outer-wrapper.bultr-hpos-right .bultr-swiper-button-next,
+.bultr-swiper-outer-wrapper.bultr-hpos-left .bultr-swiper-button-next {
+    position: relative;
+    display: inline-block;
+    right: auto;
+    left: auto;
+    margin: 0;
+}
+
+.bultr-hpos-right.bultr-vpos-bottom .bultr-swiper-button-prev,
+.bultr-hpos-right.bultr-vpos-bottom .bultr-swiper-button-next  {
+    top: auto;
+    bottom: 0;
+    transform: unset;
+}
+
+.bultr-hpos-right.bultr-vpos-top .bultr-swiper-button-next ,
+.bultr-hpos-right.bultr-vpos-top .bultr-swiper-button-prev {
+  top: 0;
+  bottom: auto;
+  transform: unset;
+}
+
+.bultr-hpos-left.bultr-vpos-top .bultr-swiper-button-prev,
+.bultr-hpos-left.bultr-vpos-top .bultr-swiper-button-next  {
+  top: 0;
+  bottom: auto;
+  transform: unset;
+}
+
+.bultr-hpos-left.bultr-vpos-bottom .bultr-swiper-button-next ,
+.bultr-hpos-left.bultr-vpos-bottom .bultr-swiper-button-prev {
+  top: auto;
+  bottom: 0;
+  transform: unset;
+}
+
+.bultr-hpos-center.bultr-vpos-bottom .bultr-swiper-button-next ,
+.bultr-hpos-center.bultr-vpos-bottom .bultr-swiper-button-prev {
+  top: auto;
+  bottom: 0;
+  transform: unset;
+}
+
+.bultr-hpos-center.bultr-vpos-top .bultr-swiper-button-next ,
+.bultr-hpos-center.bultr-vpos-top .bultr-swiper-button-prev {
+  top: 0;
+  bottom: auto;
+  transform: unset;
+  margin: 0;
+}
+.bultr-swiper-outer-wrapper.bultr-swiper-nav-outside .bultr-swiper-container{
+  margin-left:  30px;
+  margin-right: 30px;
+}
+.bultr-swiper-outer-wrapper.bultr-swiper-nav-outside .bultr-swiper-button-next{
+  right: 0;
+}
+.bultr-swiper-outer-wrapper.bultr-swiper-nav-outside .bultr-swiper-button-prev{
+  left: 0;
+}
+
+
+
+/*pagination */
+.bultr-swiper-pagination.swiper-pagination.swiper-pagination-fraction{
+  color: #ffd64f;
+}
+.bultr-swiper-pagination.swiper-pagination.swiper-pagination-fraction, .bultr-swiper-pagination.swiper-pagination.swiper-pagination-bullets{
+  bottom : 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.swiper-pagination-progressbar{
+  text-align: center;
+  transition: .3s opacity;
+  transform: translate3d(0,0,0);
+  z-index: 10;
+  background: rgba(0,0,0,.25);
+  position: absolute;
+}
+
+.swiper-horizontal>.swiper-pagination-progressbar, .swiper-pagination-progressbar.swiper-pagination-horizontal, .swiper-pagination-progressbar.swiper-pagination-vertical.swiper-pagination-progressbar-opposite, .swiper-vertical>.swiper-pagination-progressbar.swiper-pagination-progressbar-opposite {
+  width: 100%;
+  height: var(--swiper-pagination-progressbar-size,4px);
+  left: 0;
+  top: 0;
+}
+.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+  background: var(--swiper-pagination-color, #ffc400);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform: scale(0);
+  transform-origin: left top;
+}
+body:not(.bricks-is-frontend) .swiper-pagination-progressbar.swiper-pagination-bullets{
+  display: none;
+}
+/* scrollbar */
+.swiper-scrollbar{
+
+  border-radius: var(--swiper-scrollbar-border-radius,10px);
+  position: relative;
+  -ms-touch-action: none;
+  background: var(--swiper-scrollbar-bg-color,rgba(0,0,0,.1));
+}
+.swiper-horizontal>.swiper-scrollbar, .swiper-scrollbar.swiper-scrollbar-horizontal {
+  position: absolute;
+  left: var(--swiper-scrollbar-sides-offset,1%);
+  bottom: var(--swiper-scrollbar-bottom,4px);
+  top: var(--swiper-scrollbar-top,auto);
+  z-index: 50;
+  height: var(--swiper-scrollbar-size,4px);
+  width: calc(100% - 2 * var(--swiper-scrollbar-sides-offset,1%));
+}
+.swiper-scrollbar-drag {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background: var(--swiper-scrollbar-drag-bg-color,rgba(0,0,0,.5));
+  border-radius: var(--swiper-scrollbar-border-radius,10px);
+  left: 0;
+  top: 0;
+}
+
+.bult-info:has(.bultr-refresh-cache-btn){
+  background-color: #fc5778;
+    padding: 0px;
+    width: 200px;
+    background: transparent;
+}
+.bult-info:has(.bultr-refresh-cache-btn) button{
+  padding: 8px 12px;
+  margin: 0px;
+  font-size: 12px;
+  font-weight: 600;
+}
