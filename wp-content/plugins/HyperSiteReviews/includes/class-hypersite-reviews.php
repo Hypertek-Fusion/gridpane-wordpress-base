@@ -17,7 +17,6 @@ class HyperSiteReviews {
         } catch (Exception $e) {
             error_log('Error initializing HyperSiteReviews: ' . $e);
         }
-
     }
 
     public static function register_post_type() {
@@ -79,32 +78,27 @@ class HyperSiteReviews {
         );
     }
 
-public static function maybe_redirect_to_setup() {
-    // Only run in admin area
-    if ( ! is_admin() || ! current_user_can('manage_options') ) {
-        return;
+    public static function maybe_redirect_to_setup() {
+        if ( ! is_admin() || ! current_user_can('manage_options') ) {
+            return;
+        }
+
+        if ( get_option('hsrev_setup_complete') || get_option('hsrev_bypass_setup_page')) {
+            return;
+        }
+
+        $current_page = $_GET['page'] ?? '';
+
+        $is_hsrev_page = in_array($current_page, [
+            'hypersite-reviews',
+            'hypersite-reviews-settings',
+        ], true);
+
+        if ( $is_hsrev_page && $current_page !== 'hypersite-reviews-setup' && ! get_option('hsrev_bypass_setup_page') ) {
+            wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
+            exit;
+        }
     }
-
-    // If setup is complete, no need to redirect
-    if ( get_option('hsrev_setup_complete') || get_option('hsrev_bypass_setup_page')) {
-        return;
-    }
-
-    // Check if we are on a HyperSite Reviews page (admin.php?page=...)
-    $current_page = $_GET['page'] ?? '';
-
-    $is_hsrev_page = in_array($current_page, [
-        'hypersite-reviews',
-        'hypersite-reviews-settings',
-    ], true);
-
-    // Redirect only if user is accessing a HyperSite Reviews page, but setup isn't complete
-    if ( $is_hsrev_page && $current_page !== 'hypersite-reviews-setup' && ! get_option('hsrev_bypass_setup_page') ) {
-        wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
-        exit;
-    }
-}
-
 
     public static function main_page() {
         echo '<div class="wrap"><h1>HyperSite Review</h1></div>';
@@ -117,8 +111,11 @@ public static function maybe_redirect_to_setup() {
 
         $client = self::get_google_client();
 
-        // Disconnect handler
+        // Disconnect handler - revoke token on Google and delete locally
         if (isset($_POST['disconnect']) && check_admin_referer('hsrev_google_disconnect')) {
+            if ($client->getAccessToken()) {
+                $client->revokeToken();
+            }
             delete_option('hsrev_google_oauth_token');
             echo '<div class="notice notice-success"><p>Disconnected from Google account.</p></div>';
         }
@@ -138,13 +135,11 @@ public static function maybe_redirect_to_setup() {
             }
         }
 
-        // Pass data to the template
         $token = get_option('hsrev_google_oauth_token');
         $authUrl = $client->createAuthUrl();
 
         include HSREV_PATH . 'includes/admin/templates/setup-page.php';
     }
-
 
     public static function debug_settings_page() {
         if(HSREV_DEBUG) {
@@ -176,6 +171,7 @@ public static function maybe_redirect_to_setup() {
 
             try {
                 $token = $client->fetchAccessTokenWithAuthCode($code);
+
                 if (!empty($token['refresh_token'])) {
                     error_log('Refresh token found: '. $token['refresh_token']);
                 } else {
@@ -197,17 +193,14 @@ public static function maybe_redirect_to_setup() {
             $message = 'No authorization code provided.';
         }
 
-        // Pass $message and $error to the template
         include HSREV_PATH . 'includes/admin/templates/google-connect-page.php';
     }
-
-
 
     public static function get_google_client(): Google_Client {
         $client = new Google_Client();
         $client->setClientId(HSREV_GOOGLE_CLIENT_ID);
         $client->setClientSecret(HSREV_GOOGLE_CLIENT_SECRET);
-        $client->setRedirectUri(admin_url(HSREV_GOOGLE_REDIRECT_URI)); // OAuth redirect
+        $client->setRedirectUri(admin_url(HSREV_GOOGLE_REDIRECT_URI));
         $client->addScope('https://www.googleapis.com/auth/business.manage');
         $client->setAccessType('offline'); // refresh tokens
         $client->setPrompt('consent');
@@ -220,6 +213,38 @@ public static function maybe_redirect_to_setup() {
         return $client;
     }
 
+    /**
+     * Checks if the access token is expired, refreshes it if needed,
+     * updates the stored token, or clears tokens if refresh fails.
+     */
+    public static function refresh_google_token_if_needed(): bool {
+        $client = self::get_google_client();
+
+        if ($client->isAccessTokenExpired()) {
+            $refreshToken = $client->getRefreshToken();
+
+            if ($refreshToken) {
+                $newToken = $client->fetchAccessTokenWithRefreshToken($refreshToken);
+
+                if (isset($newToken['error'])) {
+                    error_log('Error refreshing Google token: ' . ($newToken['error_description'] ?? $newToken['error']));
+                    // Token invalid, clear saved tokens to force reconnect
+                    delete_option('hsrev_google_oauth_token');
+                    return false;
+                } else {
+                    // Update the stored token with new token data
+                    update_option('hsrev_google_oauth_token', $client->getAccessToken());
+                    return true;
+                }
+            } else {
+                error_log('No refresh token available for Google API.');
+                delete_option('hsrev_google_oauth_token');
+                return false;
+            }
+        }
+        // Token still valid, no action needed
+        return true;
+    }
 
     public static function activate() {
         self::register_post_type();
