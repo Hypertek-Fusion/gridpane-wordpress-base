@@ -11,11 +11,11 @@ if ( ! defined('ABSPATH') ) exit;
 define('HSREV_PATH', plugin_dir_path(__FILE__));
 define('HSREV_URL', plugin_dir_url(__FILE__));
 
-require_once HSREV_PATH . 'includes/class-hypersite-reviews.php';
-
 if ( ! defined('HSREV_DEBUG') ) {
     define('HSREV_DEBUG', defined('WP_DEBUG') && WP_DEBUG);
 }
+
+require_once HSREV_PATH . 'includes/class-hypersite-reviews.php';
 
 
 add_action('plugins_loaded', ['HyperSiteReviews', 'init']);
