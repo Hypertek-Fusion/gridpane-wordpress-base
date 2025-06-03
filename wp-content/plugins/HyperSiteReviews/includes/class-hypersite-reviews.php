@@ -50,17 +50,32 @@ class HyperSiteReviews {
         );
     }
 
-    public static function maybe_redirect_to_setup() {
-        if (
-            is_admin() &&
-            current_user_can('manage_options') &&
-            ! get_option('hsrev_setup_complete') &&
-            ($_GET['page'] ?? '') !== 'hypersite-reviews-setup'
-        ) {
-            wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
-            exit;
-        }
+public static function maybe_redirect_to_setup() {
+    // Only run in admin area
+    if ( ! is_admin() || ! current_user_can('manage_options') ) {
+        return;
     }
+
+    // If setup is complete, no need to redirect
+    if ( get_option('hsrev_setup_complete') ) {
+        return;
+    }
+
+    // Check if we are on a HyperSite Reviews page (admin.php?page=...)
+    $current_page = $_GET['page'] ?? '';
+
+    $is_hsrev_page = in_array($current_page, [
+        'hypersite-reviews',
+        'hypersite-reviews-settings',
+    ], true);
+
+    // Redirect only if user is accessing a HyperSite Reviews page, but setup isn't complete
+    if ( $is_hsrev_page && $current_page !== 'hypersite-reviews-setup' ) {
+        wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
+        exit;
+    }
+}
+
 
     public static function main_page() {
         echo '<div class="wrap"><h1>HyperSite Review</h1></div>';
