@@ -14,10 +14,11 @@
     class HyperSiteReviews {
         public static function init() {
             function hsrev_setup_post_type() {
-                register_post_type( 'reviews', ['public' => true ] ); 
+                register_post_type( 'reviews', array(
+                    'public' => true,
+                    'label' => 'Reviews' ) ); 
             } 
             add_action( 'init', 'hsrev_setup_post_type' );
-
 
             /**
              * Activate the plugin.
@@ -26,7 +27,7 @@
                 // Trigger our function that registers the custom post type plugin.
                 hsrev_setup_post_type(); 
                 // Clear the permalinks after the post type has been registered.
-                flush_rewrite_rules(); 
+                flush_rewrite_rules();
             }
             register_activation_hook( __FILE__, 'hsrev_activate' );
 
