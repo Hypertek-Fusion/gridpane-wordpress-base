@@ -10,7 +10,7 @@
  * Register the "Reviews" custom post type
  */
 function hsrev_setup_post_type() {
-	register_post_type( 'book', ['public' => true ] ); 
+	register_post_type( 'reviews', ['public' => true ] ); 
 } 
 add_action( 'init', 'hsrev_setup_post_type' );
 
