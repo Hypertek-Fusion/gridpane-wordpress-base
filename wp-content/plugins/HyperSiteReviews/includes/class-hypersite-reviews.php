@@ -157,7 +157,7 @@ public static function maybe_redirect_to_setup() {
         $client = new Google_Client();
         $client->setClientId(HSREV_GOOGLE_CLIENT_ID);
         $client->setClientSecret(HSREV_GOOGLE_CLIENT_SECRET);
-        $client->setRedirectUri(admin_url('admin.php?page=hypersite-reviews-setup')); // OAuth redirect
+        $client->setRedirectUri(admin_url(HSREV_GOOGLE_REDIRECT_URI)); // OAuth redirect
         $client->addScope('https://www.googleapis.com/auth/business.manage');
         $client->setAccessType('offline'); // refresh tokens
         $client->setPrompt('consent');
