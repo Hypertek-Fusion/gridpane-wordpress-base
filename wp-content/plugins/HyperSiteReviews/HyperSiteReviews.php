@@ -2,6 +2,6 @@
 
 /*
  * Plugin Name: HyperSite Reviews
-/*
+*/
 
 ?>
