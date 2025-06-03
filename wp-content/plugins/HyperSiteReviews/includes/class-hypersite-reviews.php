@@ -106,6 +106,12 @@ public static function maybe_redirect_to_setup() {
         include HSREV_PATH . 'includes/admin/templates/setup-page.php';
     }
 
+    public static function debug_settings_page() {
+        if(HSREV_DEBUG) {
+            include HSREV_PATH . 'includes/admin/templates/debug-settings-page.php';
+        }
+    }
+
     public static function settings_page() {
         echo '<div class="wrap"><h1>HyperSite Review Settings</h1></div>';
     }
