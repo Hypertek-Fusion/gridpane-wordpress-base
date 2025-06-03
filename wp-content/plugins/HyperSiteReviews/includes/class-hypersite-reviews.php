@@ -4,7 +4,6 @@ if ( ! defined('ABSPATH') ) exit;
 class HyperSiteReviews {
     public static function init() {
         try {
-            error_log('Client ID: ' . (defined('HSREV_GOOGLE_CLIENT_ID') ? HSREV_GOOGLE_CLIENT_ID : 'NOT SET'));
             add_action('admin_menu', [self::class, 'add_admin_menus']);
             add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
 
@@ -103,14 +102,40 @@ public static function maybe_redirect_to_setup() {
     }
 
     public static function setup_page() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_admin_referer('hsrev_setup')) {
-            update_option('hsrev_setup_complete', true);
-            wp_safe_redirect(admin_url('admin.php?page=hypersite-reviews'));
-            exit;
+        if (!current_user_can('manage_options')) {
+            wp_die('Unauthorized');
         }
+
+        $client = self::get_google_client();
+
+        // Disconnect handler
+        if (isset($_POST['disconnect']) && check_admin_referer('hsrev_google_disconnect')) {
+            delete_option('hsrev_google_oauth_token');
+            echo '<div class="notice notice-success"><p>Disconnected from Google account.</p></div>';
+        }
+
+        // OAuth callback handler
+        if (isset($_GET['code'])) {
+            $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+
+            if (isset($token['error'])) {
+                $error = $token['error_description'] ?? $token['error'];
+            } else {
+                update_option('hsrev_google_oauth_token', $token);
+                update_option('hsrev_setup_complete', true);
+
+                wp_safe_redirect(admin_url('admin.php?page=hypersite-reviews'));
+                exit;
+            }
+        }
+
+        // Pass data to the template
+        $token = get_option('hsrev_google_oauth_token');
+        $authUrl = $client->createAuthUrl();
 
         include HSREV_PATH . 'includes/admin/templates/setup-page.php';
     }
+
 
     public static function debug_settings_page() {
         if(HSREV_DEBUG) {
@@ -127,6 +152,24 @@ public static function maybe_redirect_to_setup() {
     public static function settings_page() {
         echo '<div class="wrap"><h1>HyperSite Review Settings</h1></div>';
     }
+
+    public static function get_google_client(): Google_Client {
+        $client = new Google_Client();
+        $client->setClientId(HSREV_GOOGLE_CLIENT_ID);
+        $client->setClientSecret(HSREV_GOOGLE_CLIENT_SECRET);
+        $client->setRedirectUri(admin_url('admin.php?page=hypersite-reviews-setup')); // OAuth redirect
+        $client->addScope('https://www.googleapis.com/auth/business.manage');
+        $client->setAccessType('offline'); // refresh tokens
+        $client->setPrompt('consent');
+
+        $token = get_option('hsrev_google_oauth_token');
+        if ($token) {
+            $client->setAccessToken($token);
+        }
+
+        return $client;
+    }
+
 
     public static function activate() {
         self::register_post_type();

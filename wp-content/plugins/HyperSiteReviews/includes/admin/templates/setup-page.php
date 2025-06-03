@@ -1,8 +1,14 @@
-<div class="wrap">
-    <h1>HyperSite Reviews Setup</h1>
+<?php if (!empty($error)) : ?>
+    <div class="notice notice-error"><p><?php echo esc_html($error); ?></p></div>
+<?php endif; ?>
+
+<?php if ($token): ?>
+    <p><strong>Google account is connected.</strong></p>
     <form method="post">
-        <?php wp_nonce_field('hsrev_setup'); ?>
-        <p>Welcome! Let's get your plugin set up.</p>
-        <input type="submit" value="Complete Setup" class="button button-primary">
+        <?php wp_nonce_field('hsrev_google_disconnect'); ?>
+        <input type="submit" name="disconnect" value="Disconnect Google Account" class="button button-secondary">
     </form>
-</div>
+    <p><a href="<?php echo esc_url(admin_url('admin.php?page=hypersite-reviews')); ?>" class="button button-primary">Continue to Plugin</a></p>
+<?php else: ?>
+    <p><a href="<?php echo esc_url($authUrl); ?>" class="button button-primary">Connect with Google</a></p>
+<?php endif; ?>
