@@ -3,16 +3,21 @@ if ( ! defined('ABSPATH') ) exit;
 
 class HyperSiteReviews {
     public static function init() {
-        add_action('admin_menu', [self::class, 'add_admin_menus']);
-        add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
+        try {
+            add_action('admin_menu', [self::class, 'add_admin_menus']);
+            add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
 
-        if(HSREV_DEBUG) {
-            add_action('admin_menu', [self::class, 'add_debug_admin_menus']);
+            if(HSREV_DEBUG) {
+                add_action('admin_menu', [self::class, 'add_debug_admin_menus']);
+            }
+
+            if (get_option('hsrev_setup_complete')) {
+                add_action('init', [self::class, 'register_post_type']);
+            }
+        } catch (Exception $e) {
+            error_log('Error initializing HyperSiteReviews: ' . $e);
         }
 
-        if (get_option('hsrev_setup_complete')) {
-            add_action('init', [self::class, 'register_post_type']);
-        }
     }
 
     public static function register_post_type() {
