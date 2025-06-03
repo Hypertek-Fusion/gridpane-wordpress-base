@@ -6,6 +6,10 @@ class HyperSiteReviews {
         add_action('admin_menu', [self::class, 'add_admin_menus']);
         add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
 
+        if(HSREV_DEBUG) {
+            add_action('admin_menu', [self::class, 'add_debug_admin_menus']);
+        }
+
         if (get_option('hsrev_setup_complete')) {
             add_action('init', [self::class, 'register_post_type']);
         }
@@ -46,6 +50,17 @@ class HyperSiteReviews {
             'Settings',
             'manage_options',
             'hypersite-reviews-settings',
+            [self::class, 'settings_page']
+        );
+    }
+
+    private static function add_debug_admin_menus() {
+        add_submenu_page(
+            'hypersite-reviews',
+            'HyperSite Review Debug Settings',
+            'Debug Settings',
+            'manage_options',
+            'hypersite-reviews-debug-settings',
             [self::class, 'settings_page']
         );
     }
