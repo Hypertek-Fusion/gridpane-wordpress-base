@@ -57,6 +57,15 @@ class HyperSiteReviews {
             'hypersite-reviews-settings',
             [self::class, 'settings_page']
         );
+
+        add_submenu_page(
+            null,
+            'Google Connect',
+            'Google Connect',
+            'manage_options',
+            'hypersite-reviews-google-connect',
+            [self::class, 'google_connect_page']
+        );
     }
 
     public static function add_debug_admin_menus() {
@@ -152,6 +161,42 @@ public static function maybe_redirect_to_setup() {
     public static function settings_page() {
         echo '<div class="wrap"><h1>HyperSite Review Settings</h1></div>';
     }
+
+    public static function google_connect_page() {
+        if ( ! current_user_can('manage_options') ) {
+            wp_die('Unauthorized user');
+        }
+
+        $message = '';
+        $error = false;
+
+        if ( ! empty($_GET['code']) ) {
+            $code = sanitize_text_field(wp_unslash($_GET['code']));
+            $client = self::get_google_client();
+
+            try {
+                $token = $client->fetchAccessTokenWithAuthCode($code);
+
+                if (isset($token['error'])) {
+                    $error = true;
+                    $message = 'Error fetching access token: ' . ($token['error_description'] ?? $token['error']);
+                } else {
+                    update_option('hsrev_google_oauth_token', $token);
+                    $message = 'Success! Google API connected and tokens stored.';
+                }
+            } catch (Exception $e) {
+                $error = true;
+                $message = 'Exception occurred: ' . $e->getMessage();
+            }
+        } else {
+            $message = 'No authorization code provided.';
+        }
+
+        // Pass $message and $error to the template
+        include HSREV_PATH . 'includes/admin/templates/google-connect-page.php';
+    }
+
+
 
     public static function get_google_client(): Google_Client {
         $client = new Google_Client();
