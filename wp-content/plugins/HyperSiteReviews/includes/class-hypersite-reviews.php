@@ -4,6 +4,7 @@ if ( ! defined('ABSPATH') ) exit;
 class HyperSiteReviews {
     public static function init() {
         try {
+            error_log('Client ID: ' . (defined('HSREV_GOOGLE_CLIENT_ID') ? HSREV_GOOGLE_CLIENT_ID : 'NOT SET'));
             add_action('admin_menu', [self::class, 'add_admin_menus']);
             add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
 

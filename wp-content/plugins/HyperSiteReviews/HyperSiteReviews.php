@@ -16,7 +16,7 @@ if ( ! defined('HSREV_DEBUG') ) {
 }
 
 require_once HSREV_PATH . 'includes/class-hypersite-reviews.php';
-
+require_once HSREV_PATH . 'includes/google-api-client/autoload.php';
 
 add_action('plugins_loaded', ['HyperSiteReviews', 'init']);
 register_activation_hook(__FILE__, ['HyperSiteReviews', 'activate']);
