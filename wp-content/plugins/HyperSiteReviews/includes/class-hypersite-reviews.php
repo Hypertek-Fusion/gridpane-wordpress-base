@@ -77,7 +77,7 @@ public static function maybe_redirect_to_setup() {
     }
 
     // If setup is complete, no need to redirect
-    if ( get_option('hsrev_setup_complete') ) {
+    if ( get_option('hsrev_setup_complete') || get_option('hsrev_bypass_setup_page')) {
         return;
     }
 
@@ -90,7 +90,7 @@ public static function maybe_redirect_to_setup() {
     ], true);
 
     // Redirect only if user is accessing a HyperSite Reviews page, but setup isn't complete
-    if ( $is_hsrev_page && $current_page !== 'hypersite-reviews-setup' ) {
+    if ( $is_hsrev_page && $current_page !== 'hypersite-reviews-setup' && ! get_option('hsrev_bypass_setup_page') ) {
         wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
         exit;
     }
@@ -113,6 +113,12 @@ public static function maybe_redirect_to_setup() {
 
     public static function debug_settings_page() {
         if(HSREV_DEBUG) {
+            if($_SERVER['REQUEST_METHOD'] === 'POST' && check_admin_referer('hsrev_debug_setting_set')) {
+                $is_setup = isset($_POST['is-setup']) ? true : false;
+                update_option('hsrev_setup_complete', $is_setup);
+                $bypass_setup = isset($_POST['bypass-setup-page']) ? true : false;
+                update_option('hsrev_bypass_setup_page', $bypass_setup);
+            }
             include HSREV_PATH . 'includes/admin/templates/debug-settings-page.php';
         }
     }
