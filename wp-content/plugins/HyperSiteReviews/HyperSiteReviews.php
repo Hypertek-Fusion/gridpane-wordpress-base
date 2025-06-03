@@ -1,50 +1,70 @@
 <?php
-
 /*
  * Plugin Name: HyperSite Reviews
  * Version: 0.0.1
- * Requires PHP: 8.4
+ * Requires PHP: 8.0
 */
 
-/**
- * Register the "Reviews" custom post type
- */
-
- if ( ! class_exists('HyperSiteReviews')) {
+if ( ! class_exists('HyperSiteReviews') ) {
     class HyperSiteReviews {
         public static function init() {
-            function hsrev_setup_post_type() {
-                register_post_type( 'reviews', array(
-                    'public' => true,
-                    'label' => 'Reviews' ) ); 
-            } 
-            add_action( 'init', 'hsrev_setup_post_type' );
-
-            /**
-             * Activate the plugin.
-             */
-            function hsrev_activate() { 
-                // Trigger our function that registers the custom post type plugin.
-                hsrev_setup_post_type(); 
-                // Clear the permalinks after the post type has been registered.
-                flush_rewrite_rules();
-            }
-            register_activation_hook( __FILE__, 'hsrev_activate' );
-
-            /**
-             * Deactivation hook.
-             */
-            function hsrev_deactivate() {
-                // Unregister the post type, so the rules are no longer in memory.
-                unregister_post_type( 'book' );
-                // Clear the permalinks to remove our post type's rules from the database.
-                flush_rewrite_rules();
-            }
-            register_deactivation_hook( __FILE__, 'hsrev_deactivate' );
-            }
+            add_action('init', [self::class, 'register_post_type']);
+            add_action('admin_menu', [self::class, 'add_admin_menus']);
         }
 
-        HyperSiteReviews::init();
+        public static function register_post_type() {
+            register_post_type('reviews', [
+                'public' => true,
+                'label'  => 'Reviews',
+                'supports' => ['title', 'editor', 'custom-fields'],
+                'show_in_menu' => false, // To avoid duplicate menu
+            ]);
+        }
+
+        public static function add_admin_menus() {
+            add_menu_page(
+                'HyperSite Reviews',
+                'HyperSite Reviews',
+                'manage_options',
+                'hypersite-reviews',
+                [self::class, 'main_page'],
+                'dashicons-star-filled',
+                20
+            );
+
+            add_submenu_page(
+                'hypersite-reviews',
+                'HyperSite Review Settings',
+                'Settings',
+                'manage_options',
+                'hypersite-reviews-settings',
+                [self::class, 'settings_page']
+            );
+        }
+
+        public static function main_page() {
+            echo '<div class="wrap"><h1>HyperSite Review</h1></div>';
+        }
+
+        public static function settings_page() {
+            echo '<div class="wrap"><h1>HyperSite Review Settings</h1></div>';
+        }
+
+        public static function activate() {
+            self::register_post_type();
+            flush_rewrite_rules();
+        }
+
+        public static function deactivate() {
+            flush_rewrite_rules();
+        }
     }
 
+    // Init
+    HyperSiteReviews::init();
+
+    // Hooks
+    register_activation_hook(__FILE__, ['HyperSiteReviews', 'activate']);
+    register_deactivation_hook(__FILE__, ['HyperSiteReviews', 'deactivate']);
+}
 ?>
