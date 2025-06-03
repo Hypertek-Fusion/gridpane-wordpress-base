@@ -54,7 +54,7 @@ class HyperSiteReviews {
         );
     }
 
-    private static function add_debug_admin_menus() {
+    public static function add_debug_admin_menus() {
         add_submenu_page(
             'hypersite-reviews',
             'HyperSite Review Debug Settings',
