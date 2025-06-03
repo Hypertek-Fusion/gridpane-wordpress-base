@@ -176,6 +176,11 @@ public static function maybe_redirect_to_setup() {
 
             try {
                 $token = $client->fetchAccessTokenWithAuthCode($code);
+                if (!empty($token['refresh_token'])) {
+                    error_log('Refresh token found: '. $token['refresh_token']);
+                } else {
+                    error_log('No refresh token received from Google OAuth token response.');
+                }
 
                 if (isset($token['error'])) {
                     $error = true;
