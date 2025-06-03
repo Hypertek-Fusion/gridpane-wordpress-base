@@ -61,7 +61,7 @@ class HyperSiteReviews {
             'Debug Settings',
             'manage_options',
             'hypersite-reviews-debug-settings',
-            [self::class, 'settings_page']
+            [self::class, 'debug_settings_page']
         );
     }
 
