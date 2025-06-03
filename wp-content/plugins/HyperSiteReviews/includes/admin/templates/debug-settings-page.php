@@ -6,7 +6,7 @@
         <label>Setup Complete? : </label>
         <input type="checkbox" name="is-setup" <?php checked(get_option('hsrev_setup_complete'), true); ?>>
         <label>Bypass Setup? : </label>
-        <input type="checkbox" name="bypass-setup-page" <?php checked(get_option('hsrev_bypass_setup_page'), true); ?>>>
+        <input type="checkbox" name="bypass-setup-page" <?php checked(get_option('hsrev_bypass_setup_page'), true); ?>>
         <input type="submit" value="Complete Setup" class="button button-primary">
     </form>
 </div>
