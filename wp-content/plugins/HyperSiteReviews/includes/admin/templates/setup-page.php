@@ -6,6 +6,9 @@
     <p><strong>Google account is connected.</strong></p>
     <form method="post">
         <?php wp_nonce_field('hsrev_google_disconnect'); ?>
+        <pre>
+            <?php echo HyperSiteReviews::get_google_accounts(); ?>
+        </pre>
         <input type="submit" name="disconnect" value="Disconnect Google Account" class="button button-secondary">
     </form>
     <p><a href="<?php echo esc_url(admin_url('admin.php?page=hypersite-reviews')); ?>" class="button button-primary">Continue to Plugin</a></p>

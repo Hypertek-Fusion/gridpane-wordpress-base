@@ -246,6 +246,33 @@ class HyperSiteReviews {
         return true;
     }
 
+    public static function get_google_accounts() {
+        $client = HyperSiteReviews::get_google_client();
+
+    if (!HyperSiteReviews::refresh_google_token_if_needed()) {
+        wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
+        exit;
+    }
+
+    // Create the My Business Account Management service
+    $service = new Google\Service\MyBusinessAccountManagement($client);
+
+    // Call the API to list accounts
+    try {
+        $response = $service->accounts->listAccounts();
+
+        foreach ($response->getAccounts() as $account) {
+            echo '<p>';
+            echo 'Account Name: ' . esc_html($account->getName()) . '<br>';
+            echo 'Account Display Name: ' . esc_html($account->getAccountName()) . '<br>';
+            echo '</p>';
+        }
+    } catch (Exception $e) {
+        error_log('Error fetching business accounts: ' . $e->getMessage());
+        echo '<div class="notice notice-error"><p>Failed to fetch accounts: ' . esc_html($e->getMessage()) . '</p></div>';
+    }
+    }
+
     public static function activate() {
         self::register_post_type();
         flush_rewrite_rules();
