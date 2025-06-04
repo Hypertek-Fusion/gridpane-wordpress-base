@@ -289,6 +289,12 @@ class HyperSiteReviews {
         if(empty(self::$accounts_locations)) self::get_locations_by_account();
         return self::$account_locations;
     }
+    public static function get_location_reviews() {
+        if(empty(self::$accounts)) self::get_google_accounts();
+        if(empty(self::$account_locations)) self::get_locations_by_account();
+        if(empty(self::$location_reviews)) self::get_account_location_reviews();
+        return self::$location_reviews;
+    }
 
     // Takes an Account Object and returns the account ID
     public static function get_google_account_id($acc) {
@@ -364,26 +370,33 @@ class HyperSiteReviews {
         }
     }
 
-    public static function get_location_reviews($acc, $loc) {
+    public static function get_account_location_reviews() {
         try {
             $client = HyperSiteReviews::get_google_client();
 
-            $url = "https://mybusiness.googleapis.com/v4/accounts/{$acc}/locations/{$loc}/reviews";
+            if(empty(self::$accounts)) self::get_google_accounts();
+            if(empty(self::$account_locations)) self::get_locations_by_account();
 
-            $client->setAccessType('offline');
-            $client->refreshToken($client->getRefreshToken());
+            foreach(self::$account_locations as $acc => $loc) {
+                foreach($loc as $loc_k => $loc_v) {
+                    $url = "https://mybusiness.googleapis.com/v4/accounts/{$acc}/locations/{$loc_k}/reviews";
 
-            $httpClient = $client->authorize();
+                    $client->setAccessType('offline');
+                    $client->refreshToken($client->getRefreshToken());
 
-            $response = $httpClient->get($url);
+                    $httpClient = $client->authorize();
 
-            if ($response->getStatusCode() === 200) {
-                $reviewsData = json_decode($response->getBody()->getContents(), true);
-                foreach ($reviewsData['reviews'] as $review) {
-                    self::$location_reviews[$loc][$review['reviewId']] = $review;
+                    $response = $httpClient->get($url);
+
+                    if ($response->getStatusCode() === 200) {
+                        $reviewsData = json_decode($response->getBody()->getContents(), true);
+                        foreach ($reviewsData['reviews'] as $review) {
+                            self::$location_reviews[$loc_k][$review['reviewId']] = $review;
+                        }
+                    } else {
+                        error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
+                    }
                 }
-            } else {
-                error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
             }
         } catch (Exception $e) {
             error_log('Error getting reviews: ' . $e->getMessage());
