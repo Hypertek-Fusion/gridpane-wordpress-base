@@ -348,12 +348,13 @@ class HyperSiteReviews {
             self::get_locations_by_account();
         }
         try {
-            if(null === self::$account_locations[$acc]) return 0;
-            
+            if(null === self::$account_locations[$acc]) throw new Exception('No locations found.');
+
             return count(self::$account_locations[$acc]);
         } catch (Exception $e) {
             error_log('Error getting Account Locations Length: ' . $e->getMessage());
-            echo '<div class="notice notice-error"><p>Failed to get Account Locations Length: ' . esc_html($e->getMessage()) . '</p></div>';
+            echo '<div class="notice notice-error"><p>Error getting location count: ' . esc_html($e->getMessage()) . '</p></div>';
+            return 0;
         }
     }
 
