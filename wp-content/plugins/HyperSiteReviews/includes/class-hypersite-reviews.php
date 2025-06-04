@@ -261,7 +261,7 @@ class HyperSiteReviews {
     try {
         $response = $service->accounts->listAccounts();
 
-        return $response;
+        return print_r($response, true);
     } catch (Exception $e) {
         error_log('Error fetching business accounts: ' . $e->getMessage());
         echo '<div class="notice notice-error"><p>Failed to fetch accounts: ' . esc_html($e->getMessage()) . '</p></div>';
