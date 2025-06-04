@@ -1,8 +1,12 @@
 .account-row-item {
-    display: flex;
+    display: grid;
     width: 100%;
     justify-content: space-between;
     padding: 20px 0px;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    text-align: center;
+    justify-items: center;
 }
 
 .account-selection-table__heading {
@@ -11,7 +15,8 @@
 }
 
 .account-selection-table__heading-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     width: 100%;
     justify-content: space-between;
     padding: 15px 0px;
