@@ -34,3 +34,7 @@
 button.page-next {
     margin-left: auto;
 }
+
+.button-wrapper {
+    width: 100%;
+}
