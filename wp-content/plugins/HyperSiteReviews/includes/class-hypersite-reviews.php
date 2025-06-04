@@ -352,7 +352,7 @@ class HyperSiteReviews {
         return $count;
     }
 
-    public static function get_account_locations_length($acc) {
+    public static function get_account_locations_length($acc, $print_error = true) {
         if (empty(self::$account_locations)) {
             if (empty(self::$accounts)) {
                 self::get_google_accounts();
@@ -365,7 +365,9 @@ class HyperSiteReviews {
             return count(self::$account_locations[$acc]);
         } catch (Exception $e) {
             error_log('Error getting Account Locations Length: ' . $e->getMessage());
-            echo '<div class="notice notice-error"><p>Error getting location count: ' . esc_html($e->getMessage()) . '</p></div>';
+            if($print_error) {
+                echo '<div class="notice notice-error"><p>Error getting location count: ' . esc_html($e->getMessage()) . '</p></div>';
+            }
             return 0;
         }
     }

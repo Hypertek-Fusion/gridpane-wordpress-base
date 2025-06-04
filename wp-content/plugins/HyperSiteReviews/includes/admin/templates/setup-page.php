@@ -13,7 +13,7 @@
                         <div class="account-row-item__cell" data-type="name"><?php echo $acc['name']; ?></div>
                         <div class="account-row-item__cell" data-type="account-name"><?php echo $acc['accountName']; ?></div>
                         <div class="account-row-item__cell" data-type="type"><?php echo $acc['type']; ?></div>
-                        <div class="account-row-item__cell" data-type="location-count"><?php echo HyperSiteReviews::get_account_locations_length($acc['name']); ?></div>
+                        <div class="account-row-item__cell" data-type="location-count"><?php echo HyperSiteReviews::get_account_locations_length($acc['name'], false); ?></div>
                     </div>
                 <?php endforeach ?>
             </div>
