@@ -7,9 +7,15 @@
     <form method="post">
         <?php wp_nonce_field('hsrev_google_disconnect'); ?>
             <div id="account-selection-table">
-                <pre>
-                    <?php echo print_r(HyperSiteReviews::get_accounts(), true); ?>
-                </pre>
+                <p>Select the Account you would like to use.</p>
+                <?php foreach(HyperSiteReviews::get_accounts() as $acc) : ?>
+                    <div class="account-row-item">
+                        <div class="account-row-item__cell" data-type="name"><?php echo $acc['accountName']; ?></div>
+                        <div class="account-row-item__cell" data-type="account-name"><?php echo $acc['accountName']; ?></div>
+                        <div class="account-row-item__cell" data-type="type"><?php echo $acc['accountName']; ?></div>
+                        <div class="account-row-item__cell" data-type="location-count"><?php echo HyperSiteReviews::get_account_locations_length($acc['accountName']); ?></div>
+                    </div>
+                <?php endforeach ?>
             </div>
         <input type="submit" name="disconnect" value="Disconnect Google Account" class="button button-secondary">
     </form>
