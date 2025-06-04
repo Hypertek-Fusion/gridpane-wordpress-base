@@ -10,6 +10,13 @@
     text-align: center;
 }
 
+.account-selection-table__heading-row {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 15px 0px;
+}
+
 #account-selection-table {
     background-color: #fafafa;
 }
