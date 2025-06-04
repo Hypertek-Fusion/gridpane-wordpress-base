@@ -310,7 +310,10 @@ class HyperSiteReviews {
 
             foreach(self::$accounts as $account) {
                 $curr_account = $account->getName();
-                $response = $service->accounts_locations->listAccountsLocations($account->getName());
+                $response = $service->accounts_locations->listAccountsLocations(
+                    $curr_account,
+                    ['readMask' => 'name,title,locationName']
+                );
                 foreach($response as $location) {
                     self::$account_locations[$curr_account] = $location;
                 }
