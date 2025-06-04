@@ -290,7 +290,7 @@ class HyperSiteReviews {
 
     // Gets the locations for each account
     public static function get_locations_by_account() {
-        return 1;
+        return 0;
     }
 
     public static function activate() {
