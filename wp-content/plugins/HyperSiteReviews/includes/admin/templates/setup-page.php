@@ -45,8 +45,8 @@
                         <?php foreach(HyperSiteReviews::get_account_locations() as $acc_k => $loc_o) : ?>
                             
                             <div class="rows">
-                                <div class="account-row-item" data-account-id=<?php echo HyperSiteReviews::get_google_account_id($acc_k); ?>>
-                                    <input type="checkbox" name="selected-account">
+                                <div class="account-row-item" data-account-id=<?php echo $loc_o['name']; ?>>
+                                    <input type="checkbox" name="selected-location">
                                     <div class="account-row-item__cell" data-type="name"><?php echo $loc_o['name']; ?></div>
                                     <div class="account-row-item__cell" data-type="account-name"><?php echo $loc_o['title']; ?></div>
                                     <div class="account-row-item__cell" data-type="location-count"><?php echo HyperSiteReviews::get_location_reviews_length($loc_o['name'], false); ?></div>
