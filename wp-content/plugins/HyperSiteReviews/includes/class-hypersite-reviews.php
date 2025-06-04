@@ -2,6 +2,9 @@
 if ( ! defined('ABSPATH') ) exit;
 
 class HyperSiteReviews {
+    private static $accounts = [];
+    private static $account_locations = [];
+
     public static function init() {
         try {
             add_action('admin_menu', [self::class, 'add_admin_menus']);
@@ -262,15 +265,11 @@ class HyperSiteReviews {
         try {
             $response = $service->accounts->listAccounts();
 
-            // return print_r($response, true);
-
-            foreach ($response->getAccounts() as $account) {
-                echo '<p>';
-                echo 'Account ID: ' . esc_html(self::get_google_account_id($account)) . '<br>';
-                echo 'Account Name: ' . esc_html($account->getAccountName()) . '<br>';
-                echo '</p>';
+            foreach($response->getAccounts() as $account) {
+                self::$accounts[$account->getName()] = $account;
             }
 
+            return self::$accounts;
         } catch (Exception $e) {
             error_log('Error fetching business accounts: ' . $e->getMessage());
             echo '<div class="notice notice-error"><p>Failed to fetch accounts: ' . esc_html($e->getMessage()) . '</p></div>';
@@ -290,7 +289,25 @@ class HyperSiteReviews {
 
     // Gets the locations for each account
     public static function get_locations_by_account() {
-        return 0;
+        try {
+            $client = HyperSiteReviews::get_google_client();
+
+            if (!HyperSiteReviews::refresh_google_token_if_needed()) {
+                wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
+                exit;
+            }
+
+            $service = new Google\Service\MyBusinessBusinessInformation($client);
+            if(empty(self::$accounts)) throw new Exception('No accounts found.');
+
+            foreach(self::$accounts as $account) {
+                $service->accounts_locations->listAccountsLocations($account->getName());
+            }
+        } catch (Exception $e) {
+            error_log('Error getting Google Account ID: ' . $e->getMessage());
+            wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
+            echo '<div class="notice notice-error"><p>Failed to get Google Account ID: ' . esc_html($e->getMessage()) . '</p></div>';
+        }
     }
 
     public static function activate() {
