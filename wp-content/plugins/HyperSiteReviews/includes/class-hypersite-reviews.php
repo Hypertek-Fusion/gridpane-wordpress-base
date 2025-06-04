@@ -312,7 +312,7 @@ class HyperSiteReviews {
                 $curr_account = $account->getName();
                 $response = $service->accounts_locations->listAccountsLocations(
                     $curr_account,
-                    ['read_mask' => 'name,title,locationName']
+                    ['readMask' => 'name,title,locationName']
                 );
                 foreach($response as $location) {
                     self::$account_locations[$curr_account] = $location;
