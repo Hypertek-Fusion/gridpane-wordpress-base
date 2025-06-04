@@ -246,26 +246,51 @@ class HyperSiteReviews {
         return true;
     }
 
+    // Gets Google Accounts
     public static function get_google_accounts() {
         $client = HyperSiteReviews::get_google_client();
 
-    if (!HyperSiteReviews::refresh_google_token_if_needed()) {
-        wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
-        exit;
+        if (!HyperSiteReviews::refresh_google_token_if_needed()) {
+            wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
+            exit;
+        }
+
+        // Create the My Business Account Management service
+        $service = new Google\Service\MyBusinessAccountManagement($client);
+
+        // Call the API to list accounts
+        try {
+            $response = $service->accounts->listAccounts();
+
+            // return print_r($response, true);
+
+            foreach ($response->getAccounts() as $account) {
+                echo '<p>';
+                echo 'Account Name: ' . esc_html($account->getName()) . '<br>';
+                echo 'Account Display Name: ' . esc_html($account->getAccountName()) . '<br>';
+                echo '</p>';
+            }
+
+        } catch (Exception $e) {
+            error_log('Error fetching business accounts: ' . $e->getMessage());
+            echo '<div class="notice notice-error"><p>Failed to fetch accounts: ' . esc_html($e->getMessage()) . '</p></div>';
+        }
     }
 
-    // Create the My Business Account Management service
-    $service = new Google\Service\MyBusinessAccountManagement($client);
-
-    // Call the API to list accounts
-    try {
-        $response = $service->accounts->listAccounts();
-
-        return print_r($response, true);
-    } catch (Exception $e) {
-        error_log('Error fetching business accounts: ' . $e->getMessage());
-        echo '<div class="notice notice-error"><p>Failed to fetch accounts: ' . esc_html($e->getMessage()) . '</p></div>';
+    // Takes an Account Object and returns the account ID
+    public static function get_google_account_id($acc) {
+        try {
+            if(! function_exists($acc->getName())) throw new Exception("Function 'getName()' does not exist.");
+            return $acc->getName();
+        } catch (Exception $e) {
+            error_log('Error getting Google Account ID: ' . $e->getMessage());
+            echo '<div class="notice notice-error"><p>Failed to get Google Account ID: ' . esc_html($e->getMessage()) . '</p></div>';
+        }
     }
+
+    // Gets the locations for each account
+    public static function get_locations_by_account() {
+
     }
 
     public static function activate() {
