@@ -42,15 +42,17 @@
                             <div class="account-selection-table__heading"><p>Location Name</p></div>
                             <div class="account-selection-table__heading"><p># of Reviews</p></div>
                         </div>
-                        <?php foreach(HyperSiteReviews::get_account_locations() as $acc_k => $loc_o) : ?>
-                            <div class="rows">
-                                <div class="account-row-item" data-account-id=<?php echo $loc_o['name']; ?>>
-                                    <input type="checkbox" name="selected-location">
-                                    <div class="account-row-item__cell" data-type="name"><?php echo $loc_o->getName(); ?></div>
-                                    <div class="account-row-item__cell" data-type="account-name"><?php echo $loc_o->getTitle(); ?></div>
-                                    <div class="account-row-item__cell" data-type="location-count"><?php echo HyperSiteReviews::get_location_reviews_length($loc_o['name'], false); ?></div>
+                        <?php foreach(HyperSiteReviews::get_account_locations() as $acc_k => $loc_id) : ?>
+                            <?php foreach($loc_id as $loc_k => $loc_o) : ?>
+                                <div class="rows">
+                                    <div class="account-row-item" data-account-id=<?php echo $loc_o['name']; ?>>
+                                        <input type="checkbox" name="selected-location">
+                                        <div class="account-row-item__cell" data-type="name"><?php echo $loc_o->getName(); ?></div>
+                                        <div class="account-row-item__cell" data-type="account-name"><?php echo $loc_o->getTitle(); ?></div>
+                                        <div class="account-row-item__cell" data-type="location-count"><?php echo HyperSiteReviews::get_location_reviews_length($loc_o['name'], false); ?></div>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endforeach ?>
                         <?php endforeach ?>
                     </div>
             </div>
