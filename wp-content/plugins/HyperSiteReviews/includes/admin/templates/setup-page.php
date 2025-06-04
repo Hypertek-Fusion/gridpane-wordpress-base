@@ -27,7 +27,7 @@
                             </div>
                         </div>
                     <?php endforeach ?>
-                    <button class="page-next" data-page="1" disabled></button>
+                    <button class="page-next" data-page="1" disabled>Next Page</button>
                 </div>
             <input type="submit" name="disconnect" value="Disconnect Google Account" class="button button-secondary">
         </form>
