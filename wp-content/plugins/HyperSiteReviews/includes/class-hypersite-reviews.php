@@ -23,6 +23,27 @@ class HyperSiteReviews {
             if (get_option('hsrev_setup_complete')) {
                 add_action('init', [self::class, 'register_post_type']);
             }
+
+            add_action('admin_enqueue_scripts', function($hook) {
+                // Only load on plugin setup page
+                if (isset($_GET['page']) && $_GET['page'] === 'hypersite-reviews-setup') {
+                    wp_enqueue_style(
+                        'hsrev-setup-style',
+                        plugin_dir_url(__FILE__) . 'admin/css/setup-page.css',
+                        [],
+                        filemtime(plugin_dir_path(__FILE__) . 'admin/css/setup-page.css') // For cache busting
+                    );
+
+                    
+                    wp_enqueue_script(
+                        'hsrev-setup-script',
+                        plugin_dir_url(__FILE__) . 'admin/js/setup-page.js',
+                        ['jquery'], // dependencies
+                        filemtime(plugin_dir_path(__FILE__) . 'admin/js/setup-page.js'),
+                        true
+                    );
+                }
+            });
         } catch (Exception $e) {
             error_log('Error initializing HyperSiteReviews: ' . $e);
         }

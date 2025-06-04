@@ -6,10 +6,11 @@
     <p><strong>Google account is connected.</strong></p>
     <form method="post">
         <?php wp_nonce_field('hsrev_google_disconnect'); ?>
-            <div id="account-selection-table">
+            <div id="account-selection-table" data-select="single">
                 <p>Select the Account you would like to use.</p>
                 <?php foreach(HyperSiteReviews::get_accounts() as $acc) : ?>
-                    <div class="account-row-item">
+                    <div class="account-row-item" data-account-id=<?php echo HyperSiteReviews::get_google_account_id($acc['name']); ?>>
+                        <input type="checkbox" name="selected-account">
                         <div class="account-row-item__cell" data-type="name"><?php echo $acc['name']; ?></div>
                         <div class="account-row-item__cell" data-type="account-name"><?php echo $acc['accountName']; ?></div>
                         <div class="account-row-item__cell" data-type="type"><?php echo $acc['type']; ?></div>

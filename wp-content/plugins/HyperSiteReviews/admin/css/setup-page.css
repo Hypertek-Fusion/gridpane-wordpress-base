@@ -1,0 +1,12 @@
+.account-row-item {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    background-color: #fafafa;
+    padding: 20px 0px;
+}
+
+.account-row-item__cell {
+    width: 100%;
+    text-align: center;
+}
