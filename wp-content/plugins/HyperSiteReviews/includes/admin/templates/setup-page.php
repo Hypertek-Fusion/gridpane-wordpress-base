@@ -30,9 +30,7 @@
                     </div>
                     <input type="submit" name="disconnect" value="Disconnect Google Account" class="button button-secondary">
             </div>
-            <pre>
-                <?php echo print_r(HyperSiteReviews::get_account_locations(), true); ?>
-            </pre>
+            
             <div class="setup-page" data-page="2">
                     <div id="account-selection-table" data-select="single">
                         <p>Select the Location you would like to use.</p>
