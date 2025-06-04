@@ -261,12 +261,7 @@ class HyperSiteReviews {
     try {
         $response = $service->accounts->listAccounts();
 
-        foreach ($response->getAccounts() as $account) {
-            echo '<p>';
-            echo 'Account Name: ' . esc_html($account->getName()) . '<br>';
-            echo 'Account Display Name: ' . esc_html($account->getAccountName()) . '<br>';
-            echo '</p>';
-        }
+        return $response;
     } catch (Exception $e) {
         error_log('Error fetching business accounts: ' . $e->getMessage());
         echo '<div class="notice notice-error"><p>Failed to fetch accounts: ' . esc_html($e->getMessage()) . '</p></div>';
