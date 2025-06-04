@@ -276,6 +276,10 @@ class HyperSiteReviews {
         }
     }
 
+    public static function get_accounts() {
+        return self::$accounts;
+    }
+
     // Takes an Account Object and returns the account ID
     public static function get_google_account_id($acc) {
         try {
