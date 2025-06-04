@@ -2,6 +2,7 @@
     <h1>HyperSite Reviews Debug Settings</h1>
     <form method="post">
         <?php wp_nonce_field('hsrev_debug_setting_set'); ?>
+        <h2>Flags</h2>
         <p>Handle any settings for debug purposes here.</p>
         <label>Setup Complete? : </label>
         <input type="checkbox" name="is-setup" <?php checked(get_option('hsrev_setup_complete'), true); ?>>
@@ -9,4 +10,20 @@
         <input type="checkbox" name="bypass-setup-page" <?php checked(get_option('hsrev_bypass_setup_page'), true); ?>>
         <input type="submit" value="Complete Setup" class="button button-primary">
     </form>
+    <br>
+    <br>
+    <h2>Data (Read-Only)</h2>
+
+    <p>Total locations: <?php echo HyperSiteReviews::get_total_locations_length(); ?></p>
+
+    <?php 
+    
+    foreach(HyperSiteReviews::get_accounts() as $acc_k => $acc_o) {
+    ?>
+        <h3>Account: <?php echo $acc_k ?></h3>
+        <p>Length: <?php echo HyperSiteReviews::get_account_locations_length($acc_k); ?></p>
+    <?php
+    }
+    
+    ?>
 </div>

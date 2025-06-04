@@ -325,6 +325,36 @@ class HyperSiteReviews {
         }
     }
 
+    public static function get_total_locations_length() {
+        if (empty(self::$account_locations)) {
+            if (empty(self::$accounts)) {
+                self::get_google_accounts();
+            }
+            self::get_locations_by_account();
+        }
+
+        $count = 0;
+        foreach (self::$account_locations as $account) {
+            $count += count($account);
+        }
+        return $count;
+    }
+
+    public static function get_account_locations_length($acc) {
+        if (empty(self::$account_locations)) {
+            if (empty(self::$accounts)) {
+                self::get_google_accounts();
+            }
+            self::get_locations_by_account();
+        }
+        try {
+            return count(self::$account_locations[$acc]);
+        } catch (Exception $e) {
+            error_log('Error getting Account Locations Length: ' . $e->getMessage());
+            echo '<div class="notice notice-error"><p>Failed to get Account Locations Length: ' . esc_html($e->getMessage()) . '</p></div>';
+        }
+    }
+
     public static function activate() {
         self::register_post_type();
         flush_rewrite_rules();
