@@ -312,7 +312,7 @@ class HyperSiteReviews {
             }
 
             $service = new Google\Service\MyBusinessBusinessInformation($client);
-            if(empty(self::$accounts)) throw new Exception('No accounts found.');
+            if(empty(self::$accounts)) self::get_google_accounts();
 
             foreach(self::$accounts as $account) {
                 $curr_account = $account->getName();
