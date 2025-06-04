@@ -8,8 +8,8 @@
         <?php wp_nonce_field('hsrev_google_disconnect'); ?>
             <div id="account-selection-table">
                 <pre>
-                    <?php echo print_r(HyperSiteReviews::get_accounts()); ?>
-                    <?php echo print_r(HyperSiteReviews::get_account_locations()); ?>
+                    <?php echo print_r(HyperSiteReviews::get_accounts(), true); ?>
+                    <?php echo print_r(HyperSiteReviews::get_account_locations(), true); ?>
                 </pre>
             </div>
         <input type="submit" name="disconnect" value="Disconnect Google Account" class="button button-secondary">
