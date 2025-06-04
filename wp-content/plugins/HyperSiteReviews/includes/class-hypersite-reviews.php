@@ -1,9 +1,15 @@
 <?php
 if ( ! defined('ABSPATH') ) exit;
 
+// TODO
+// Get reviews by location
+// Get total review count
+// Set location_reviews array
+
 class HyperSiteReviews {
     private static $accounts = [];
     private static $account_locations = [];
+    private static $location_reviews = [];
 
     public static function init() {
         try {
@@ -356,6 +362,34 @@ class HyperSiteReviews {
             echo '<div class="notice notice-error"><p>Error getting location count: ' . esc_html($e->getMessage()) . '</p></div>';
             return 0;
         }
+    }
+
+    public static function get_location_reviews($acc, $loc) {
+        try {
+            $client = HyperSiteReviews::get_google_client();
+
+            $url = "https://mybusiness.googleapis.com/v4/accounts/{$acc}/locations/{$loc}/reviews";
+
+            $client->setAccessType('offline');
+            $client->refreshToken($client->getRefreshToken());
+
+            $httpClient = $client->authorize();
+
+            $response = $httpClient->get($url);
+
+            if ($response->getStatusCode() === 200) {
+                $reviewsData = json_decode($response->getBody()->getContents(), true);
+                foreach ($reviewsData['reviews'] as $review) {
+                    self::$location_reviews[$loc][$review['reviewId']] = $review;
+                }
+            } else {
+                error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
+            }
+        } catch (Exception $e) {
+            error_log('Error getting reviews: ' . $e->getMessage());
+            echo '<div class="notice notice-error"><p>Error getting reviews: ' . esc_html($e->getMessage()) . '</p></div>';
+        }
+        
     }
 
     public static function activate() {
