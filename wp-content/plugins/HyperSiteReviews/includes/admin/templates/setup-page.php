@@ -47,10 +47,10 @@
                             <div class="rows">
                                 <div class="account-row-item" data-account-id=<?php echo HyperSiteReviews::get_google_account_id($acc); ?>>
                                     <input type="checkbox" name="selected-account">
-                                    <div class="account-row-item__cell" data-type="name"><?php echo $loc_o['name']; ?></div>
-                                    <div class="account-row-item__cell" data-type="account-name"><?php echo $loc_o['title']; ?></div>
+                                    <div class="account-row-item__cell" data-type="name"><?php echo $loc_o->getName(); ?></div>
+                                    <div class="account-row-item__cell" data-type="account-name"><?php echo $loc_o->getTitle(); ?></div>
                                     <div class="account-row-item__cell" data-type="type"><?php echo $acc['type']; ?></div>
-                                    <div class="account-row-item__cell" data-type="location-count"><?php echo HyperSiteReviews::get_location_reviews_length($loc_o['name'], false); ?></div>
+                                    <div class="account-row-item__cell" data-type="location-count"><?php echo HyperSiteReviews::get_location_reviews_length($loc_o->getName(), false); ?></div>
                                 </div>
                             </div>
                         <?php endforeach ?>
