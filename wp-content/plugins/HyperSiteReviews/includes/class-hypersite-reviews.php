@@ -25,21 +25,24 @@ class HyperSiteReviews {
             }
 
             add_action('admin_enqueue_scripts', function($hook) {
+
                 // Only load on plugin setup page
                 if (isset($_GET['page']) && $_GET['page'] === 'hypersite-reviews-setup') {
+                    // Get the root plugin URL
+                    $plugin_url = plugin_dir_url(__DIR__);
+
                     wp_enqueue_style(
                         'hsrev-setup-style',
-                        plugin_dir_url(__FILE__) . 'admin/css/setup-page.css',
+                        $plugin_url . 'admin/css/setup-page.css',
                         [],
-                        filemtime(plugin_dir_path(__FILE__) . 'admin/css/setup-page.css') // For cache busting
+                        filemtime(plugin_dir_path(__DIR__) . 'admin/css/setup-page.css')
                     );
 
-                    
                     wp_enqueue_script(
                         'hsrev-setup-script',
-                        plugin_dir_url(__FILE__) . 'admin/js/setup-page.js',
-                        ['jquery'], // dependencies
-                        filemtime(plugin_dir_path(__FILE__) . 'admin/js/setup-page.js'),
+                        $plugin_url . 'admin/js/setup-page.js',
+                        [],
+                        filemtime(plugin_dir_path(__DIR__) . 'admin/js/setup-page.js'),
                         true
                     );
                 }
