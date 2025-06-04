@@ -280,7 +280,7 @@ class HyperSiteReviews {
     // Takes an Account Object and returns the account ID
     public static function get_google_account_id($acc) {
         try {
-            if(! function_exists($acc->getName())) throw new Exception("Function 'getName()' does not exist.");
+            if(! method_exists($acc, 'getName')) throw new Exception("Function 'getName()' does not exist.");
             return str_replace('accounts/', '', $acc->getName());
         } catch (Exception $e) {
             error_log('Error getting Google Account ID: ' . $e->getMessage());
