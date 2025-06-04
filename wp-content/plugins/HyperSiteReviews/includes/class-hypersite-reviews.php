@@ -391,6 +391,7 @@ class HyperSiteReviews {
                     if ($response->getStatusCode() === 200) {
                         $reviewsData = json_decode($response->getBody()->getContents(), true);
                         foreach ($reviewsData['reviews'] as $review) {
+                            if($review['starRating'] === 'FIVE')
                             self::$location_reviews[$loc_k][$review['reviewId']] = $review;
                         }
                     } else {
