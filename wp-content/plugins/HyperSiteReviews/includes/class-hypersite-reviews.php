@@ -348,6 +348,8 @@ class HyperSiteReviews {
             self::get_locations_by_account();
         }
         try {
+            if(null === self::$account_locations[$acc]) return 0;
+            
             return count(self::$account_locations[$acc]);
         } catch (Exception $e) {
             error_log('Error getting Account Locations Length: ' . $e->getMessage());
