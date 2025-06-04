@@ -9,6 +9,7 @@
             <div id="account-selection-table">
                 <pre>
                     <?php echo print_r(HyperSiteReviews::get_accounts()); ?>
+                    <?php echo print_r(HyperSiteReviews::get_account_locations()); ?>
                 </pre>
             </div>
         <input type="submit" name="disconnect" value="Disconnect Google Account" class="button button-secondary">
