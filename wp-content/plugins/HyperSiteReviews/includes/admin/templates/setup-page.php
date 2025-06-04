@@ -48,7 +48,7 @@
                                     <div class="account-row-item__cell" data-type="name"><?php echo $loc_o['name']; ?></div>
                                     <div class="account-row-item__cell" data-type="account-name"><?php echo $loc_o['title']; ?></div>
                                     <div class="account-row-item__cell" data-type="type"><?php echo $acc['type']; ?></div>
-                                    <div class="account-row-item__cell" data-type="location-count"><?php echo HyperSiteReviews::get_location_reviews_length($loc_o['name']); ?></div>
+                                    <div class="account-row-item__cell" data-type="location-count"><?php echo HyperSiteReviews::get_location_reviews_length($loc_o['name'], false); ?></div>
                                 </div>
                             </div>
                         <?php endforeach ?>
