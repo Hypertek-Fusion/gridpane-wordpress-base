@@ -313,6 +313,12 @@ class HyperSiteReviews {
         if(empty(self::$accounts_locations)) self::get_locations_by_account();
         return self::$account_locations;
     }
+
+    public static function get_locations_for_account($acc) {
+        if(empty(self::$accounts_locations)) self::get_locations_by_account();
+        return self::$account_locations[$acc];
+    }
+
     public static function get_location_reviews() {
         if(empty(self::$accounts)) self::get_google_accounts();
         if(empty(self::$account_locations)) self::get_locations_by_account();
@@ -430,6 +436,47 @@ class HyperSiteReviews {
             echo '<div class="notice notice-error"><p>Error getting reviews: ' . esc_html($e->getMessage()) . '</p></div>';
         }
         
+    }
+
+    public static function get_total_location_reviews_length() {
+        if(empty(self::$location_reviews)) {
+            if (empty(self::$account_locations)) {
+                if (empty(self::$accounts)) {
+                    self::get_google_accounts();
+                }
+                self::get_locations_by_account();
+            }
+            self::get_account_location_reviews();
+        }
+
+        $count = 0;
+        foreach (self::$location_reviews as $reviews) {
+            $count += count($reviews);
+        }
+        return $count;
+    }
+
+        public static function get_location_reviews_length($loc, $print_error = true) {
+            if(empty(self::$location_reviews)) {
+                if (empty(self::$account_locations)) {
+                    if (empty(self::$accounts)) {
+                        self::get_google_accounts();
+                    }
+                    self::get_locations_by_account();
+                }
+                self::get_account_location_reviews();
+            }
+        try {
+            if(null === self::$location_reviews[$loc]) throw new Exception('No locations found.');
+
+            return count(self::$location_reviews[$loc]);
+        } catch (Exception $e) {
+            error_log('Error getting Account Locations Length: ' . $e->getMessage());
+            if($print_error) {
+                echo '<div class="notice notice-error"><p>Error getting location count: ' . esc_html($e->getMessage()) . '</p></div>';
+            }
+            return 0;
+        }
     }
 
     public static function activate() {

@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const accountSelect = document.getElementById('account-selection-table');
     const accountCheckboxes = accountSelect.querySelectorAll('input[type="checkbox"]');
-    const accountSelectButton = document.querySelector('button[data-page="1"]');
+    const formFlowButtons = document.querySelector('button[data-button-type="form-flow"]');
 
     accountCheckboxes.forEach(c => {
         c.addEventListener('change', e => {
