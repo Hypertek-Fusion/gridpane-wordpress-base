@@ -379,7 +379,7 @@ class HyperSiteReviews {
 
             foreach(self::$account_locations as $acc => $loc) {
                 foreach($loc as $loc_k => $loc_v) {
-                    $url = "https://mybusiness.googleapis.com/v4/accounts/{$acc}/locations/{$loc_k}/reviews";
+                    $url = "https://mybusiness.googleapis.com/v4/{$acc}{$loc_k}/reviews";
 
                     $client->setAccessType('offline');
                     $client->refreshToken($client->getRefreshToken());
