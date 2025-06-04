@@ -8,6 +8,11 @@
         <?php wp_nonce_field('hsrev_google_disconnect'); ?>
             <div id="account-selection-table" data-select="single">
                 <p>Select the Account you would like to use.</p>
+                <div class="account-selection-table__heading" ><p>Select</p></div>
+                <div class="account-selection-table__heading"><p>Account ID</p></div>
+                <div class="account-selection-table__heading"><p>Account Name</p></div>
+                <div class="account-selection-table__heading"><p>Account Type</p></div>
+                <div class="account-selection-table__heading"><p># of Locations</p></div>
                 <?php foreach(HyperSiteReviews::get_accounts() as $acc) : ?>
                     <div class="account-row-item" data-account-id=<?php echo HyperSiteReviews::get_google_account_id($acc); ?>>
                         <input type="checkbox" name="selected-account">

@@ -2,8 +2,16 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
-    background-color: #fafafa;
     padding: 20px 0px;
+}
+
+.account-selection-table__heading {
+    font-weight: 600;
+    text-align: center;
+}
+
+#account-selection-table {
+    background-color: #fafafa;
 }
 
 .account-row-item__cell {
