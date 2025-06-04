@@ -315,7 +315,7 @@ class HyperSiteReviews {
                     ['readMask' => 'name,title']
                 );
                 foreach($response as $location) {
-                    self::$account_locations[$curr_account] = $location;
+                    self::$account_locations[$curr_account][$location->getName()] = $location;
                 }
             }
         } catch (Exception $e) {
