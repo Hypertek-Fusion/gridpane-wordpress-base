@@ -266,8 +266,8 @@ class HyperSiteReviews {
 
             foreach ($response->getAccounts() as $account) {
                 echo '<p>';
-                echo 'Account Name: ' . esc_html($account->getName()) . '<br>';
-                echo 'Account Display Name: ' . esc_html($account->getAccountName()) . '<br>';
+                echo 'Account ID: ' . esc_html(self::get_google_account_id($account)) . '<br>';
+                echo 'Account Name: ' . esc_html($account->getAccountName()) . '<br>';
                 echo '</p>';
             }
 
@@ -281,7 +281,7 @@ class HyperSiteReviews {
     public static function get_google_account_id($acc) {
         try {
             if(! function_exists($acc->getName())) throw new Exception("Function 'getName()' does not exist.");
-            return $acc->getName();
+            return str_replace('accounts/', '', $acc->getName());
         } catch (Exception $e) {
             error_log('Error getting Google Account ID: ' . $e->getMessage());
             echo '<div class="notice notice-error"><p>Failed to get Google Account ID: ' . esc_html($e->getMessage()) . '</p></div>';
