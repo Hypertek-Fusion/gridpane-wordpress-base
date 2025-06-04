@@ -268,8 +268,6 @@ class HyperSiteReviews {
             foreach($response->getAccounts() as $account) {
                 self::$accounts[$account->getName()] = $account;
             }
-
-            return self::$accounts;
         } catch (Exception $e) {
             error_log('Error fetching business accounts: ' . $e->getMessage());
             echo '<div class="notice notice-error"><p>Failed to fetch accounts: ' . esc_html($e->getMessage()) . '</p></div>';
@@ -277,6 +275,7 @@ class HyperSiteReviews {
     }
 
     public static function get_accounts() {
+        if(empty(self::$accounts)) self::get_google_accounts();
         return self::$accounts;
     }
 
