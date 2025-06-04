@@ -279,6 +279,11 @@ class HyperSiteReviews {
         return self::$accounts;
     }
 
+    public static function get_account_locations() {
+        if(empty(self::$accounts_locations)) self::get_locations_by_account();
+        return self::$account_locations;
+    }
+
     // Takes an Account Object and returns the account ID
     public static function get_google_account_id($acc) {
         try {
@@ -304,7 +309,11 @@ class HyperSiteReviews {
             if(empty(self::$accounts)) throw new Exception('No accounts found.');
 
             foreach(self::$accounts as $account) {
-                $service->accounts_locations->listAccountsLocations($account->getName());
+                $curr_account = $account->getName();
+                $response = $service->accounts_locations->listAccountsLocations($account->getName());
+                foreach($response as $location) {
+                    self::$account_locations[$curr_account] = $location;
+                }
             }
         } catch (Exception $e) {
             error_log('Error getting Google Account ID: ' . $e->getMessage());
