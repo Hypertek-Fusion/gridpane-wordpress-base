@@ -30,7 +30,9 @@
                     </div>
                     <input type="submit" name="disconnect" value="Disconnect Google Account" class="button button-secondary">
             </div>
-
+            <pre>
+                <?php echo print_r(HyperSiteReviews::get_account_locations(), true); ?>
+            </pre>
             <div class="setup-page" data-page="2">
                     <div id="account-selection-table" data-select="single">
                         <p>Select the Location you would like to use.</p>
@@ -40,8 +42,8 @@
                             <div class="account-selection-table__heading"><p>Location Name</p></div>
                             <div class="account-selection-table__heading"><p># of Reviews</p></div>
                         </div>
-
                         <?php foreach(HyperSiteReviews::get_account_locations() as $acc_k => $loc_o) : ?>
+                            
                             <div class="rows">
                                 <div class="account-row-item" data-account-id=<?php echo HyperSiteReviews::get_google_account_id($acc); ?>>
                                     <input type="checkbox" name="selected-account">
