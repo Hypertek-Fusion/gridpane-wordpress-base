@@ -95,7 +95,16 @@ class HyperSiteReviews {
 
                     // Localize the script to pass REST API URL and nonce
                     wp_localize_script('hsrev-admin-script', 'HSRevApi', [
-                        'url'   => rest_url('hsrev/v1/accounts'),
+                        'urls' => [
+                            'accounts' => rest_url('hsrev/v1/accounts'),
+                            'locations' => rest_url('hsrev/v1/locations'),
+                            'accountLocations' => function($account_id) {
+                                return rest_url("hsrev/v1/accounts/{$account_id}/locations");
+                            },
+                            'reviews' => function($account_id, $location_id) {
+                                return rest_url("hsrev/v1/accounts/{$account_id}/locations/{$location_id}/reviews");
+                            }
+                        ],
                         'nonce' => wp_create_nonce('wp_rest'),
                     ]);
                 }
