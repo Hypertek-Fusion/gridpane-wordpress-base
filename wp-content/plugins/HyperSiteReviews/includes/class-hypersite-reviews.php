@@ -301,6 +301,8 @@ class HyperSiteReviews {
             foreach($response->getAccounts() as $account) {
                 self::$accounts[$account->getName()] = $account;
             }
+
+            return self::$accounts;
         } catch (Exception $e) {
             error_log('Error fetching business accounts: ' . $e->getMessage());
             echo '<div class="notice notice-error"><p>Failed to fetch accounts: ' . esc_html($e->getMessage()) . '</p></div>';
@@ -499,6 +501,22 @@ class HyperSiteReviews {
         }
     }
 
+            public static function get_reviews_by_location($account_id, $location_id) {
+            if (empty(self::$location_reviews)) {
+                self::get_account_location_reviews();
+            }
+
+            return self::$location_reviews[$location_id] ?? [];
+        }
+
+        public static function get_locations_by_account_id($account_id) {
+            self::get_locations_by_account(); // Ensure locations are populated
+
+            return self::$account_locations[$account_id] ?? []; // Return locations for the specific account
+        }
+
+
+
         public static function register_api_routes() {
         register_rest_route('hsrev/v1', '/accounts', [
             'methods'  => 'GET',
@@ -527,7 +545,7 @@ class HyperSiteReviews {
 
     public static function api_get_accounts($request) {
         try {
-            $accounts = self::get_google_accounts(); // Your existing logic
+            $accounts = self::get_google_accounts();
             return rest_ensure_response($accounts);
         } catch (Exception $e) {
             return new WP_Error('account_fetch_failed', $e->getMessage(), ['status' => 500]);
@@ -538,7 +556,7 @@ class HyperSiteReviews {
         $account_id = $request['account_id'];
 
         try {
-            $locations = self::get_locations_by_account($account_id); // You may want to adjust this
+            $locations = self::get_locations_by_account_id($account_id);
             return rest_ensure_response($locations);
         } catch (Exception $e) {
             return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
