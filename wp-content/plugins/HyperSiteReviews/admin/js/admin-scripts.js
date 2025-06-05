@@ -15,8 +15,8 @@ function getReviewsUrl(accountId, locationId) {
 
 const getUsers = async () => {
     try {
-
         const accountRowsContainer = document.getElementById('account-rows');
+        accountRowsContainer.innerHTML = '';
         const loading = createElement('div');
         loading.style.textAlign = 'center';
         loading.style.verticalAlign = 'center';
