@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 0;
 
     // Account selection logic
-    const accountSelect = document.getElementById('account-selection-table');
+    const accountSelect = document.querySelector('.selection-table[data-select-type="account"');
 
     // Function to check if any account is selected
     const isAnyAccountChecked = () => {

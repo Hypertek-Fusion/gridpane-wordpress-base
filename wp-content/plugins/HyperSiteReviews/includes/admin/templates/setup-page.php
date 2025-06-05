@@ -19,7 +19,7 @@
             ?>
             <form method="post">
                 <div class="setup-page" data-page="1">
-                    <div class="selection-table" data-select="single">
+                    <div class="selection-table" data-select-type="account" data-select="single">
                         <p>Select the Account you would like to use.</p>
                         <div class="selection-table__heading-row">
                             <div class="selection-table__heading"><p>Select</p></div>
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="setup-page" data-page="2">
-                    <div class="selection-table" data-select="single">
+                    <div class="selection-table" data-select-type="location" data-select="single">
                         <p>Select the Location you would like to use.</p>
                         <div class="selection-table__heading-row">
                             <div class="selection-table__heading"><p>Select</p></div>
