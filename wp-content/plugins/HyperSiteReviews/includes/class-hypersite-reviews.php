@@ -655,7 +655,9 @@ class HyperSiteReviews {
     public static function api_get_accounts($request) {
         try {
             $accounts = self::get_google_accounts();
-            return rest_ensure_response($accounts);
+            return rest_ensure_response(array(
+                'accounts' => $accounts
+            ));
         } catch (Exception $e) {
             return new WP_Error('account_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
