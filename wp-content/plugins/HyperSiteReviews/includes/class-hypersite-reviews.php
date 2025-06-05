@@ -239,7 +239,7 @@ class HyperSiteReviews {
     }
 
     public static function settings_page() {
-        echo '<div class="wrap"><h1>HyperSite Review Settings</h1></div>';
+        include HSREV_PATH . 'includes/admin/templates/debug-settings-page.php';
     }
 
     public static function google_connect_page() {
