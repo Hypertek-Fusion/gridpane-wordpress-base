@@ -1,3 +1,6 @@
+// Update "Fetching locations" to update to "Fetching review count" when ready
+// Fix bug admin-scripts.js?ver=1749160472:185 There was a problem with the fetch operation: SyntaxError: Unexpected token '<', "<div class"... is not valid JSON
+
 document.addEventListener('DOMContentLoaded', function() {
     getUsers();
 });
