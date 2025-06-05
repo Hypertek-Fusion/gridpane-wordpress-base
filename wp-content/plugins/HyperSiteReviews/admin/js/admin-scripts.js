@@ -71,7 +71,8 @@ const populateAccounts = (accountsData) => {
 
 const getAccountLocationsLength = async (accountName, element) => {
     try {
-        const url = getAccountLocationsUrl(accountName.replace('accounts/', ''));
+        // Use the totalAccountLocations URL template and replace '%s' with the account ID
+        const url = HSRevApi.urls.totalAccountLocations.replace('%s', accountName.replace('accounts/', ''));
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -85,11 +86,12 @@ const getAccountLocationsLength = async (accountName, element) => {
         }
 
         const data = await response.json();
-        element.textContent = data.total_locations || 0;
+        element.textContent = data.total_locations || 0; // Use the total_locations property from the response
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
 };
+
 
 const getAccountLocations = async (accountId) => {
     const url = getAccountLocationsUrl(accountId);
