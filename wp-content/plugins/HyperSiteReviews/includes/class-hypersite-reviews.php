@@ -16,6 +16,8 @@ class HyperSiteReviews {
         try {
             add_action('admin_menu', [self::class, 'add_admin_menus']);
             add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
+            add_action('rest_api_init', ['HyperSiteReviews', 'register_api_routes']);
+
 
             if(HSREV_DEBUG) {
                 add_action('admin_menu', [self::class, 'add_debug_admin_menus']);
@@ -496,6 +498,65 @@ class HyperSiteReviews {
             return 0;
         }
     }
+
+        public static function register_api_routes() {
+        register_rest_route('hsrev/v1', '/accounts', [
+            'methods'  => 'GET',
+            'callback' => [self::class, 'api_get_accounts'],
+            'permission_callback' => function () {
+                return current_user_can('manage_options');
+            },
+        ]);
+
+        register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations', [
+            'methods'  => 'GET',
+            'callback' => [self::class, 'api_get_account_locations'],
+            'permission_callback' => function () {
+                return current_user_can('manage_options');
+            },
+        ]);
+
+        register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations/(?P<location_id>[^\/]+)/reviews', [
+            'methods'  => 'GET',
+            'callback' => [self::class, 'api_get_location_reviews'],
+            'permission_callback' => function () {
+                return current_user_can('manage_options');
+            },
+        ]);
+    }
+
+    public static function api_get_accounts($request) {
+        try {
+            $accounts = self::get_google_accounts(); // Your existing logic
+            return rest_ensure_response($accounts);
+        } catch (Exception $e) {
+            return new WP_Error('account_fetch_failed', $e->getMessage(), ['status' => 500]);
+        }
+    }
+
+    public static function api_get_account_locations($request) {
+        $account_id = $request['account_id'];
+
+        try {
+            $locations = self::get_locations_by_account($account_id); // You may want to adjust this
+            return rest_ensure_response($locations);
+        } catch (Exception $e) {
+            return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
+        }
+    }
+
+    public static function api_get_location_reviews($request) {
+        $account_id = $request['account_id'];
+        $location_id = $request['location_id'];
+
+        try {
+            $reviews = self::get_reviews_by_location($account_id, $location_id); // Your own method
+            return rest_ensure_response($reviews);
+        } catch (Exception $e) {
+            return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
+        }
+    }
+
 
     public static function activate() {
         self::register_post_type();
