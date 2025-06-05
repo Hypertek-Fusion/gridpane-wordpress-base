@@ -125,8 +125,8 @@ const populateLocations = async (locationsData) => {
     const locationRowsContainer = document.getElementById('location-rows');
     const locationRows = [];
 
-    // Assuming locationsData contains an array in the 'locations' key
-    const locationsArray = locationsData.locations || []; // Adjust according to actual API response structure
+    // Convert the locations object into an array
+    const locationsArray = Object.keys(locationsData.locations).map(locationKey => locationsData.locations[locationKey]);
 
     await Promise.all(locationsArray.map(async location => {
         const reviewCount = await getLocationReviewCount(location.name); // Example function to get review count
