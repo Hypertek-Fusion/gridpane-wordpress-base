@@ -521,12 +521,26 @@ class HyperSiteReviews {
         }
 
         public static function get_locations_by_account_id($account_id) {
-            self::get_locations_by_account();
+            if (empty(self::$account_locations)) {
+                if (empty(self::$accounts)) {
+                    self::get_google_accounts();
+                }
+                self::get_locations_by_account();
+            }
 
             return self::$account_locations[$account_id] ?? []; // Return locations for the specific account
         }
 
+        public static function get_all_locations() {
+            if (empty(self::$account_locations)) {
+                if (empty(self::$accounts)) {
+                    self::get_google_accounts();
+                }
+                self::get_locations_by_account();
+            }
 
+            return self::$account_locations ?? []; // Return locations for the specific account
+        }
 
         public static function register_api_routes() {
         register_rest_route('hsrev/v1', '/accounts', [
@@ -538,23 +552,32 @@ class HyperSiteReviews {
                     wp_set_current_user($user_id);
                 }
 
-                $current_user = wp_get_current_user();
-                error_log('Current user: ' . $current_user->user_login);
                 return current_user_can('manage_options');
             },
         ]);
 
         register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations', [
             'methods'  => 'GET',
-            'callback' => __CLASS__ . '::api_get_account_locations',
+            'callback' => [self::class, 'api_get_account_locations'],
             'permission_callback' => function () {
                 $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
                 if ($user_id) {
                     wp_set_current_user($user_id);
                 }
 
-                $current_user = wp_get_current_user();
-                error_log('Current user: ' . $current_user->user_login);
+                return current_user_can('manage_options');
+            },
+        ]);
+
+        register_rest_route('hsrev/v1', '/locations', [
+            'methods'  => 'GET',
+            'callback' => [self::class, 'api_get_all_locations'],
+            'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
                 return current_user_can('manage_options');
             },
         ]);
@@ -568,8 +591,6 @@ class HyperSiteReviews {
                     wp_set_current_user($user_id);
                 }
 
-                $current_user = wp_get_current_user();
-                error_log('Current user: ' . $current_user->user_login);
                 return current_user_can('manage_options');
             },
         ]);
@@ -589,6 +610,16 @@ class HyperSiteReviews {
 
         try {
             $locations = self::get_locations_by_account_id($account_id);
+            return rest_ensure_response($locations);
+        } catch (Exception $e) {
+            return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
+        }
+    }
+
+    public static function api_get_all_locations($request) {
+
+        try {
+            $locations = self::get_all_locations();
             return rest_ensure_response($locations);
         } catch (Exception $e) {
             return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
