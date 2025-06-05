@@ -140,7 +140,7 @@ const populateLocations = async (locationsData) => {
         const reviewCount = await getLocationReviewCount(location.name); // Example function to get review count
 
         const locationRow = document.createElement('div');
-        locationRow.classList.add('row-item');
+        locationRow.classList.add('rows');
         locationRow.innerHTML = `
             <div class="row-item" data-location-id="${location.name}">
                 <input type="checkbox" name="selected-location">
