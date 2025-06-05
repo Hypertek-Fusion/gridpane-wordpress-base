@@ -607,7 +607,7 @@ class HyperSiteReviews {
 
     public static function api_get_account_locations($request) {
         $account_id = $request['account_id'];
-        $account_key = '/accounts' . $account_id;
+        $account_key = '/accounts/' . $account_id;
 
         try {
             $locations = self::get_locations_by_account_id($account_key);
@@ -631,8 +631,8 @@ class HyperSiteReviews {
         $account_id = $request['account_id'];
         $location_id = $request['location_id'];
 
-        $account_key = '/accounts' . $account_id;
-        $location_key = '/locations' . $location_id;
+        $account_key = '/accounts/' . $account_id;
+        $location_key = '/locations/' . $location_id;
 
         try {
             $reviews = self::get_reviews_by_location($account_key, $location_key); // Your own method
