@@ -39,11 +39,11 @@ class HyperSiteReviews {
             }
 
             add_action('admin_enqueue_scripts', function($hook) {
+                $plugin_url = plugin_dir_url(__DIR__);
 
                 // Only load on plugin setup page
                 if (isset($_GET['page']) && $_GET['page'] === 'hypersite-reviews-setup') {
                     // Get the root plugin URL
-                    $plugin_url = plugin_dir_url(__DIR__);
 
                     wp_enqueue_style(
                         'hsrev-setup-style',
