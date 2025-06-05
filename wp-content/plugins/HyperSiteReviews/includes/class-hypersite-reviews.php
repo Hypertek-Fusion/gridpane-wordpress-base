@@ -26,7 +26,6 @@ class HyperSiteReviews {
                 HyperSiteReviews::register_api_routes();
             });
 
-
             if(HSREV_DEBUG) {
                 add_action('admin_menu', [self::class, 'add_debug_admin_menus']);
             }
