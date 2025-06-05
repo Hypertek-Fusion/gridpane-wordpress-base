@@ -48,9 +48,9 @@ const populateAccounts = async (accountsData) => {
     accountRowsContainer.innerHTML = ''; // Clear existing content
 
     // Iterate over each account in the accountsData object
-    Object.keys(accountsData.accounts).forEach(accountKey => {
+    Object.keys(accountsData.accounts).forEach(async accountKey => {
         const account = accountsData.accounts[accountKey];
-        const accountLength = getAccountLocationsLength(account.name);
+        const accountLength = await getAccountLocationsLength(account.name);
         
         if(accountLength > 0) {
             const accountRow = document.createElement('div');
