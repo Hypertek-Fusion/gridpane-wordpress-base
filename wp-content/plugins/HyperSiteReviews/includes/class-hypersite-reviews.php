@@ -438,7 +438,7 @@ class HyperSiteReviews {
         return $count;
     }
 
-    public static function get_account_locations_length($acc, $print_error = true) {
+    public static function get_account_locations_length($acc) {
         if (empty(self::$account_locations)) {
             if (empty(self::$accounts)) {
                 self::get_google_accounts();
@@ -451,9 +451,6 @@ class HyperSiteReviews {
             return count(self::$account_locations[$acc]);
         } catch (Exception $e) {
             error_log('Error getting Account Locations Length: ' . $e->getMessage());
-            if($print_error) {
-                echo '<div class="notice notice-error"><p>Error getting location count: ' . esc_html($e->getMessage()) . '</p></div>';
-            }
             return 0;
         }
     }
@@ -583,6 +580,8 @@ class HyperSiteReviews {
         }
 
         public static function register_api_routes() {
+
+        // Get Google Accounts
         register_rest_route('hsrev/v1', '/accounts', [
             'methods'  => 'GET',
             'callback' => [self::class, 'api_get_accounts'],
@@ -596,6 +595,7 @@ class HyperSiteReviews {
             },
         ]);
 
+        // Get Account Locations
         register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations', [
             'methods'  => 'GET',
             'callback' => [self::class, 'api_get_account_locations'],
@@ -609,6 +609,7 @@ class HyperSiteReviews {
             },
         ]);
 
+        // Get All Locations
         register_rest_route('hsrev/v1', '/locations', [
             'methods'  => 'GET',
             'callback' => [self::class, 'api_get_all_locations'],
@@ -621,7 +622,22 @@ class HyperSiteReviews {
                 return current_user_can('manage_options');
             },
         ]);
+        
+        // Get Total Locations for an Account
+        register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/total-locations', [
+            'methods'  => 'GET',
+            'callback' => [self::class, 'api_get_account_locations_total'],
+            'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
 
+                return current_user_can('manage_options');
+            },
+        ]);
+
+        // Get Location Reviews
         register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations/(?P<location_id>[^\/]+)/reviews', [
             'methods'  => 'GET',
             'callback' => [self::class, 'api_get_location_reviews'],
@@ -642,6 +658,23 @@ class HyperSiteReviews {
             return rest_ensure_response($accounts);
         } catch (Exception $e) {
             return new WP_Error('account_fetch_failed', $e->getMessage(), ['status' => 500]);
+        }
+    }
+
+    public static function api_get_account_locations_total($request) {
+        $account_id = $request['account_id'];
+        $account_key = 'accounts/' . $account_id;
+
+        try {
+            error_log('Account Key: ' . $account_key);
+            $count = json_encode(array(
+                'accounts' => $account_key,
+                'total_locations' => self::get_account_locations_length($account_key)
+               )
+            );
+            return rest_ensure_response($count);
+        } catch (Exception $e) {
+            return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
     }
 

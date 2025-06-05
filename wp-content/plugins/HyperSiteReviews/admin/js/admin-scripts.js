@@ -56,7 +56,6 @@ const getAccountLocations = async (accountId) => {
     }
 }
 
-
 const getAllLocations = async () => {
     await fetch(HSRevApi.urls.locations, {
         method: 'GET',
