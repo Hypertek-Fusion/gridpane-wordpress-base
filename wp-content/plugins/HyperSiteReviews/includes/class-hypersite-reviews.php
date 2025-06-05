@@ -74,6 +74,21 @@ class HyperSiteReviews {
                         'url'   => rest_url('hsrev/v1/accounts'),
                         'nonce' => wp_create_nonce('wp_rest'),
                     ]);
+                } else if (isset($_GET['page']) && $_GET['page'] === 'hypersite-reviews-debug-settings') {
+                                        // Enqueue the admin scripts
+                    wp_enqueue_script(
+                        'hsrev-admin-script',
+                        $plugin_url . 'admin/js/admin-script.js',
+                        ['jquery'], // Assuming you want to use jQuery
+                        filemtime(plugin_dir_path(__DIR__) . 'admin/js/admin-script.js'),
+                        true
+                    );
+
+                    // Localize the script to pass REST API URL and nonce
+                    wp_localize_script('hsrev-admin-script', 'HSRevApi', [
+                        'url'   => rest_url('hsrev/v1/accounts'),
+                        'nonce' => wp_create_nonce('wp_rest'),
+                    ]);
                 }
             });
         } catch (Exception $e) {
