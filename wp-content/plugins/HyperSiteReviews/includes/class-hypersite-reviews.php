@@ -684,7 +684,9 @@ class HyperSiteReviews {
         try {
             error_log('Account Key: ' . $account_key);
             $locations = self::get_locations_by_account_id($account_key);
-            return rest_ensure_response($locations);
+            return rest_ensure_response(array(
+                'locations' => $locations
+            ));
         } catch (Exception $e) {
             return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
         }

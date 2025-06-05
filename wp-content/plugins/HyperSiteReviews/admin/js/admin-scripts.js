@@ -121,18 +121,16 @@ const getLocations = async (accountId) => {
 };
 
 // Function to populate locations for a selected account
-const populateLocations = (locationsData) => {
+const populateLocations = async (locationsData) => {
     const locationRowsContainer = document.getElementById('location-rows');
-    locationRowsContainer.innerHTML = '';
-    const loading = document.createElement('div');
-    loading.style.textAlign = 'center';
-    loading.innerText = 'Fetching locations. Please wait ...';
-    loading.classList.add('location-row-item');
-    locationRowsContainer.appendChild(loading);
+    const locationRows = [];
 
-    locationRowsContainer.innerHTML = ''; // Clear loading message
+    // Assuming locationsData contains an array in the 'locations' key
+    const locationsArray = locationsData.locations || []; // Adjust according to actual API response structure
 
-    locationsData.forEach(location => {
+    await Promise.all(locationsArray.map(async location => {
+        const reviewCount = await getLocationReviewCount(location.name); // Example function to get review count
+
         const locationRow = document.createElement('div');
         locationRow.classList.add('rows');
         locationRow.innerHTML = `
@@ -140,16 +138,26 @@ const populateLocations = (locationsData) => {
                 <input type="checkbox" name="selected-location">
                 <div class="location-row-item__cell" data-type="id">${location.name}</div>
                 <div class="location-row-item__cell" data-type="name">${location.title}</div>
-                <div class="location-row-item__cell" data-type="review-count">Loading...</div>
+                <div class="location-row-item__cell" data-type="review-count">${reviewCount}</div>
             </div>
         `;
-        locationRowsContainer.appendChild(locationRow);
-    });
+        locationRows.push(locationRow);
+    }));
+
+    locationRowsContainer.innerHTML = ''; // Clear loading message
+    locationRowsContainer.append(...locationRows);
 
     if (window.HSRevData.functions.attachCheckboxListeners) {
         window.HSRevData.functions.attachCheckboxListeners(locationRowsContainer);
     }
 };
+
+// Example function to get review count for a location
+const getLocationReviewCount = async (locationId) => {
+    // Implement the logic to fetch the review count for a location
+    return Math.floor(Math.random() * 100); // Placeholder for demonstration
+};
+
 
 // Expose functions to the global scope
 window.HSRevData = window.HSRevData || {};
