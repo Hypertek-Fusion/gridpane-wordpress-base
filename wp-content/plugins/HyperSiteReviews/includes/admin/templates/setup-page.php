@@ -19,27 +19,27 @@
             ?>
             <form method="post">
                 <div class="setup-page" data-page="1">
-                    <div id="account-selection-table" data-select="single">
+                    <div class="selection-table" data-select="single">
                         <p>Select the Account you would like to use.</p>
-                        <div class="account-selection-table__heading-row">
-                            <div class="account-selection-table__heading"><p>Select</p></div>
-                            <div class="account-selection-table__heading"><p>Account ID</p></div>
-                            <div class="account-selection-table__heading"><p>Account Name</p></div>
-                            <div class="account-selection-table__heading"><p>Account Type</p></div>
-                            <div class="account-selection-table__heading"><p># of Locations</p></div>
+                        <div class="selection-table__heading-row">
+                            <div class="selection-table__heading"><p>Select</p></div>
+                            <div class="selection-table__heading"><p>Account ID</p></div>
+                            <div class="selection-table__heading"><p>Account Name</p></div>
+                            <div class="selection-table__heading"><p>Account Type</p></div>
+                            <div class="selection-table__heading"><p># of Locations</p></div>
                         </div>
                         <div id="account-rows"></div> <!-- Placeholder for account rows -->
                     </div>
                 </div>
 
                 <div class="setup-page" data-page="2">
-                    <div id="location-selection-table" data-select="single">
+                    <div class="selection-table" data-select="single">
                         <p>Select the Location you would like to use.</p>
-                        <div class="account-selection-table__heading-row">
-                            <div class="account-selection-table__heading"><p>Select</p></div>
-                            <div class="account-selection-table__heading"><p>Location ID</p></div>
-                            <div class="account-selection-table__heading"><p>Location Name</p></div>
-                            <div class="account-selection-table__heading"><p># of Reviews</p></div>
+                        <div class="selection-table__heading-row">
+                            <div class="selection-table__heading"><p>Select</p></div>
+                            <div class="selection-table__heading"><p>Location ID</p></div>
+                            <div class="selection-table__heading"><p>Location Name</p></div>
+                            <div class="selection-table__heading"><p># of Reviews</p></div>
                         </div>
                         <div id="location-rows"></div> <!-- Placeholder for location rows -->
                     </div>
