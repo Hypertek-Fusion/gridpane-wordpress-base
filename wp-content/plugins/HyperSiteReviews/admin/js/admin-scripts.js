@@ -72,6 +72,11 @@ const populateAccounts = async (accountsData) => {
     // Clear previous content and append all account rows at once
     accountRowsContainer.innerHTML = '';
     accountRowsContainer.append(...accountRows);
+
+        // Call the globally exposed function to attach listeners
+    if (window.attachCheckboxListeners) {
+        window.attachCheckboxListeners();
+    }
 };
 
 const getAccountLocationsLength = async (accountName) => {

@@ -60,6 +60,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Call this after populating account checkboxes dynamically
-    attachCheckboxListeners();
+    window.attachCheckboxListeners = attachCheckboxListeners;
 });
