@@ -1,3 +1,14 @@
+function getAccountLocationsUrl(accountId) {
+    return HSRevApi.urls.accountLocationsBase.replace('%s', accountId);
+}
+
+// Function to construct the reviews URL
+function getReviewsUrl(accountId, locationId) {
+    return HSRevApi.urls.reviewsBase
+        .replace('%s', accountId)
+        .replace('%s', locationId);
+}
+
 const getUsers = async () => {
          await fetch(HSRevApi.urls.accounts, {
             method: 'GET',
@@ -22,29 +33,29 @@ const getUsers = async () => {
     }
 
 const getAccountLocations = async (accountId) => {
-    const url = HSRevApi.urls.accountLocations(accountId);
+    const url = getAccountLocationsUrl(accountId);
 
-    await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-WP-Nonce': HSRevApi.nonce
-        }
-    })
-    .then(response => {
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-WP-Nonce': HSRevApi.nonce
+            }
+        });
+
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
-        return response.json();
-    })
-    .then(data => {
+
+        const data = await response.json();
         console.log('Locations for Account:', data);
         // Process and display the locations data in the admin dashboard
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
-    });
+    }
 }
+
 
 const getAllLocations = async () => {
     await fetch(HSRevApi.urls.locations, {
@@ -70,7 +81,7 @@ const getAllLocations = async () => {
 }
 
 const getLocationReviews = async (accountId, locationId) => {
-    const url = HSRevApi.urls.reviews(accountId, locationId);
+    const url = getReviewsUrl(accountId);
 
     await fetch(url, {
         method: 'GET',
