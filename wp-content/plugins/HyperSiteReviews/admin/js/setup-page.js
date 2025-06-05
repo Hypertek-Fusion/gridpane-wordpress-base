@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.querySelector('.page-next');
     let currentPage = 0;
 
+    // Initialize window.HSRevData if not already done
+    window.HSRevData = window.HSRevData || {};
+    window.HSRevData.functions = window.HSRevData.functions || {};
+    window.HSRevData.data = window.HSRevData.data || {};
+
     // Account selection logic
     const accountSelect = document.querySelector('.selection-table[data-select-type="account"]');
 
@@ -13,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return Array.from(accountCheckboxes).some(cb => cb.checked);
     };
 
+    // Function to get the checked account ID
     const getCheckedAccountId = () => {
         const selectedCheckbox = accountSelect.querySelector('input[type="checkbox"]:checked');
         if (selectedCheckbox) {
@@ -65,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const accountId = getCheckedAccountId();
             if (accountId && window.HSRevData.functions.getLocations) {
                 window.HSRevData.functions.getLocations(accountId);
-                window.HSRevData.data.accountId = accountId
+                window.HSRevData.data.accountId = accountId; // Ensure HSRevData.data is initialized
+                console.log(`Account ID set: ${accountId}`);
             }
             currentPage++;
             showPage(currentPage);
