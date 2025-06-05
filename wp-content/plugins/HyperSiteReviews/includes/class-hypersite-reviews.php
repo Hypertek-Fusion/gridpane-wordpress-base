@@ -19,22 +19,27 @@ class HyperSiteReviews {
 
             add_action('rest_api_init', function () {
                 error_log('REST API Init');
+
                 if (isset($_COOKIE[LOGGED_IN_COOKIE])) {
-                    error_log('LOGGED_IN_COOKIE is set: ' . $_COOKIE[LOGGED_IN_COOKIE]);
+                    error_log('LOGGED_IN_COOKIE present: ' . $_COOKIE[LOGGED_IN_COOKIE]);
                 } else {
                     error_log('LOGGED_IN_COOKIE is not set.');
                 }
-                
-                if (!is_user_logged_in()) {
-                    $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
-                    if ($user_id) {
-                        error_log('Authenticated user ID: ' . $user_id);
-                        wp_set_current_user($user_id);
-                    } else {
-                        error_log('Failed to authenticate user via cookie.');
-                    }
+
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE], 'logged_in');
+                if ($user_id) {
+                    error_log('Authenticated user ID: ' . $user_id);
+                    wp_set_current_user($user_id);
                 } else {
-                    error_log('User already logged in.');
+                    error_log('Failed to authenticate user via cookie.');
+                }
+
+                // Test current user
+                $current_user = wp_get_current_user();
+                if ($current_user->exists()) {
+                    error_log('Current user login: ' . $current_user->user_login);
+                } else {
+                    error_log('No current user found.');
                 }
 
                 HyperSiteReviews::register_api_routes();
