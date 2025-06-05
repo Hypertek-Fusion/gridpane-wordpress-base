@@ -1,4 +1,4 @@
-.account-row-item {
+.row-item {
     display: grid;
     width: 100%;
     justify-content: space-between;
@@ -26,7 +26,7 @@
     background-color: #fafafa;
 }
 
-.account-row-item__cell {
+.row-item__cell {
     width: 100%;
     text-align: center;
 }

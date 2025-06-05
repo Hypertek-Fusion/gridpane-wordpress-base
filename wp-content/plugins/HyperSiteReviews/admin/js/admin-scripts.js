@@ -54,12 +54,12 @@ const populateAccounts = async (accountsData) => {
             const accountRow = document.createElement('div');
             accountRow.classList.add('rows');
             accountRow.innerHTML = `
-                <div class="account-row-item" data-account-id="${account.name}">
+                <div class="row-item" data-account-id="${account.name}">
                     <input type="checkbox" name="selected-account">
-                    <div class="account-row-item__cell" data-type="name">${account.name}</div>
-                    <div class="account-row-item__cell" data-type="account-name">${account.accountName}</div>
-                    <div class="account-row-item__cell" data-type="type">${account.type}</div>
-                    <div class="account-row-item__cell" data-type="location-count">${accountLength}</div>
+                    <div class="row-item__cell" data-type="name">${account.name}</div>
+                    <div class="row-item__cell" data-type="account-name">${account.accountName}</div>
+                    <div class="row-item__cell" data-type="type">${account.type}</div>
+                    <div class="row-item__cell" data-type="location-count">${accountLength}</div>
                 </div>
             `;
             accountRows.push(accountRow);
@@ -103,8 +103,8 @@ const getLocations = async (accountId) => {
         locationRowsContainer.innerHTML = '';
         const loading = document.createElement('div');
         loading.style.textAlign = 'center';
-        loading.innerText = 'Fetching accounts. Please wait ...';
-        loading.classList.add('account-row-item');
+        loading.innerText = 'Fetching locations. Please wait ...';
+        loading.classList.add('row-item');
         locationRowsContainer.appendChild(loading);
 
         const url = getAccountLocationsUrl(accountId.replace('accounts/', ''));
@@ -140,13 +140,13 @@ const populateLocations = async (locationsData) => {
         const reviewCount = await getLocationReviewCount(location.name); // Example function to get review count
 
         const locationRow = document.createElement('div');
-        locationRow.classList.add('rows');
+        locationRow.classList.add('row-item');
         locationRow.innerHTML = `
-            <div class="location-row-item" data-location-id="${location.name}">
+            <div class="row-item" data-location-id="${location.name}">
                 <input type="checkbox" name="selected-location">
-                <div class="location-row-item__cell" data-type="id">${location.name}</div>
-                <div class="location-row-item__cell" data-type="name">${location.title}</div>
-                <div class="location-row-item__cell" data-type="review-count">${reviewCount}</div>
+                <div class="row-item__cell" data-type="id">${location.name}</div>
+                <div class="row-item__cell" data-type="name">${location.title}</div>
+                <div class="row-item__cell" data-type="review-count">${reviewCount}</div>
             </div>
         `;
         locationRows.push(locationRow);
