@@ -63,7 +63,7 @@ class HyperSiteReviews {
                     // Enqueue the admin scripts
                     wp_enqueue_script(
                         'hsrev-admin-script',
-                        $plugin_url . 'admin/js/admin-script.js',
+                        $plugin_url . 'admin/js/admin-scripts.js',
                         ['jquery'], // Assuming you want to use jQuery
                         filemtime(plugin_dir_path(__DIR__) . 'admin/js/admin-scripts.js'),
                         true
