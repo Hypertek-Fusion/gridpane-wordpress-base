@@ -46,14 +46,14 @@ const getUsers = async () => {
 
 const populateAccounts = async (accountsData) => {
     const accountRowsContainer = document.getElementById('account-rows');
-    const accountRows = []
-    
-    // Iterate over each account in the accountsData object
-    Object.keys(accountsData.accounts).forEach(async accountKey => {
+    const accountRows = [];
+
+    // Use Promise.all to handle asynchronous operations in parallel
+    await Promise.all(Object.keys(accountsData.accounts).map(async accountKey => {
         const account = accountsData.accounts[accountKey];
         const accountLength = await getAccountLocationsLength(account.name);
-        
-        if(accountLength > 0) {
+
+        if (accountLength > 0) {
             const accountRow = document.createElement('div');
             accountRow.classList.add('rows');
             accountRow.innerHTML = `
@@ -65,14 +65,13 @@ const populateAccounts = async (accountsData) => {
                     <div class="account-row-item__cell" data-type="location-count">${accountLength}</div>
                 </div>
             `;
-            
-            accountRows.push(accountRow)
+            accountRows.push(accountRow);
         }
-    });
+    }));
 
-
+    // Clear previous content and append all account rows at once
     accountRowsContainer.innerHTML = '';
-    accountRowsContainer.appendChild(...accountRows);
+    accountRowsContainer.append(...accountRows);
 };
 
 const getAccountLocationsLength = async (accountName) => {
