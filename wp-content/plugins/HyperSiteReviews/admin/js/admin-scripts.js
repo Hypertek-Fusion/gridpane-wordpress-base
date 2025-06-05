@@ -36,6 +36,7 @@ const getUsers = async () => {
         }
 
         const data = await response.json();
+        console.log(data)
         populateAccounts(data);
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
