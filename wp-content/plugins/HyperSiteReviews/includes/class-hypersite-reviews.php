@@ -2,10 +2,7 @@
 if ( ! defined('ABSPATH') ) exit;
 
 // TODO
-// Create REST API for getting locations by account
-// Create REST API route for getting reviews by location
 // Finish Form Flow
-// Have review request function automatically get the next page with the next page token
 
 class HyperSiteReviews {
     private static $accounts = [];

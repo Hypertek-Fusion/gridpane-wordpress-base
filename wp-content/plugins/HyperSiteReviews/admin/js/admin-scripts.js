@@ -43,11 +43,14 @@ const getUsers = async () => {
     }
 };
 
-const populateAccounts = (accounts) => {
+const populateAccounts = (accountsData) => {
     const accountRowsContainer = document.getElementById('account-rows');
     accountRowsContainer.innerHTML = ''; // Clear existing content
 
-    accounts.forEach(account => {
+    // Iterate over each account in the accountsData object
+    Object.keys(accountsData.accounts).forEach(accountKey => {
+        const account = accountsData.accounts[accountKey];
+
         const accountRow = document.createElement('div');
         accountRow.classList.add('rows');
         accountRow.innerHTML = `
