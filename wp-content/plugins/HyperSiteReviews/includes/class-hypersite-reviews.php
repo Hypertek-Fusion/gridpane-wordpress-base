@@ -549,6 +549,11 @@ class HyperSiteReviews {
             'methods'  => 'GET',
             'callback' => [self::class, 'api_get_accounts'],
             'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
                 $current_user = wp_get_current_user();
                 error_log('Current user: ' . $current_user->user_login);
                 return current_user_can('manage_options');
@@ -559,6 +564,11 @@ class HyperSiteReviews {
             'methods'  => 'GET',
             'callback' => [self::class, 'api_get_account_locations'],
             'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
                 $current_user = wp_get_current_user();
                 error_log('Current user: ' . $current_user->user_login);
                 return current_user_can('manage_options');
@@ -569,6 +579,11 @@ class HyperSiteReviews {
             'methods'  => 'GET',
             'callback' => [self::class, 'api_get_location_reviews'],
             'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
                 $current_user = wp_get_current_user();
                 error_log('Current user: ' . $current_user->user_login);
                 return current_user_can('manage_options');
