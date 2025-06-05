@@ -628,20 +628,39 @@ class HyperSiteReviews {
         }
     }
 
-    public static function api_get_location_reviews($request) {
-        $account_id = $request['account_id'];
-        $location_id = $request['location_id'];
+        public static function api_get_location_reviews($request) {
+            $account_id = $request['account_id'];
+            $location_id = $request['location_id'];
 
-        $account_key = 'accounts/' . $account_id;
-        $location_key = 'locations/' . $location_id;
+            $account_key = 'accounts/' . $account_id;
+            $location_key = 'locations/' . $location_id;
 
-        try {
-            $reviews = self::get_reviews_by_location($account_key, $location_key); // Your own method
-            return rest_ensure_response($reviews);
-        } catch (Exception $e) {
-            return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
+            $page = (int) $request->get_param('page') ?: 1;
+            $per_page = (int) $request->get_param('per_page') ?: 10; // Default to 10 items per page
+
+            try {
+                $all_reviews = self::get_reviews_by_location($account_key, $location_key);
+
+                // Calculate pagination
+                $total_reviews = count($all_reviews);
+                $total_pages = ceil($total_reviews / $per_page);
+                $offset = ($page - 1) * $per_page;
+
+                // Slice the reviews array to get the current page
+                $paged_reviews = array_slice($all_reviews, $offset, $per_page);
+
+                // Prepare response
+                $response = rest_ensure_response($paged_reviews);
+
+                // Add pagination headers
+                $response->header('X-WP-Total', $total_reviews);
+                $response->header('X-WP-TotalPages', $total_pages);
+
+                return $response;
+            } catch (Exception $e) {
+                return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
+            }
         }
-    }
 
 
     public static function activate() {
