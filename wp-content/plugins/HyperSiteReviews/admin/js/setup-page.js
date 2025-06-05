@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Disable/enable buttons based on the current page
         prevButton.disabled = index === 0;
-        nextButton.disabled = index === pages.length - 1;
+        nextButton.disabled = index === pages.length - 1 || !isAnyAccountChecked();
     };
 
     // Initial setup
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     nextButton.addEventListener('click', () => {
-        if (currentPage < pages.length - 1) {
+        if (currentPage < pages.length - 1 && isAnyAccountChecked()) {
             currentPage++;
             showPage(currentPage);
         }
@@ -35,16 +35,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Account selection logic
     const accountSelect = document.getElementById('account-selection-table');
-    const accountCheckboxes = accountSelect.querySelectorAll('input[type="checkbox"]');
-    const accountSelectButton = nextButton; // Assuming you use the next button to proceed
 
-    accountCheckboxes.forEach(c => {
-        c.addEventListener('change', e => {
-            const clickedCheckbox = e.target;
-            const otherCheckboxes = Array.from(accountCheckboxes).filter(cb => cb !== clickedCheckbox);
-            otherCheckboxes.forEach(cb => cb.checked = false);
+    // Function to check if any account is selected
+    const isAnyAccountChecked = () => {
+        const accountCheckboxes = accountSelect.querySelectorAll('input[type="checkbox"]');
+        return Array.from(accountCheckboxes).some(cb => cb.checked);
+    };
 
-            accountSelectButton.disabled = !Array.from(accountCheckboxes).some(cb => cb.checked);
+    const updateButtonState = () => {
+        nextButton.disabled = !isAnyAccountChecked();
+    };
+
+    // Function to attach event listeners to checkboxes
+    const attachCheckboxListeners = () => {
+        const accountCheckboxes = accountSelect.querySelectorAll('input[type="checkbox"]');
+        accountCheckboxes.forEach(c => {
+            c.addEventListener('change', e => {
+                const clickedCheckbox = e.target;
+                const otherCheckboxes = Array.from(accountCheckboxes).filter(cb => cb !== clickedCheckbox);
+                otherCheckboxes.forEach(cb => cb.checked = false);
+
+                updateButtonState();
+            });
         });
-    });
+    };
+
+    // Call this after populating account checkboxes dynamically
+    attachCheckboxListeners();
 });
