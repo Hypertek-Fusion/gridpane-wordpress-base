@@ -539,7 +539,7 @@ class HyperSiteReviews {
                 self::get_locations_by_account();
             }
 
-            return self::$account_locations ?? []; // Return locations for the specific account
+            return self::$account_locations ?? [];
         }
 
         public static function register_api_routes() {
@@ -607,9 +607,10 @@ class HyperSiteReviews {
 
     public static function api_get_account_locations($request) {
         $account_id = $request['account_id'];
+        $account_key = '/accounts' . $account_id;
 
         try {
-            $locations = self::get_locations_by_account_id($account_id);
+            $locations = self::get_locations_by_account_id($account_key);
             return rest_ensure_response($locations);
         } catch (Exception $e) {
             return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
@@ -630,8 +631,11 @@ class HyperSiteReviews {
         $account_id = $request['account_id'];
         $location_id = $request['location_id'];
 
+        $account_key = '/accounts' . $account_id;
+        $location_key = '/locations' . $location_id;
+
         try {
-            $reviews = self::get_reviews_by_location($account_id, $location_id); // Your own method
+            $reviews = self::get_reviews_by_location($account_key, $location_key); // Your own method
             return rest_ensure_response($reviews);
         } catch (Exception $e) {
             return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
