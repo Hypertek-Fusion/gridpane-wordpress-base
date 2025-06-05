@@ -16,6 +16,15 @@ class HyperSiteReviews {
         try {
             add_action('admin_menu', [self::class, 'add_admin_menus']);
             add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
+
+            add_action('rest_api_init', function () {
+                if (!is_user_logged_in() && isset($_COOKIE[LOGGED_IN_COOKIE])) {
+                    $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE], 'logged_in');
+                    if ($user_id) {
+                        wp_set_current_user($user_id);
+                    }
+                }
+            });
             add_action('rest_api_init', ['HyperSiteReviews', 'register_api_routes']);
 
 
