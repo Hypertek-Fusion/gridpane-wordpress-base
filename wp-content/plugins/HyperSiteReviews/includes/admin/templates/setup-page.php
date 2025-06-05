@@ -19,7 +19,6 @@
             ?>
             <form method="post">
                 <div class="setup-page" data-page="1">
-                    <?php wp_nonce_field('hsrev_google_disconnect'); ?>
                     <div id="account-selection-table" data-select="single">
                         <p>Select the Account you would like to use.</p>
                         <div class="account-selection-table__heading-row">
@@ -31,7 +30,6 @@
                         </div>
                         <div id="account-rows"></div> <!-- Placeholder for account rows -->
                     </div>
-                    <input type="submit" name="disconnect" value="Disconnect Google Account" class="button button-secondary">
                 </div>
 
                 <div class="setup-page" data-page="2">

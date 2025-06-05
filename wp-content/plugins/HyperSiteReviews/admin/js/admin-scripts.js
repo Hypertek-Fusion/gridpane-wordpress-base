@@ -21,6 +21,7 @@ const getUsers = async () => {
         loading.style.textAlign = 'center';
         loading.style.verticalAlign = 'center';
         loading.innerText = 'Fetching accounts. Please wait ...';
+        loading.classList.add('account-row-item');
         accountRowsContainer.appendChild(loading)
 
         const response = await fetch(HSRevApi.urls.accounts, {
@@ -45,14 +46,12 @@ const getUsers = async () => {
 
 const populateAccounts = async (accountsData) => {
     const accountRowsContainer = document.getElementById('account-rows');
+    const accountRows = []
     
-
     // Iterate over each account in the accountsData object
     Object.keys(accountsData.accounts).forEach(async accountKey => {
         const account = accountsData.accounts[accountKey];
         const accountLength = await getAccountLocationsLength(account.name);
-
-        accountRowsContainer.innerHTML = '';
         
         if(accountLength > 0) {
             const accountRow = document.createElement('div');
@@ -66,9 +65,14 @@ const populateAccounts = async (accountsData) => {
                     <div class="account-row-item__cell" data-type="location-count">${accountLength}</div>
                 </div>
             `;
-            accountRowsContainer.appendChild(accountRow);
+            
+            accountRows.push(accountRow)
         }
     });
+
+
+    accountRowsContainer.innerHTML = '';
+    accountRowsContainer.appendChild(...accountRows);
 };
 
 const getAccountLocationsLength = async (accountName) => {
