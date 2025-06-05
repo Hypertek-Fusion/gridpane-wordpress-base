@@ -137,9 +137,9 @@ const populateLocations = async (locationsData) => {
     const locationsArray = Object.keys(locationsData.locations).map(locationKey => locationsData.locations[locationKey]);
 
     await Promise.all(locationsArray.map(async location => {
-        const reviewCount = await getLocationReviewCount(location.name); // Example function to get review count
-
-        const locationRow = document.createElement('div');
+        if(window.HSRevData.data.accountId) {
+            const reviewCount = await getLocationReviewCount(window.HSRevData.data.accountId, location.name); // Example function to get review count
+            const locationRow = document.createElement('div');
         locationRow.classList.add('rows');
         locationRow.innerHTML = `
             <div class="row-item" data-location-id="${location.name}">
@@ -150,6 +150,7 @@ const populateLocations = async (locationsData) => {
             </div>
         `;
         locationRows.push(locationRow);
+        }
     }));
 
     locationRowsContainer.innerHTML = ''; // Clear loading message

@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const accountId = getCheckedAccountId();
             if (accountId && window.HSRevData.functions.getLocations) {
                 window.HSRevData.functions.getLocations(accountId);
+                window.HSRevData.data.accountId = accountId
             }
             currentPage++;
             showPage(currentPage);
