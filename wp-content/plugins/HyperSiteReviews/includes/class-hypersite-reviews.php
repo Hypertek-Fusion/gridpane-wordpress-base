@@ -18,28 +18,12 @@ class HyperSiteReviews {
             add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
 
             add_action('rest_api_init', function () {
-                error_log('REST API Init');
-
-                if (isset($_COOKIE[LOGGED_IN_COOKIE])) {
-                    error_log('LOGGED_IN_COOKIE present: ' . $_COOKIE[LOGGED_IN_COOKIE]);
-                } else {
-                    error_log('LOGGED_IN_COOKIE is not set.');
-                }
 
                 $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE], 'logged_in');
                 if ($user_id) {
-                    error_log('Authenticated user ID: ' . $user_id);
                     wp_set_current_user($user_id);
                 } else {
                     error_log('Failed to authenticate user via cookie.');
-                }
-
-                // Test current user
-                $current_user = wp_get_current_user();
-                if ($current_user->exists()) {
-                    error_log('Current user login: ' . $current_user->user_login);
-                } else {
-                    error_log('No current user found.');
                 }
 
                 HyperSiteReviews::register_api_routes();
@@ -537,7 +521,7 @@ class HyperSiteReviews {
         }
 
         public static function get_locations_by_account_id($account_id) {
-            self::get_locations_by_account(); // Ensure locations are populated
+            self::get_locations_by_account();
 
             return self::$account_locations[$account_id] ?? []; // Return locations for the specific account
         }
@@ -562,7 +546,7 @@ class HyperSiteReviews {
 
         register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations', [
             'methods'  => 'GET',
-            'callback' => [self::class, 'api_get_account_locations'],
+            'callback' => __CLASS__ . '::api_get_account_locations',
             'permission_callback' => function () {
                 $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
                 if ($user_id) {
