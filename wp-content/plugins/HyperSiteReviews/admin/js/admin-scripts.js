@@ -59,7 +59,7 @@ const populateAccounts = (accountsData) => {
                 <div class="account-row-item__cell" data-type="name">${account.name}</div>
                 <div class="account-row-item__cell" data-type="account-name">${account.accountName}</div>
                 <div class="account-row-item__cell" data-type="type">${account.type}</div>
-                <div class="account-row-item__cell" data-type="location-count">Loading...</div> <!-- Placeholder for location count -->
+                <div class="account-row-item__cell" data-type="location-count">Loading...</div>
             </div>
         `;
         accountRowsContainer.appendChild(accountRow);
@@ -67,6 +67,28 @@ const populateAccounts = (accountsData) => {
         // Fetch location count for each account
         getAccountLocationsLength(account.name, accountRow.querySelector('[data-type="location-count"]'));
     });
+};
+
+const getAccountLocationsLength = async (accountName, element) => {
+    try {
+        const url = getAccountLocationsUrl(accountName);
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-WP-Nonce': HSRevApi.nonce
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+
+        const data = await response.json();
+        element.textContent = data.total_locations || 0;
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
 };
 
 const getAccountLocations = async (accountId) => {
