@@ -669,7 +669,7 @@ class HyperSiteReviews {
             error_log('Account Key: ' . $account_key);
             $count = array(
                 'accounts' => $account_key,
-                'total_locations' => self::get_account_locations_length($account_key)
+                'total' => self::get_account_locations_length($account_key)
             );
             return rest_ensure_response($count);
         } catch (Exception $e) {
