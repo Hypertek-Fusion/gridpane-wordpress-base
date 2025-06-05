@@ -70,10 +70,19 @@ class HyperSiteReviews {
                     );
 
                     // Localize the script to pass REST API URL and nonce
-                    wp_localize_script('hsrev-admin-script', 'HSRevApi', [
-                        'url'   => rest_url('hsrev/v1/accounts'),
-                        'nonce' => wp_create_nonce('wp_rest'),
-                    ]);
+                wp_localize_script('hsrev-admin-script', 'HSRevApi', [
+                    'urls' => [
+                        'accounts' => rest_url('hsrev/v1/accounts'),
+                        'locations' => rest_url('hsrev/v1/locations'),
+                        'accountLocations' => function($account_id) {
+                            return rest_url("hsrev/v1/accounts/{$account_id}/locations");
+                        },
+                        'reviews' => function($account_id, $location_id) {
+                            return rest_url("hsrev/v1/accounts/{$account_id}/locations/{$location_id}/reviews");
+                        }
+                    ],
+                    'nonce' => wp_create_nonce('wp_rest'),
+                ]);
                 } else if (isset($_GET['page']) && $_GET['page'] === 'hypersite-reviews-debug-settings') {
                                         // Enqueue the admin scripts
                     wp_enqueue_script(
