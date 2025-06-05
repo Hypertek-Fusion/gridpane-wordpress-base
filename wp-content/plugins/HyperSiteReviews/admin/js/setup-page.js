@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
     nextButton.addEventListener('click', () => {
         if (currentPage < pages.length - 1 && isAnyAccountChecked()) {
             const accountId = getCheckedAccountId();
-            if (accountId && window.HSRevData.functions.populateLocations) {
-                window.HSRevData.functions.populateLocations(accountId);
+            if (accountId && window.HSRevData.functions.getLocations) {
+                window.HSRevData.functions.getLocations(accountId);
             }
             currentPage++;
             showPage(currentPage);
