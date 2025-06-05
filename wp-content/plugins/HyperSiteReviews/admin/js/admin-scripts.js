@@ -86,7 +86,7 @@ const getAccountLocationsLength = async (accountName, element) => {
         }
 
         const data = await response.json();
-        element.textContent = data.total_locations || 0; // Use the total_locations property from the response
+        element.textContent = data.total || 0; // Use the total_locations property from the response
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
