@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch(HSRevApi.url, {
+    fetch(HSRevApi.urls.accounts, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
