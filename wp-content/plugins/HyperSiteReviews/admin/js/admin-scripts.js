@@ -71,7 +71,7 @@ const populateAccounts = (accountsData) => {
 
 const getAccountLocationsLength = async (accountName, element) => {
     try {
-        const url = getAccountLocationsUrl(accountName);
+        const url = getAccountLocationsUrl(accountName.replace('accounts/', ''));
         const response = await fetch(url, {
             method: 'GET',
             headers: {
