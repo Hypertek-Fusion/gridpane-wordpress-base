@@ -99,7 +99,7 @@ const getAccountLocationsLength = async (accountName) => {
 // Function to fetch locations for a selected account
 const getLocations = async (accountId) => {
     try {
-        const url = getAccountLocationsUrl(accountId.replace('%s', accountName.replace('accounts/', '')));
+        const url = getAccountLocationsUrl(accountId.replace('accounts/', ''));
         const response = await fetch(url, {
             method: 'GET',
             headers: {
