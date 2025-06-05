@@ -99,6 +99,14 @@ const getAccountLocationsLength = async (accountName) => {
 // Function to fetch locations for a selected account
 const getLocations = async (accountId) => {
     try {
+        const locationRowsContainer = document.getElementById('location-rows');
+        locationRowsContainer.innerHTML = '';
+        const loading = document.createElement('div');
+        loading.style.textAlign = 'center';
+        loading.innerText = 'Fetching accounts. Please wait ...';
+        loading.classList.add('account-row-item');
+        locationRowsContainer.appendChild(loading);
+
         const url = getAccountLocationsUrl(accountId.replace('accounts/', ''));
         const response = await fetch(url, {
             method: 'GET',
