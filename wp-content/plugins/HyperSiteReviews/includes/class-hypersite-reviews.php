@@ -2,9 +2,10 @@
 if ( ! defined('ABSPATH') ) exit;
 
 // TODO
-// Get reviews by location
-// Get total review count
-// Set location_reviews array
+// Create REST API for getting locations by account
+// Create REST API route for getting reviews by location
+// Finish Form Flow
+// Have review request function automatically get the next page with the next page token
 
 class HyperSiteReviews {
     private static $accounts = [];
@@ -416,19 +417,36 @@ class HyperSiteReviews {
                     $client->setAccessType('offline');
                     $client->refreshToken($client->getRefreshToken());
 
-                    $httpClient = $client->authorize();
+                    $next_page_token = null;
 
-                    $response = $httpClient->get($url);
+                    do {
+                        $httpClient = $client->authorize();
 
-                    if ($response->getStatusCode() === 200) {
-                        $reviewsData = json_decode($response->getBody()->getContents(), true);
-                        foreach ($reviewsData['reviews'] as $review) {
-                            if($review['starRating'] === 'FIVE')
-                            self::$location_reviews[$loc_k][$review['reviewId']] = $review;
+                        $request_url = $url;
+                        if ($next_page_token) {
+                            $request_url .= '?pageToken=' . urlencode($next_page_token);
                         }
-                    } else {
-                        error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
-                    }
+
+                        $response = $httpClient->get($request_url);
+
+                        if ($response->getStatusCode() === 200) {
+                            $reviewsData = json_decode($response->getBody()->getContents(), true);
+                            $reviews = $reviewsData['reviews'] ?? null;
+
+                            if ($reviews) {
+                                foreach ($reviews as $review) {
+                                    if ($review['starRating'] === 'FIVE') {
+                                        self::$location_reviews[$loc_k][$review['reviewId']] = $review;
+                                    }
+                                }
+                            }
+
+                            $next_page_token = $reviewsData['nextPageToken'] ?? null;
+                        } else {
+                            error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
+                            throw new Exception('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
+                        }
+                    } while ($next_page_token);
                 }
             }
         } catch (Exception $e) {
