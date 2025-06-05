@@ -43,33 +43,33 @@ const getUsers = async () => {
     }
 };
 
-const populateAccounts = (accountsData) => {
+const populateAccounts = async (accountsData) => {
     const accountRowsContainer = document.getElementById('account-rows');
     accountRowsContainer.innerHTML = ''; // Clear existing content
 
     // Iterate over each account in the accountsData object
     Object.keys(accountsData.accounts).forEach(accountKey => {
         const account = accountsData.accounts[accountKey];
-
-        const accountRow = document.createElement('div');
-        accountRow.classList.add('rows');
-        accountRow.innerHTML = `
-            <div class="account-row-item" data-account-id="${account.name}">
-                <input type="checkbox" name="selected-account">
-                <div class="account-row-item__cell" data-type="name">${account.name}</div>
-                <div class="account-row-item__cell" data-type="account-name">${account.accountName}</div>
-                <div class="account-row-item__cell" data-type="type">${account.type}</div>
-                <div class="account-row-item__cell" data-type="location-count">Loading...</div>
-            </div>
-        `;
-        accountRowsContainer.appendChild(accountRow);
-
-        // Fetch location count for each account
-        getAccountLocationsLength(account.name, accountRow.querySelector('[data-type="location-count"]'));
+        const accountLength = getAccountLocationsLength(account.name);
+        
+        if(accountLength > 0) {
+            const accountRow = document.createElement('div');
+            accountRow.classList.add('rows');
+            accountRow.innerHTML = `
+                <div class="account-row-item" data-account-id="${account.name}">
+                    <input type="checkbox" name="selected-account">
+                    <div class="account-row-item__cell" data-type="name">${account.name}</div>
+                    <div class="account-row-item__cell" data-type="account-name">${account.accountName}</div>
+                    <div class="account-row-item__cell" data-type="type">${account.type}</div>
+                    <div class="account-row-item__cell" data-type="location-count">${accountLength}</div>
+                </div>
+            `;
+            accountRowsContainer.appendChild(accountRow);
+        }
     });
 };
 
-const getAccountLocationsLength = async (accountName, element) => {
+const getAccountLocationsLength = async (accountName) => {
     try {
         // Use the totalAccountLocations URL template and replace '%s' with the account ID
         const url = HSRevApi.urls.totalAccountLocations.replace('%s', accountName.replace('accounts/', ''));
@@ -86,7 +86,7 @@ const getAccountLocationsLength = async (accountName, element) => {
         }
 
         const data = await response.json();
-        element.textContent = data.total || 0; // Use the total_locations property from the response
+        return data.total || 0;
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
