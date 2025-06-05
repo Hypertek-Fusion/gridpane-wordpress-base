@@ -1,3 +1,7 @@
+document.addEventListener('DOMContentLoaded', function() {
+    getUsers();
+});
+
 function getAccountLocationsUrl(accountId) {
     return HSRevApi.urls.accountLocationsBase.replace('%s', accountId);
 }
