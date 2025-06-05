@@ -73,6 +73,7 @@ class HyperSiteReviews {
                             'accountLocationsBase' => rest_url('hsrev/v1/accounts/%s/locations'),
                             'totalAccountLocations' => rest_url('hsrev/v1/accounts/%s/total-locations'),
                             'reviewsBase' => rest_url('hsrev/v1/accounts/%s/locations/%s/reviews'),
+                            'totalLocationReviews' => rest_url('hsrev/v1/accounts/%s/locations/%s/total-reviews'),
                         ],
                         'nonce' => wp_create_nonce('wp_rest'),
                     ]);
@@ -94,6 +95,7 @@ class HyperSiteReviews {
                             'accountLocationsBase' => rest_url('hsrev/v1/accounts/%s/locations'),
                             'totalAccountLocations' => rest_url('hsrev/v1/accounts/%s/total-locations'),
                             'reviewsBase' => rest_url('hsrev/v1/accounts/%s/locations/%s/reviews'),
+                            'totalLocationReviews' => rest_url('hsrev/v1/accounts/%s/locations/%s/total-reviews'),
                         ],
                         'nonce' => wp_create_nonce('wp_rest'),
                     ]);
@@ -524,7 +526,7 @@ class HyperSiteReviews {
         return $count;
     }
 
-        public static function get_location_reviews_length($loc, $print_error = true) {
+        public static function get_location_reviews_length($loc) {
             if(empty(self::$location_reviews)) {
                 if (empty(self::$account_locations)) {
                     if (empty(self::$accounts)) {
@@ -540,9 +542,6 @@ class HyperSiteReviews {
             return count(self::$location_reviews[$loc]);
         } catch (Exception $e) {
             error_log('Error getting Account Locations Length: ' . $e->getMessage());
-            if($print_error) {
-                echo '<div class="notice notice-error"><p>Error getting location count: ' . esc_html($e->getMessage()) . '</p></div>';
-            }
             return 0;
         }
     }
@@ -648,6 +647,20 @@ class HyperSiteReviews {
                 return current_user_can('manage_options');
             },
         ]);
+
+        // Get Location Review Count
+        register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations/(?P<location_id>[^\/]+)/total-reviews', [
+            'methods'  => 'GET',
+            'callback' => [self::class, 'api_get_total_location_reviews'],
+            'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
+                return current_user_can('manage_options');
+            },
+        ]);
     }
 
     public static function api_get_accounts($request) {
@@ -658,6 +671,23 @@ class HyperSiteReviews {
             ));
         } catch (Exception $e) {
             return new WP_Error('account_fetch_failed', $e->getMessage(), ['status' => 500]);
+        }
+    }
+
+    public static function api_get_total_location_reviews($request) {
+        $location_id = $request['location_id'];
+
+        $location_key = 'locations/' . $location_id;
+        
+        try {
+            error_log('Location Key: ' . $location_key);
+            $count = array(
+                'locations' => $location_key,
+                'total' => self::get_location_reviews_length($location_key)
+            );
+            return rest_ensure_response($count);
+        } catch (Exception $e) {
+            return new WP_Error('location_review_total_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
     }
 

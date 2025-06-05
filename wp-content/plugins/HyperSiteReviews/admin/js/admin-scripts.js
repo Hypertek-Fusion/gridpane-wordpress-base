@@ -161,9 +161,28 @@ const populateLocations = async (locationsData) => {
 };
 
 // Example function to get review count for a location
-const getLocationReviewCount = async (locationId) => {
-    // Implement the logic to fetch the review count for a location
-    return Math.floor(Math.random() * 100); // Placeholder for demonstration
+const getLocationReviewCount = async (accountId, locationId) => {
+        try {
+        const url = HSRevApi.urls.totalLocationReviews
+        .replace('%s', accountId.replace('accounts/', ''))
+        .replace('%s', locationId.replace('locations/', ''));
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-WP-Nonce': HSRevApi.nonce
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+
+        const data = await response.json();
+        return data.total || 0;
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
 };
 
 
