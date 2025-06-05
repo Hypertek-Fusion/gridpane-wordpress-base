@@ -6,7 +6,6 @@ function getAccountLocationsUrl(accountId) {
     return HSRevApi.urls.accountLocationsBase.replace('%s', accountId);
 }
 
-// Function to construct the reviews URL
 function getReviewsUrl(accountId, locationId) {
     return HSRevApi.urls.reviewsBase
         .replace('%s', accountId)
@@ -22,7 +21,7 @@ const getUsers = async () => {
         loading.style.verticalAlign = 'center';
         loading.innerText = 'Fetching accounts. Please wait ...';
         loading.classList.add('account-row-item');
-        accountRowsContainer.appendChild(loading)
+        accountRowsContainer.appendChild(loading);
 
         const response = await fetch(HSRevApi.urls.accounts, {
             method: 'GET',
@@ -37,7 +36,7 @@ const getUsers = async () => {
         }
 
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         populateAccounts(data);
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
@@ -48,7 +47,6 @@ const populateAccounts = async (accountsData) => {
     const accountRowsContainer = document.getElementById('account-rows');
     const accountRows = [];
 
-    // Use Promise.all to handle asynchronous operations in parallel
     await Promise.all(Object.keys(accountsData.accounts).map(async accountKey => {
         const account = accountsData.accounts[accountKey];
         const accountLength = await getAccountLocationsLength(account.name);
@@ -69,19 +67,16 @@ const populateAccounts = async (accountsData) => {
         }
     }));
 
-    // Clear previous content and append all account rows at once
     accountRowsContainer.innerHTML = '';
     accountRowsContainer.append(...accountRows);
 
-        // Call the globally exposed function to attach listeners
-    if (window.attachCheckboxListeners) {
-        window.attachCheckboxListeners();
+    if (window.HSRevData.functions.attachCheckboxListeners) {
+        window.HSRevData.functions.attachCheckboxListeners(accountRowsContainer);
     }
 };
 
 const getAccountLocationsLength = async (accountName) => {
     try {
-        // Use the totalAccountLocations URL template and replace '%s' with the account ID
         const url = HSRevApi.urls.totalAccountLocations.replace('%s', accountName.replace('accounts/', ''));
         const response = await fetch(url, {
             method: 'GET',
@@ -102,11 +97,19 @@ const getAccountLocationsLength = async (accountName) => {
     }
 };
 
-
-const getAccountLocations = async (accountId) => {
-    const url = getAccountLocationsUrl(accountId);
-
+// Function to populate locations for a selected account
+const populateLocations = async (accountId) => {
     try {
+        const locationRowsContainer = document.getElementById('location-rows');
+        locationRowsContainer.innerHTML = '';
+        const loading = document.createElement('div');
+        loading.style.textAlign = 'center';
+        loading.style.verticalAlign = 'center';
+        loading.innerText = 'Fetching locations. Please wait ...';
+        loading.classList.add('location-row-item');
+        locationRowsContainer.appendChild(loading);
+
+        const url = getAccountLocationsUrl(accountId);
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -119,57 +122,35 @@ const getAccountLocations = async (accountId) => {
             throw new Error('Network response was not ok ' + response.statusText);
         }
 
-        const data = await response.json();
-        console.log('Locations for Account:', data);
-        // Process and display the locations data in the admin dashboard
+        const locationsData = await response.json();
+        console.log('Locations for Account:', locationsData);
+
+        locationRowsContainer.innerHTML = ''; // Clear loading message
+
+        locationsData.forEach(location => {
+            const locationRow = document.createElement('div');
+            locationRow.classList.add('rows');
+            locationRow.innerHTML = `
+                <div class="location-row-item" data-location-id="${location.name}">
+                    <input type="checkbox" name="selected-location">
+                    <div class="location-row-item__cell" data-type="id">${location.name}</div>
+                    <div class="location-row-item__cell" data-type="name">${location.title}</div>
+                    <div class="location-row-item__cell" data-type="review-count">Loading...</div>
+                </div>
+            `;
+            locationRowsContainer.appendChild(locationRow);
+        });
+
+        if (window.HSRevData.functions.attachCheckboxListeners) {
+            window.HSRevData.functions.attachCheckboxListeners(locationRowsContainer);
+        }
+
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
-}
+};
 
-const getAllLocations = async () => {
-    await fetch(HSRevApi.urls.locations, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-WP-Nonce': HSRevApi.nonce
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('All Locations:', data);
-        // Process and display the locations data in the admin dashboard
-    })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
-}
-
-const getLocationReviews = async (accountId, locationId) => {
-    const url = getReviewsUrl(accountId);
-
-    await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-WP-Nonce': HSRevApi.nonce
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Reviews for Location:', data);
-    })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
-}
+// Expose functions to the global scope
+window.HSRevData = window.HSRevData || {};
+window.HSRevData.functions = window.HSRevData.functions || {};
+window.HSRevData.functions.populateLocations = populateLocations;

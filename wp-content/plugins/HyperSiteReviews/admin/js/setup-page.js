@@ -13,17 +13,25 @@ document.addEventListener('DOMContentLoaded', () => {
         return Array.from(accountCheckboxes).some(cb => cb.checked);
     };
 
+    const getCheckedAccountId = () => {
+        const selectedCheckbox = accountSelect.querySelector('input[type="checkbox"]:checked');
+        if (selectedCheckbox) {
+            return selectedCheckbox.closest('.account-row-item').dataset.accountId;
+        }
+        return null;
+    };
+
     const updateButtonState = () => {
         nextButton.disabled = !isAnyAccountChecked();
     };
 
     // Function to attach event listeners to checkboxes
-    const attachCheckboxListeners = () => {
-        const accountCheckboxes = accountSelect.querySelectorAll('input[type="checkbox"]');
-        accountCheckboxes.forEach(c => {
+    const attachCheckboxListeners = (container) => {
+        const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(c => {
             c.addEventListener('change', e => {
                 const clickedCheckbox = e.target;
-                const otherCheckboxes = Array.from(accountCheckboxes).filter(cb => cb !== clickedCheckbox);
+                const otherCheckboxes = Array.from(checkboxes).filter(cb => cb !== clickedCheckbox);
                 otherCheckboxes.forEach(cb => cb.checked = false);
 
                 updateButtonState();
@@ -37,9 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
             page.style.display = i === index ? 'block' : 'none';
         });
 
-        // Disable/enable buttons based on the current page
         prevButton.disabled = index === 0;
-        nextButton.disabled = index === pages.length - 1 || !isAnyAccountChecked();
+        updateButtonState();
     };
 
     // Initial setup
@@ -55,10 +62,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     nextButton.addEventListener('click', () => {
         if (currentPage < pages.length - 1 && isAnyAccountChecked()) {
+            const accountId = getCheckedAccountId();
+            if (accountId && window.HSRevData.functions.populateLocations) {
+                window.HSRevData.functions.populateLocations(accountId);
+            }
             currentPage++;
             showPage(currentPage);
         }
     });
 
-    window.attachCheckboxListeners = attachCheckboxListeners;
+    // Attach listeners for account checkboxes once they are populated
+    if (window.HSRevData && window.HSRevData.functions) {
+        window.HSRevData.functions.attachCheckboxListeners = attachCheckboxListeners;
+    }
 });
