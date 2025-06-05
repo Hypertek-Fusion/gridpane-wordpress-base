@@ -610,6 +610,7 @@ class HyperSiteReviews {
         $account_key = '/accounts/' . $account_id;
 
         try {
+            error_log('Account Key: ' . $account_key);
             $locations = self::get_locations_by_account_id($account_key);
             return rest_ensure_response($locations);
         } catch (Exception $e) {
