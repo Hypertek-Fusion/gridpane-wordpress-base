@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const getCheckedAccountId = () => {
         const selectedCheckbox = accountSelect.querySelector('input[type="checkbox"]:checked');
         if (selectedCheckbox) {
-            return selectedCheckbox.closest('.account-row-item').dataset.accountId;
+            return selectedCheckbox.closest('.row-item').dataset.accountId;
         }
         return null;
     };
