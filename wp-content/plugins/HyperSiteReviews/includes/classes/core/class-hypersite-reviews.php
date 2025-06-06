@@ -346,7 +346,7 @@ class HyperSiteReviews {
         $location_key = 'locations/' . $location_id;
         try {
             $reviews = GoogleDataHandler::get_location_reviews_length($location_key);
-            return rest_ensure_response(['total' => $reviews ?? [])]);
+            return rest_ensure_response(['total' => $reviews ?? []]);
         } catch (Exception $e) {
             return new WP_Error('location_review_total_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
