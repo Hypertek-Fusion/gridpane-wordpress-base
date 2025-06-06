@@ -68,6 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentPage === 0) {
                 const accountId = getCheckedAccountId();
                 if (accountId && window.HSRevData.functions.getLocations) {
+                    // Clear location cache if a new account is selected
+                    if (window.HSRevData.data.accountId !== accountId) {
+                        console.log('Account changed, clearing location cache');
+                        window.HSRevData.data.locationsCache = {};
+                    }
                     window.HSRevData.functions.getLocations(accountId);
                     window.HSRevData.data.accountId = accountId;
                     console.log(`Account ID set: ${accountId}`);
