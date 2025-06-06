@@ -196,8 +196,73 @@ const getLocationReviewCount = async (accountId, locationId) => {
         console.error('There was a problem with the fetch operation:', error);
     }
 };
+// Function to fetch reviews for a selected location
+const getReviews = async (accountId, locationId) => {
+    const reviewRowsContainer = document.getElementById('review-rows');
+
+    // Check if reviews are already cached
+    if (window.HSRevData.data.reviewsCache && window.HSRevData.data.reviewsCache[locationId]) {
+        console.log('Using cached reviews');
+        populateReviews(window.HSRevData.data.reviewsCache[locationId]);
+        return;
+    }
+
+    try {
+        reviewRowsContainer.innerHTML = '<div>Loading reviews...</div>';
+
+        const url = HSRevApi.urls.reviewsBase
+            .replace('%s', accountId.replace('accounts/', ''))
+            .replace('%s', locationId.replace('locations/', ''));
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-WP-Nonce': HSRevApi.nonce
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+
+        const reviewsData = await response.json();
+
+        // Cache the fetched reviews
+        window.HSRevData.data.reviewsCache = window.HSRevData.data.reviewsCache || {};
+        window.HSRevData.data.reviewsCache[locationId] = reviewsData;
+
+        console.log('Reviews for Location:', reviewsData);
+        populateReviews(reviewsData);
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+};
+
+// Function to populate reviews for a selected location
+const populateReviews = (reviewsData) => {
+    const reviewRowsContainer = document.getElementById('review-rows');
+    const reviewRows = [];
+
+    reviewsData.reviews.forEach(review => {
+        const reviewRow = document.createElement('div');
+        reviewRow.classList.add('rows');
+        reviewRow.innerHTML = `
+            <div class="row-item">
+                <div class="row-item__cell" data-type="reviewer">${review.reviewer_display_name}</div>
+                <div class="row-item__cell" data-type="rating">${review.star_rating}</div>
+                <div class="row-item__cell" data-type="comment">${review.comment}</div>
+                <div class="row-item__cell" data-type="date">${new Date(review.create_time).toLocaleDateString()}</div>
+            </div>
+        `;
+        reviewRows.push(reviewRow);
+    });
+
+    reviewRowsContainer.innerHTML = ''; // Clear loading message
+    reviewRowsContainer.append(...reviewRows);
+};
 
 // Expose functions to the global scope
 window.HSRevData = window.HSRevData || {};
 window.HSRevData.functions = window.HSRevData.functions || {};
 window.HSRevData.functions.getLocations = getLocations;
+window.HSRevData.functions.getReviews = getReviews;

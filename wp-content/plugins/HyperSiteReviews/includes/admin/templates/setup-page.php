@@ -44,6 +44,20 @@
                         <div id="location-rows"></div>
                     </div>
                 </div>
+
+                
+                <div class="setup-page" data-page="3">
+                    <div class="selection-table" data-select-type="review">
+                        <p>Reviews for the selected location:</p>
+                        <div class="selection-table__heading-row">
+                            <div class="selection-table__heading"><p>Reviewer</p></div>
+                            <div class="selection-table__heading"><p>Rating</p></div>
+                            <div class="selection-table__heading"><p>Comment</p></div>
+                            <div class="selection-table__heading"><p>Date</p></div>
+                        </div>
+                        <div id="review-rows"></div> <!-- Placeholder for review rows -->
+                    </div>
+                </div>
             </form>
 
             <div class="button-wrapper">

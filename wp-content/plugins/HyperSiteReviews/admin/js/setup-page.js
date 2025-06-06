@@ -24,11 +24,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
     };
 
+    // Function to get the checked location ID
+    const getCheckedLocationId = () => {
+        const selectedCheckbox = pages[1].querySelector('input[type="checkbox"]:checked');
+        if (selectedCheckbox) {
+            return selectedCheckbox.closest('.row-item').dataset.locationId;
+        }
+        return null;
+    };
+
     const updateButtonState = () => {
         nextButton.disabled = !isAnyCheckboxCheckedOnCurrentPage();
     };
 
-    // Function to attach event listeners to checkboxes on the current page
+    // Attach checkbox event listeners
     const attachCheckboxListeners = (container) => {
         const checkboxes = container.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(c => {
@@ -68,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentPage === 0) {
                 const accountId = getCheckedAccountId();
                 if (accountId && window.HSRevData.functions.getLocations) {
-                    // Clear location cache if a new account is selected
                     if (window.HSRevData.data.accountId !== accountId) {
                         console.log('Account changed, clearing location cache');
                         window.HSRevData.data.locationsCache = {};
@@ -76,6 +84,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.HSRevData.functions.getLocations(accountId);
                     window.HSRevData.data.accountId = accountId;
                     console.log(`Account ID set: ${accountId}`);
+                }
+            } else if (currentPage === 1) {
+                const locationId = getCheckedLocationId();
+                if (locationId && window.HSRevData.functions.getReviews) {
+                    if (window.HSRevData.data.locationId !== locationId) {
+                        console.log('Location changed, clearing review cache');
+                        window.HSRevData.data.reviewsCache = {};
+                    }
+                    window.HSRevData.functions.getReviews(window.HSRevData.data.accountId, locationId);
+                    window.HSRevData.data.locationId = locationId;
+                    console.log(`Location ID set: ${locationId}`);
                 }
             }
             currentPage++;
