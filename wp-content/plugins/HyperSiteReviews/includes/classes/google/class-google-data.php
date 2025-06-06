@@ -253,6 +253,14 @@ public static function get_all_accounts_locations() {
     }
 }
 
+public static function is_accounts_table_empty() {
+    global $wpdb;
+
+    $count = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}accounts");
+
+    return $count == 0;
+}
+
 public static function is_locations_table_empty() {
     global $wpdb;
 
@@ -276,8 +284,15 @@ public static function get_initial_google_locations() {
     $service = new Google\Service\MyBusinessBusinessInformation($client);
 
     try {
+        $accounts = null;
         // Fetch all accounts
-        $accounts = self::get_google_accounts();
+        if(self::is_accounts_table_empty()) {
+            $accounts = self::get_google_accounts();
+        } else {
+            $accounts = self::get_all_accounts();
+        }
+
+        if(!$accounts) throw new Exception('$accounts is null');
         
         foreach ($accounts as $account) {
             $account_id = $account['account_id'];
