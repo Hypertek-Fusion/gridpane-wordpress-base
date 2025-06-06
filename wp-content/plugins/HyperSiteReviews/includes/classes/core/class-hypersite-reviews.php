@@ -98,6 +98,7 @@ class HyperSiteReviews {
                     'totalAccountLocations' => rest_url('hsrev/v1/accounts/%s/total-locations'),
                     'reviewsBase' => rest_url('hsrev/v1/accounts/%s/locations/%s/reviews'),
                     'totalLocationReviews' => rest_url('hsrev/v1/accounts/%s/locations/%s/total-reviews'),
+                    'locationReviewsBase' => rest_url('hsrev/v1/locations/%s/reviews'),
                 ],
                 'nonce' => wp_create_nonce('wp_rest'),
             ]);
@@ -289,6 +290,14 @@ class HyperSiteReviews {
                 return current_user_can('manage_options');
             },
         ]);
+
+        register_rest_route('hsrev/v1', '/locations/(?P<location_id>[^\/]+)/reviews', [
+        'methods' => 'GET',
+        'callback' => [self::class, 'api_get_locations_reviews'],
+        'permission_callback' => function () {
+            return current_user_can('manage_options');
+        },
+    ]);
     }
 
     public static function api_get_accounts($request) {
@@ -345,6 +354,17 @@ class HyperSiteReviews {
         try {
             $reviews = GoogleDataHandler::get_initial_google_reviews();
             return rest_ensure_response(['reviews' => $reviews[$location_key] ?? []]);
+        } catch (Exception $e) {
+            return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
+        }
+    }
+
+        public static function api_get_locations_reviews($request) {
+        $location_id = $request['location_id'];
+
+        try {
+            $reviews = GoogleDataHandler::get_initial_location_reviews($location_id);
+            return rest_ensure_response(['reviews' => $reviews]);
         } catch (Exception $e) {
             return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
         }

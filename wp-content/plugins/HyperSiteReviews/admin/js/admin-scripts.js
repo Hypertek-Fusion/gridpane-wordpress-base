@@ -196,8 +196,8 @@ const getLocationReviewCount = async (accountId, locationId) => {
         console.error('There was a problem with the fetch operation:', error);
     }
 };
-// Function to fetch reviews for a selected location
-const getReviews = async (accountId, locationId) => {
+
+const getReviews = async (locationId) => {
     const reviewRowsContainer = document.getElementById('review-rows');
 
     // Check if reviews are already cached
@@ -210,8 +210,7 @@ const getReviews = async (accountId, locationId) => {
     try {
         reviewRowsContainer.innerHTML = '<div>Loading reviews...</div>';
 
-        const url = HSRevApi.urls.reviewsBase
-            .replace('%s', accountId.replace('accounts/', ''))
+        const url = HSRevApi.urls.locationReviewsBase
             .replace('%s', locationId.replace('locations/', ''));
         const response = await fetch(url, {
             method: 'GET',

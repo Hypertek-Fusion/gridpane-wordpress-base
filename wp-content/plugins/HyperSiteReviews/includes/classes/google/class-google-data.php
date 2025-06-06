@@ -1,9 +1,10 @@
 <?php
 
+// TODO
+// Get single account lookup
+// Get single location lookup
+
 class GoogleDataHandler {
-    private static $accounts = [];
-    private static $account_locations = [];
-    private static $location_reviews = [];
 
     /**
      * Get Google Business accounts.
@@ -132,6 +133,55 @@ public static function get_initial_google_reviews() {
 }
 
 
+public static function get_initial_location_reviews($loc_id) {
+        global $wpdb;
+
+    $client = GoogleOAuthClient::get_client();
+
+    try {
+        if(self::location_exists($loc_id)) {
+            self::get_initial_google_locations();
+        }
+        $locations = self::get_location($loc_id);
+        $url = "https://mybusiness.googleapis.com/v4/{$location['parent_account_id']}/{$locations['location_id']}/reviews";
+        $httpClient = $client->authorize();
+        $response = $httpClient->get($url);
+            
+        if ($response->getStatusCode() === 200) {
+            $reviewsData = json_decode($response->getBody()->getContents(), true);
+            $reviews = $reviewsData['reviews'] ?? null;
+
+            if ($reviews) {
+                foreach ($reviews as $review) {
+                    $wpdb->replace(
+                        $wpdb->prefix . 'reviews',
+                        [
+                            'review_id' => $review['reviewId'],
+                            'location_id' => $location_id,
+                            'reviewer_display_name' => $review['reviewer']['displayName'],
+                            'reviewer_profile_photo_url' => $review['reviewer']['profilePhotoUrl'],
+                            'star_rating' => $review['starRating'],
+                            'comment' => $review['comment'],
+                            'create_time' => $review['createTime'],
+                            'update_time' => $review['updateTime'],
+                            'review_reply_comment' => $review['reviewReply']['comment'] ?? null,
+                            'review_reply_update_time' => $review['reviewReply']['updateTime'] ?? null,
+                        ]
+                    );
+                }
+            } else {
+                error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
+                throw new Exception('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
+            }
+        }
+        return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}reviews", ARRAY_A);
+    } catch (Exception $e) {
+        error_log('Error fetching reviews: ' . $e->getMessage());
+        throw new Exception('Failed to fetch reviews: ' . $e->getMessage());
+    }
+}
+
+
 public static function get_locations_reviews_length() {
     global $wpdb;
 
@@ -216,7 +266,6 @@ public static function get_all_accounts() {
     return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}accounts", ARRAY_A);
 }
 
-
     /**
      * Get all locations.
      *
@@ -291,9 +340,151 @@ public static function is_reviews_table_empty() {
     return $count == 0;
 }
 
+/**
+     * Check if an account exists in the database.
+     *
+     * @param string $account_id The account ID to check.
+     * @return bool True if the account exists, false otherwise.
+     */
+    public static function account_exists($account_id) {
+        global $wpdb;
+        
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}accounts WHERE account_id = %s",
+            $account_id
+        ));
+
+        return $exists > 0;
+    }
+
+    /**
+     * Check if a location exists in the database.
+     *
+     * @param string $location_id The location ID to check.
+     * @return bool True if the location exists, false otherwise.
+     */
+    public static function location_exists($location_id) {
+        global $wpdb;
+        
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}locations WHERE location_id = %s",
+            $location_id
+        ));
+
+        return $exists > 0;
+    }
+
+public static function get_location($location_id) {
+    global $wpdb;
+
+    if (self::location_exists($location_id)) {
+        // Use get_row to fetch the entire row as an associative array
+        return $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$wpdb->prefix}locations WHERE location_id = %s",
+            $location_id
+        ), ARRAY_A);
+    }
+
+    // Return null if the location does not exist
+    return null;
+}
+
+    /**
+     * Check if a review exists in the database.
+     *
+     * @param string $review_id The review ID to check.
+     * @return bool True if the review exists, false otherwise.
+     */
+    public static function review_exists($review_id) {
+        global $wpdb;
+        
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE review_id = %s",
+            $review_id
+        ));
+
+        return $exists > 0;
+    }
+
 
 
 public static function get_initial_google_locations() {
+    global $wpdb;
+
+    $client = GoogleOAuthClient::get_client();
+
+    if (!$client->getAccessToken()) {
+        wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
+        exit;
+    }
+
+    $service = new Google\Service\MyBusinessBusinessInformation($client);
+
+    try {
+        $accounts = null;
+        // Fetch all accounts
+        if(self::is_accounts_table_empty()) {
+            $accounts = self::get_google_accounts();
+        } else {
+            $accounts = self::get_all_accounts();
+        }
+
+        if(!$accounts) throw new Exception('$accounts is null');
+        
+        foreach ($accounts as $account) {
+            $account_id = $account['account_id'];
+            
+            // Fetch locations from Google API for the current account
+            $response = $service->accounts_locations->listAccountsLocations($account_id, ['readMask' => 'name,title,labels,languageCode,storeCode,websiteUri']);
+            
+            foreach ($response->getLocations() as $location) {
+                $url = "https://mybusiness.googleapis.com/v4/{$account_id}/{$location->getName()}/reviews";
+                $httpClient = $client->authorize();
+                $response = $httpClient->get($url);
+                
+                if ($response->getStatusCode() === 200) {
+                    $reviewsData = json_decode($response->getBody()->getContents(), true);
+                    $total_reviews = $reviewsData['totalReviewCount'] ?? null;
+
+                    if ($total_reviews) {
+                        $wpdb->replace(
+                            $wpdb->prefix . 'locations',
+                            [
+                                'location_id' => $location->getName(),
+                                'parent_account_id' => $account_id,
+                                'title' => $location->getTitle(),
+                                'labels' => json_encode($location->getLabels()),
+                                'language_code' => $location->getLanguageCode(),
+                                'store_code' => $location->getStoreCode(),
+                                'website_uri' => $location->getWebsiteUri(),
+                                'total_reviews' => $total_reviews,
+                            ]
+                        );
+                    } else {
+                        $wpdb->replace(
+                            $wpdb->prefix . 'locations',
+                            [
+                                'location_id' => $location->getName(),
+                                'parent_account_id' => $account_id,
+                                'title' => $location->getTitle(),
+                                'labels' => json_encode($location->getLabels()),
+                                'language_code' => $location->getLanguageCode(),
+                                'store_code' => $location->getStoreCode(),
+                                'website_uri' => $location->getWebsiteUri(),
+                                'total_reviews' => 0,
+                            ]
+                        );
+                    }
+                }
+            }
+        }
+    } catch (Exception $e) {
+        error_log('Error fetching and storing locations: ' . $e->getMessage());
+        throw new Exception('Failed to fetch and store locations: ' . $e->getMessage());
+    }
+}
+
+public static function get_initial_google_location($acc_id) {
     global $wpdb;
 
     $client = GoogleOAuthClient::get_client();
