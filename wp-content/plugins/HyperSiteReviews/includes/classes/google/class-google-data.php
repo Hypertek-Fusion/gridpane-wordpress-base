@@ -186,6 +186,10 @@ public static function get_account_locations_total($account_id) {
     global $wpdb;
 
     try {
+    if(self::is_accounts_table_empty()) {
+        self::get_google_accounts();
+    }
+
         $location_count = $wpdb->get_var($wpdb->prepare(
             "SELECT COUNT(*) FROM {$wpdb->prefix}locations WHERE parent_account_id = %s",
             $account_id
@@ -220,6 +224,7 @@ public static function get_all_accounts() {
      */
 public static function get_all_locations() {
     global $wpdb;
+    
 
     return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}locations", ARRAY_A);
 }
@@ -229,6 +234,10 @@ public static function get_all_accounts_locations() {
 
     try {
         // Fetch all accounts
+
+        if(self::is_accounts_table_empty()) {
+            self::get_google_accounts();
+        }
         $accounts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}accounts", ARRAY_A);
 
         // Initialize an array to hold accounts and their locations
