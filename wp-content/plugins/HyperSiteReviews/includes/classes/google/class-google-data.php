@@ -159,7 +159,7 @@ public static function get_location_reviews_length($acc, $loc) {
 
     try {
         $review_count = $wpdb->get_var($wpdb->prepare(
-            "SELECT total_reviews FROM {$wpdb->prefix}reviews WHERE location_id = %s",
+            "SELECT total_reviews FROM {$wpdb->prefix}locations WHERE location_id = %s",
             $loc
         ));
 
