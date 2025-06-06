@@ -1,6 +1,3 @@
-// Update "Fetching locations" to update to "Fetching review count" when ready
-// Fix bug admin-scripts.js?ver=1749160472:185 There was a problem with the fetch operation: SyntaxError: Unexpected token '<', "<div class"... is not valid JSON
-
 document.addEventListener('DOMContentLoaded', function() {
     getUsers();
 });
@@ -49,18 +46,18 @@ const populateAccounts = async (accountsData) => {
     const accountRowsContainer = document.getElementById('account-rows');
     const accountRows = [];
 
-    await Promise.all(Object.keys(accountsData.accounts).map(async accountKey => {
-        const account = accountsData.accounts[accountKey];
-        const accountLength = await getAccountLocationsLength(account.name);
+    await Promise.all(accountsData.accounts.map(async account => {
+        const accountId = account.account_id; // Access the account ID from the array element
+        const accountLength = await getAccountLocationsLength(accountId);
 
         if (accountLength > 0) {
             const accountRow = document.createElement('div');
             accountRow.classList.add('rows');
             accountRow.innerHTML = `
-                <div class="row-item" data-account-id="${account.name}">
+                <div class="row-item" data-account-id="${accountId}">
                     <input type="checkbox" name="selected-account">
-                    <div class="row-item__cell" data-type="name">${account.name}</div>
-                    <div class="row-item__cell" data-type="account-name">${account.accountName}</div>
+                    <div class="row-item__cell" data-type="name">${accountId}</div>
+                    <div class="row-item__cell" data-type="account-name">${account.account_name}</div>
                     <div class="row-item__cell" data-type="type">${account.type}</div>
                     <div class="row-item__cell" data-type="location-count">${accountLength}</div>
                 </div>
@@ -77,9 +74,9 @@ const populateAccounts = async (accountsData) => {
     }
 };
 
-const getAccountLocationsLength = async (accountName) => {
+const getAccountLocationsLength = async (accountId) => {
     try {
-        const url = HSRevApi.urls.totalAccountLocations.replace('%s', accountName.replace('accounts/', ''));
+        const url = HSRevApi.urls.totalAccountLocations.replace('%s', accountId.replace('accounts/', ''));
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -138,22 +135,22 @@ const populateLocations = async (locationsData) => {
     const locationRows = [];
 
     // Convert the locations object into an array
-    const locationsArray = Object.keys(locationsData.locations).map(locationKey => locationsData.locations[locationKey]);
+    const locationsArray = locationsData.locations;
 
     await Promise.all(locationsArray.map(async location => {
         if(window.HSRevData.data.accountId) {
-            const reviewCount = await getLocationReviewCount(window.HSRevData.data.accountId, location.name); // Example function to get review count
+            const reviewCount = await getLocationReviewCount(window.HSRevData.data.accountId, location.location_id);
             const locationRow = document.createElement('div');
-        locationRow.classList.add('rows');
-        locationRow.innerHTML = `
-            <div class="row-item" data-location-id="${location.name}">
-                <input type="checkbox" name="selected-location">
-                <div class="row-item__cell" data-type="id">${location.name}</div>
-                <div class="row-item__cell" data-type="name">${location.title}</div>
-                <div class="row-item__cell" data-type="review-count">${reviewCount}</div>
-            </div>
-        `;
-        locationRows.push(locationRow);
+            locationRow.classList.add('rows');
+            locationRow.innerHTML = `
+                <div class="row-item" data-location-id="${location.location_id}">
+                    <input type="checkbox" name="selected-location">
+                    <div class="row-item__cell" data-type="id">${location.location_id}</div>
+                    <div class="row-item__cell" data-type="name">${location.title}</div>
+                    <div class="row-item__cell" data-type="review-count">${reviewCount}</div>
+                </div>
+            `;
+            locationRows.push(locationRow);
         }
     }));
 
@@ -167,10 +164,10 @@ const populateLocations = async (locationsData) => {
 
 // Example function to get review count for a location
 const getLocationReviewCount = async (accountId, locationId) => {
-        try {
+    try {
         const url = HSRevApi.urls.totalLocationReviews
-        .replace('%s', accountId.replace('accounts/', ''))
-        .replace('%s', locationId.replace('locations/', ''));
+            .replace('%s', accountId.replace('accounts/', ''))
+            .replace('%s', locationId.replace('locations/', ''));
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -189,7 +186,6 @@ const getLocationReviewCount = async (accountId, locationId) => {
         console.error('There was a problem with the fetch operation:', error);
     }
 };
-
 
 // Expose functions to the global scope
 window.HSRevData = window.HSRevData || {};
