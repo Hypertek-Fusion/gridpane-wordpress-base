@@ -329,7 +329,7 @@ public static function get_initial_google_locations() {
                 
                 if ($response->getStatusCode() === 200) {
                     $reviewsData = json_decode($response->getBody()->getContents(), true);
-                    $total_reviews = $reviewsData['reviews'] ?? null;
+                    $total_reviews = $reviewsData['totalReviewCount'] ?? null;
 
                     if ($total_reviews) {
                         $wpdb->replace(
