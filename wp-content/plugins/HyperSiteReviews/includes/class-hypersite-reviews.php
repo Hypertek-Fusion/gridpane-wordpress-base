@@ -229,6 +229,18 @@ class HyperSiteReviews {
                 update_option('hsrev_setup_complete', $is_setup);
                 $bypass_setup = isset($_POST['bypass-setup-page']) ? true : false;
                 update_option('hsrev_bypass_setup_page', $bypass_setup);
+                if (isset($_POST['force-delete-google-oauth'])) {
+                    error_log('Starting to delete OAuth Key.');
+                    if(get_option('hsrev_google_oauth_token')) {
+                        error_log('Oauth Token found. Current Token: ' . get_option('hsrev_google_oauth_token' . '. Deleting Token ...'));
+                        delete_option('hsrev_google_oauth_token');
+                        error_log('Token deleted.');
+                    } else { 
+                        error_log('No token to delete.');
+                    }
+                } else {
+                    error_log('Force delete request detected.');
+                }
             }
             include HSREV_PATH . 'includes/admin/templates/debug-settings-page.php';
         }
