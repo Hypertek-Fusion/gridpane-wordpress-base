@@ -303,6 +303,7 @@ class HyperSiteReviews {
         $account_key = 'accounts/' . $account_id;
         try {
             $locations = GoogleDataHandler::get_locations_by_account($account_key);
+            
             return rest_ensure_response(['locations' => $locations ?? []]);
         } catch (Exception $e) {
             return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);

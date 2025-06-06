@@ -63,7 +63,7 @@ public static function get_locations_by_account($account_id) {
             "SELECT * FROM {$wpdb->prefix}locations WHERE parent_account_id = %s",
             $account_id
         ), ARRAY_A);
-
+        error_log(print_r($locations, true));
     
         return $locations;
     } catch (Exception $e) {
