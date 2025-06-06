@@ -540,22 +540,38 @@ class HyperSiteReviews {
     }
 
     public static function get_location_reviews_length($loc) {
-        if (empty(self::$location_reviews)) {
-            if (empty(self::$account_locations)) {
-                if (empty(self::$accounts)) {
-                    self::get_google_accounts();
-                }
-                self::get_locations_by_account();
-            }
-            self::get_account_location_reviews();
-        }
         try {
-            if (null === self::$location_reviews[$loc]) throw new Exception('No locations found.');
+            $client = self::get_google_client();
 
-            return count(self::$location_reviews[$loc]);
+            if (empty(self::$accounts)) self::get_google_accounts();
+            if (empty(self::$account_locations)) self::get_locations_by_account();
+
+            foreach (self::$account_locations as $acc => $loc) {
+                foreach ($loc as $loc_k => $loc_v) {
+                    $url = "https://mybusiness.googleapis.com/v4/{$acc}/{$loc_k}/reviews";
+                    error_log($url);
+                    $client->setAccessType('offline');
+                    $client->refreshToken($client->getRefreshToken());
+                        $httpClient = $client->authorize();
+
+                        $response = $httpClient->get($url);
+
+                        if ($response->getStatusCode() === 200) {
+                            $reviewsData = json_decode($response->getBody()->getContents(), true);
+
+                            if ($reviewsData['totalReviewCount']) {
+                                self::$location_reviews[$loc_k]['total'] = $reviewsData['totalReviewCount'];
+                            }
+
+                        } else {
+                            error_log('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
+                            throw new Exception('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
+                        }
+                }
+            }
         } catch (Exception $e) {
-            error_log('Error getting Account Locations Length: ' . $e->getMessage());
-            return 0;
+            error_log('Error getting reviews count: ' . $e->getMessage());
+            echo '<div class="notice notice-error"><p>Error getting reviews: ' . esc_html($e->getMessage()) . '</p></div>';
         }
     }
 
@@ -693,9 +709,11 @@ class HyperSiteReviews {
         
         try {
             error_log('Location Key: ' . $location_key);
+            if(empty(self::$location_reviews[$location_key]['total']))
+            self::get_location_reviews_length($location_key);
             $count = array(
-                'locations' => $location_key,
-                'total' => self::get_location_reviews_length($location_key)
+                'location' => $location_key,
+                'total' => self::$location_reviews[$location_key]['total']
             );
             return rest_ensure_response($count);
         } catch (Exception $e) {
