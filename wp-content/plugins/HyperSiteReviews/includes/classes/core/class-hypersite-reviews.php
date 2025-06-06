@@ -328,6 +328,9 @@ class HyperSiteReviews {
         $account_id = $request['account_id'];
         $account_key = 'accounts/' . $account_id;
         try {
+            if(GoogleDataHandler::is_locations_table_empty()) {
+                GoogleDataHandler::get_initial_google_locations();
+            }
             $locations = GoogleDataHandler::get_account_locations_total($account_key);
             return rest_ensure_response(['total' => $locations ?? []]);
         } catch (Exception $e) {
