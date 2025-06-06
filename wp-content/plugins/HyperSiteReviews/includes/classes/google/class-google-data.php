@@ -153,6 +153,7 @@ class GoogleDataHandler {
             if (empty(self::$account_locations)) self::get_locations_by_account();
             if (empty(self::$location_reviews[$loc]['total'])) {
                     $url = "https://mybusiness.googleapis.com/v4/{$acc}/{$loc}/reviews";
+                    error_log($url);
                     $client->setAccessType('offline');
                     $client->refreshToken($client->getRefreshToken());
                         $httpClient = $client->authorize();
@@ -170,7 +171,7 @@ class GoogleDataHandler {
                                 throw new Exception('totalReviewCount not found.');
                             }
                         } else {
-                            error_log('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
+                            error_log('Failed to fetch reviews count, HTTP code: ' . $response->getStatusCode());
                             throw new Exception('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
                         }
             }
