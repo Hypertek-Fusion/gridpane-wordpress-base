@@ -57,6 +57,7 @@ public static function get_google_accounts() {
 public static function get_locations_by_account($account_id) {
     global $wpdb;
     try {
+        error_log('Account ID: ')
         error_log(print_r($account_id, true));
         // Query the locations table for entries with the specified parent_account_id
         $locations = $wpdb->get_results($wpdb->prepare(
