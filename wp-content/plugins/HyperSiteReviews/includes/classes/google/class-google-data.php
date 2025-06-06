@@ -253,6 +253,16 @@ public static function get_all_accounts_locations() {
     }
 }
 
+public static function is_locations_table_empty() {
+    global $wpdb;
+
+    $count = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}locations");
+
+    return $count == 0;
+}
+
+
+
 public static function get_initial_google_locations() {
     global $wpdb;
 
