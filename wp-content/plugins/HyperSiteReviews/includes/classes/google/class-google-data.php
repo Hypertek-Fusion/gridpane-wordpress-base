@@ -157,7 +157,7 @@ public static function get_initial_location_reviews($loc_id) {
                         $wpdb->prefix . 'reviews',
                         [
                             'review_id' => $review['reviewId'],
-                            'location_id' => $location_id,
+                            'location_id' => $locations['location_id'],
                             'reviewer_display_name' => $review['reviewer']['displayName'],
                             'reviewer_profile_photo_url' => $review['reviewer']['profilePhotoUrl'],
                             'star_rating' => $review['starRating'],
