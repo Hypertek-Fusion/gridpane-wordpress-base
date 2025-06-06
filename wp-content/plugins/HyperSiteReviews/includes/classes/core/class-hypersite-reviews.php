@@ -354,8 +354,70 @@ class HyperSiteReviews {
         }
     }
 
+    // Responsible for the initial creation of the database tables.
+    private static function wp_create_db_tables() {
+        global $wpdb;
+
+        // Create Accounts table
+        $table_name = $wpdb->prefix;
+        $charset_collate = $wpdb->get_charset_collate();
+
+        // Create Accounts table
+        $accounts_table = $wpdb->prefix . 'accounts';
+        $accounts_sql = "CREATE TABLE $accounts_table (
+            account_id VARCHAR(255) NOT NULL,
+            account_name VARCHAR(255),
+            account_number VARCHAR(255),
+            permission_level VARCHAR(255),
+            primary_owner VARCHAR(255),
+            role VARCHAR(255),
+            type VARCHAR(255),
+            verification_state VARCHAR(255),
+            vetted_state VARCHAR(255),
+            PRIMARY KEY  (account_id)
+        ) $charset_collate;";
+
+        // Create Locations table
+        $locations_table = $wpdb->prefix . 'locations';
+        $locations_sql = "CREATE TABLE $locations_table (
+            location_id VARCHAR(255) NOT NULL,
+            parent_account_id VARCHAR(255),
+            title VARCHAR(255),
+            labels TEXT,
+            language_code VARCHAR(10),
+            store_code VARCHAR(255),
+            website_uri TEXT,
+            PRIMARY KEY  (location_id),
+            FOREIGN KEY  (parent_account_id) REFERENCES $accounts_table(account_id) ON DELETE CASCADE
+        ) $charset_collate;";
+
+        // Create Reviews table
+        $reviews_table = $wpdb->prefix . 'reviews';
+        $reviews_sql = "CREATE TABLE $reviews_table (
+            review_id VARCHAR(255) NOT NULL,
+            location_id VARCHAR(255),
+            reviewer_display_name VARCHAR(255),
+            reviewer_profile_photo_url TEXT,
+            star_rating VARCHAR(10),
+            comment TEXT,
+            create_time DATETIME,
+            update_time DATETIME,
+            review_reply_comment TEXT,
+            review_reply_update_time DATETIME,
+            PRIMARY KEY  (review_id),
+            FOREIGN KEY  (location_id) REFERENCES $locations_table(location_id) ON DELETE CASCADE
+        ) $charset_collate;";
+
+        // Execute the SQL queries
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        dbDelta($accounts_sql);
+        dbDelta($locations_sql);
+        dbDelta($reviews_sql);
+    }
+
     public static function activate() {
         self::register_post_type();
+        self::wp_create_db_tables();
         flush_rewrite_rules();
     }
 
