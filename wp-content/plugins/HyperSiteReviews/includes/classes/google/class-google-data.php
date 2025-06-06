@@ -323,7 +323,7 @@ public static function get_initial_google_locations() {
             $response = $service->accounts_locations->listAccountsLocations($account_id, ['readMask' => 'name,title,labels,languageCode,storeCode,websiteUri']);
             
             foreach ($response->getLocations() as $location) {
-                $url = "https://mybusiness.googleapis.com/v4/{$account_id}/{$location_id}/reviews";
+                $url = "https://mybusiness.googleapis.com/v4/{$account_id}/{$location->getName()}/reviews";
                 $httpClient = $client->authorize();
                 $response = $httpClient->get($url);
                 
