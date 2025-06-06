@@ -47,7 +47,7 @@ const populateAccounts = async (accountsData) => {
     const accountRows = [];
 
     await Promise.all(accountsData.accounts.map(async account => {
-        const accountId = account.account_id; // Access the account ID from the array element
+        const accountId = account.account_id;
         const accountLength = await getAccountLocationsLength(accountId);
 
         if (accountLength > 0) {
@@ -97,10 +97,17 @@ const getAccountLocationsLength = async (accountId) => {
     }
 };
 
-// Function to fetch locations for a selected account
 const getLocations = async (accountId) => {
+    const locationRowsContainer = document.getElementById('location-rows');
+
+    // Check if locations are already cached
+    if (window.HSRevData.data.locationsCache && window.HSRevData.data.locationsCache[accountId]) {
+        console.log('Using cached locations');
+        populateLocations(window.HSRevData.data.locationsCache[accountId]);
+        return;
+    }
+
     try {
-        const locationRowsContainer = document.getElementById('location-rows');
         locationRowsContainer.innerHTML = '';
         const loading = document.createElement('div');
         loading.style.textAlign = 'center';
@@ -122,14 +129,18 @@ const getLocations = async (accountId) => {
         }
 
         const locationsData = await response.json();
+
+        // Cache the fetched locations
+        window.HSRevData.data.locationsCache = window.HSRevData.data.locationsCache || {};
+        window.HSRevData.data.locationsCache[accountId] = locationsData;
+
         console.log('Locations for Account:', locationsData);
-        populateLocations(locationsData); // Call populateLocations with the data
+        populateLocations(locationsData);
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
 };
 
-// Function to populate locations for a selected account
 const populateLocations = async (locationsData) => {
     const locationRowsContainer = document.getElementById('location-rows');
     const locationRows = [];
@@ -162,7 +173,6 @@ const populateLocations = async (locationsData) => {
     }
 };
 
-// Example function to get review count for a location
 const getLocationReviewCount = async (accountId, locationId) => {
     try {
         const url = HSRevApi.urls.totalLocationReviews
