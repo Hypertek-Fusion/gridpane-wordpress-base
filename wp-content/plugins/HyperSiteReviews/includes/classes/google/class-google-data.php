@@ -64,7 +64,7 @@ public static function get_locations_by_account($account_id) {
             $account_id
         ), ARRAY_A);
 
-        error_log(print_r($locations),true);
+        error_log(print_r($locations,true));
 
         return $locations;
     } catch (Exception $e) {
