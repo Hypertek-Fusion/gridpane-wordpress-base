@@ -145,7 +145,7 @@ class GoogleDataHandler {
         }
     }
 
-    public static function get_location_reviews_length($loc) {
+    public static function get_location_reviews_length($acc, $loc) {
         try {
             $client = GoogleOAuthClient::get_client();
 

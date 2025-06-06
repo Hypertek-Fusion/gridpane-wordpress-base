@@ -342,10 +342,12 @@ class HyperSiteReviews {
     }
 
     public static function api_get_location_reviews_total($request) {
+        $account_id = $request['account_id'];
+        $account_key = 'accounts/' . $account_id;
         $location_id = $request['location_id'];
         $location_key = 'locations/' . $location_id;
         try {
-            $reviews = GoogleDataHandler::get_location_reviews_length($location_key);
+            $reviews = GoogleDataHandler::get_location_reviews_length($account_key, $location_key);
             return rest_ensure_response(['total' => $reviews ?? []]);
         } catch (Exception $e) {
             return new WP_Error('location_review_total_fetch_failed', $e->getMessage(), ['status' => 500]);
