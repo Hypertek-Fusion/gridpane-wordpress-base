@@ -389,6 +389,21 @@ public static function get_location($location_id) {
     return null;
 }
 
+public static function get_reviews($location_id) {
+    global $wpdb;
+
+    if (self::location_exists($location_id)) {
+        // Use get_row to fetch the entire row as an associative array
+        return $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$wpdb->prefix}reviews WHERE location_id = %s",
+            $location_id
+        ), ARRAY_A);
+    }
+
+    // Return null if the location does not exist
+    return null;
+}
+
     /**
      * Check if a review exists in the database.
      *
