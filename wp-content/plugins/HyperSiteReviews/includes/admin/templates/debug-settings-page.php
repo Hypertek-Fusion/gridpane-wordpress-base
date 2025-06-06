@@ -1,3 +1,5 @@
+<?php if (!defined('ABSPATH')) exit; ?>
+
 <div class="wrap">
     <h1>HyperSite Reviews Debug Settings</h1>
     <h2>Flags</h2>
@@ -16,18 +18,16 @@
     <br>
     <h2>Data (Read-Only)</h2>
 
-    <p>Current Oauth Token:<?php echo print_r(get_option('hsrev_google_oauth_token'), true); ?></p>
+    <p>Current Oauth Token: <?php echo print_r(get_option('hsrev_google_oauth_token'), true); ?></p>
     <p>Current Refresh Token: <?php echo get_option('hsrev_google_refresh_token'); ?></p>
-    <p>Total locations: <?php echo HyperSiteReviews::get_total_locations_length(); ?></p>
+    <p>Total locations: <?php echo GoogleDataHandler::get_all_locations(); ?></p>
 
     <?php 
-    
-    foreach(HyperSiteReviews::get_accounts() as $acc_k => $acc_o) {
+    foreach (GoogleDataHandler::get_all_accounts() as $acc_k => $acc_o) {
     ?>
         <h3>Account: <?php echo $acc_k ?></h3>
-        <p>Length: <?php echo HyperSiteReviews::get_account_locations_length($acc_k); ?></p>
+        <p>Length: <?php echo GoogleDataHandler::get_account_locations_length($acc_k); ?></p>
     <?php
     }
-    
     ?>
 </div>

@@ -7,7 +7,7 @@
     $token = get_option('hsrev_google_oauth_token');
     if ($token) {
         // Token exists, show the disconnect option
-        $client = HyperSiteReviews::get_google_client();
+        $client = GoogleOAuthClient::get_client();
         ?>
 
         <form method="post">

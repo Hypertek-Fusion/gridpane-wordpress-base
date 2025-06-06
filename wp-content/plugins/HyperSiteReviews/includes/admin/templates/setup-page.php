@@ -9,7 +9,7 @@
     $token = get_option('hsrev_google_oauth_token');
     if ($token) {
         // Token exists, check if it's expired
-        $client = HyperSiteReviews::get_google_client();
+        $client = GoogleOAuthClient::get_client(); // Use GoogleOAuthClient instead
         if ($client->isAccessTokenExpired()) {
             echo '<div class="notice notice-error"><p>Google account connection expired. Please reconnect.</p></div>';
             $authUrl = $client->createAuthUrl();
@@ -55,7 +55,7 @@
         }
     } else {
         // No token, show the connect button
-        $client = HyperSiteReviews::get_google_client();
+        $client = GoogleOAuthClient::get_client(); // Use GoogleOAuthClient instead
         $authUrl = $client->createAuthUrl();
         ?>
         <p><a href="<?php echo esc_url($authUrl); ?>" class="button button-primary">Connect with Google</a></p>
