@@ -300,9 +300,10 @@ class HyperSiteReviews {
 
     public static function api_get_account_locations($request) {
         $account_id = $request['account_id'];
+        $account_key = 'accounts/' . $account_id;
         try {
             $locations = GoogleDataHandler::get_locations_by_account();
-            return rest_ensure_response(['locations' => $locations[$account_id] ?? []]);
+            return rest_ensure_response(['locations' => $locations[$account_key] ?? []]);
         } catch (Exception $e) {
             return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
@@ -319,8 +320,9 @@ class HyperSiteReviews {
 
     public static function api_get_account_locations_total($request) {
         $account_id = $request['account_id'];
+        $account_key = 'accounts/' . $account_id;
         try {
-            $locations = GoogleDataHandler::get_account_locations_total($account_id);
+            $locations = GoogleDataHandler::get_account_locations_total($account_key);
             return rest_ensure_response(['total' => $locations ?? []]);
         } catch (Exception $e) {
             return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
@@ -328,11 +330,12 @@ class HyperSiteReviews {
     }
 
     public static function api_get_location_reviews($request) {
-        $account_id = $request['account_id'];
         $location_id = $request['location_id'];
+
+        $location_key = 'locations/' . $location_id;
         try {
             $reviews = GoogleDataHandler::get_account_location_reviews();
-            return rest_ensure_response(['reviews' => $reviews[$location_id] ?? []]);
+            return rest_ensure_response(['reviews' => $reviews[$location_key] ?? []]);
         } catch (Exception $e) {
             return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
@@ -340,9 +343,10 @@ class HyperSiteReviews {
 
     public static function api_get_total_location_reviews($request) {
         $location_id = $request['location_id'];
+        $location_key = 'locations/' . $location_id;
         try {
             $reviews = GoogleDataHandler::get_account_location_reviews();
-            return rest_ensure_response(['total' => count($reviews[$location_id] ?? [])]);
+            return rest_ensure_response(['total' => count($reviews[$location_key] ?? [])]);
         } catch (Exception $e) {
             return new WP_Error('location_review_total_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
