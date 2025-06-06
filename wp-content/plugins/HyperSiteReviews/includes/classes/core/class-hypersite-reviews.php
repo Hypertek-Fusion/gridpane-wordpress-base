@@ -399,6 +399,7 @@ class HyperSiteReviews {
             language_code VARCHAR(10),
             store_code VARCHAR(255),
             website_uri TEXT,
+            total_reviews SMALLINT UNSIGNED,
             PRIMARY KEY  (location_id),
             FOREIGN KEY  (parent_account_id) REFERENCES $accounts_table(account_id) ON DELETE CASCADE
         ) $charset_collate;";

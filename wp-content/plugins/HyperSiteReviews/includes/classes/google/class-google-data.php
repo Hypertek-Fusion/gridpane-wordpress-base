@@ -159,7 +159,7 @@ public static function get_location_reviews_length($acc, $loc) {
 
     try {
         $review_count = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s",
+            "SELECT total_reviews FROM {$wpdb->prefix}reviews WHERE location_id = %s",
             $loc
         ));
 
@@ -312,18 +312,44 @@ public static function get_initial_google_locations() {
             $response = $service->accounts_locations->listAccountsLocations($account_id, ['readMask' => 'name,title,labels,languageCode,storeCode,websiteUri']);
             
             foreach ($response->getLocations() as $location) {
-                $wpdb->replace(
-                    $wpdb->prefix . 'locations',
-                    [
-                        'location_id' => $location->getName(),
-                        'parent_account_id' => $account_id,
-                        'title' => $location->getTitle(),
-                        'labels' => json_encode($location->getLabels()),
-                        'language_code' => $location->getLanguageCode(),
-                        'store_code' => $location->getStoreCode(),
-                        'website_uri' => $location->getWebsiteUri(),
-                    ]
-                );
+                $url = "https://mybusiness.googleapis.com/v4/{$account_id}/{$location_id}/reviews";
+                $httpClient = $client->authorize();
+                $response = $httpClient->get($url);
+                
+                if ($response->getStatusCode() === 200) {
+                    $reviewsData = json_decode($response->getBody()->getContents(), true);
+                    $total_reviews = $reviewsData['reviews'] ?? null;
+
+                    if ($total_reviews) {
+                        $wpdb->replace(
+                            $wpdb->prefix . 'locations',
+                            [
+                                'location_id' => $location->getName(),
+                                'parent_account_id' => $account_id,
+                                'title' => $location->getTitle(),
+                                'labels' => json_encode($location->getLabels()),
+                                'language_code' => $location->getLanguageCode(),
+                                'store_code' => $location->getStoreCode(),
+                                'website_uri' => $location->getWebsiteUri(),
+                                'total_reviews' => $total_reviews,
+                            ]
+                        );
+                    } else {
+                        $wpdb->replace(
+                            $wpdb->prefix . 'locations',
+                            [
+                                'location_id' => $location->getName(),
+                                'parent_account_id' => $account_id,
+                                'title' => $location->getTitle(),
+                                'labels' => json_encode($location->getLabels()),
+                                'language_code' => $location->getLanguageCode(),
+                                'store_code' => $location->getStoreCode(),
+                                'website_uri' => $location->getWebsiteUri(),
+                                'total_reviews' => 0,
+                            ]
+                        );
+                    }
+                }
             }
         }
     } catch (Exception $e) {
