@@ -9,18 +9,15 @@ document.addEventListener('DOMContentLoaded', () => {
     window.HSRevData.functions = window.HSRevData.functions || {};
     window.HSRevData.data = window.HSRevData.data || {};
 
-    // Account selection logic
-    const accountSelect = document.querySelector('.selection-table[data-select-type="account"]');
-
-    // Function to check if any account is selected
-    const isAnyAccountChecked = () => {
-        const accountCheckboxes = accountSelect.querySelectorAll('input[type="checkbox"]');
-        return Array.from(accountCheckboxes).some(cb => cb.checked);
+    // Function to check if any checkbox is selected on the current page
+    const isAnyCheckboxCheckedOnCurrentPage = () => {
+        const currentCheckboxes = pages[currentPage].querySelectorAll('input[type="checkbox"]');
+        return Array.from(currentCheckboxes).some(cb => cb.checked);
     };
 
     // Function to get the checked account ID
     const getCheckedAccountId = () => {
-        const selectedCheckbox = accountSelect.querySelector('input[type="checkbox"]:checked');
+        const selectedCheckbox = pages[0].querySelector('input[type="checkbox"]:checked');
         if (selectedCheckbox) {
             return selectedCheckbox.closest('.row-item').dataset.accountId;
         }
@@ -28,10 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateButtonState = () => {
-        nextButton.disabled = !isAnyAccountChecked();
+        nextButton.disabled = !isAnyCheckboxCheckedOnCurrentPage();
     };
 
-    // Function to attach event listeners to checkboxes
+    // Function to attach event listeners to checkboxes on the current page
     const attachCheckboxListeners = (container) => {
         const checkboxes = container.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(c => {
@@ -67,12 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     nextButton.addEventListener('click', () => {
-        if (currentPage < pages.length - 1 && isAnyAccountChecked()) {
-            const accountId = getCheckedAccountId();
-            if (accountId && window.HSRevData.functions.getLocations) {
-                window.HSRevData.functions.getLocations(accountId);
-                window.HSRevData.data.accountId = accountId; // Ensure HSRevData.data is initialized
-                console.log(`Account ID set: ${accountId}`);
+        if (currentPage < pages.length - 1 && isAnyCheckboxCheckedOnCurrentPage()) {
+            if (currentPage === 0) {
+                const accountId = getCheckedAccountId();
+                if (accountId && window.HSRevData.functions.getLocations) {
+                    window.HSRevData.functions.getLocations(accountId);
+                    window.HSRevData.data.accountId = accountId;
+                    console.log(`Account ID set: ${accountId}`);
+                }
             }
             currentPage++;
             showPage(currentPage);
@@ -82,5 +81,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Attach listeners for account checkboxes once they are populated
     if (window.HSRevData && window.HSRevData.functions) {
         window.HSRevData.functions.attachCheckboxListeners = attachCheckboxListeners;
+    }
+
+    // Attach listeners to checkboxes on the initial page load
+    if (pages[currentPage]) {
+        attachCheckboxListeners(pages[currentPage]);
     }
 });
