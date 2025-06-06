@@ -16,7 +16,7 @@
     <br>
     <h2>Data (Read-Only)</h2>
 
-    <p>Current Oauth Token:<?php echo print_r(get_option('hsrev_google_oauth_token')); ?></p>
+    <p>Current Oauth Token:<?php echo print_r(get_option('hsrev_google_oauth_token'), true); ?></p>
     <p>Current Refresh Token: <?php echo get_option('hsrev_google_refresh_token'); ?></p>
     <p>Total locations: <?php echo HyperSiteReviews::get_total_locations_length(); ?></p>
 
