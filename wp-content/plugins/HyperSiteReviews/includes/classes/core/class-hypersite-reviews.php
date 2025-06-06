@@ -7,7 +7,16 @@ class HyperSiteReviews {
             // Setup WordPress hooks
             add_action('admin_menu', [self::class, 'add_admin_menus']);
             add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
-            add_action('rest_api_init', [self::class, 'register_api_routes']);
+            add_action('rest_api_init', function () {
+                // Validate and set the current user based on the logged-in cookie
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                } else {
+                    error_log('Failed to authenticate user via cookie.');
+                }
+                HyperSiteReviews::register_api_routes();
+            });
             add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
 
             if (get_option('hsrev_setup_complete')) {
@@ -94,7 +103,6 @@ class HyperSiteReviews {
             ]);
         }
     }
-
 
     public static function maybe_redirect_to_setup() {
         if (!is_admin() || !current_user_can('manage_options')) return;
@@ -206,6 +214,11 @@ class HyperSiteReviews {
             'methods' => 'GET',
             'callback' => [self::class, 'api_get_accounts'],
             'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
                 return current_user_can('manage_options');
             },
         ]);
@@ -214,6 +227,11 @@ class HyperSiteReviews {
             'methods' => 'GET',
             'callback' => [self::class, 'api_get_account_locations'],
             'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
                 return current_user_can('manage_options');
             },
         ]);
@@ -222,6 +240,11 @@ class HyperSiteReviews {
             'methods' => 'GET',
             'callback' => [self::class, 'api_get_all_locations'],
             'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
                 return current_user_can('manage_options');
             },
         ]);
@@ -230,6 +253,11 @@ class HyperSiteReviews {
             'methods' => 'GET',
             'callback' => [self::class, 'api_get_account_locations_total'],
             'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
                 return current_user_can('manage_options');
             },
         ]);
@@ -238,6 +266,11 @@ class HyperSiteReviews {
             'methods' => 'GET',
             'callback' => [self::class, 'api_get_location_reviews'],
             'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
                 return current_user_can('manage_options');
             },
         ]);
@@ -246,6 +279,11 @@ class HyperSiteReviews {
             'methods' => 'GET',
             'callback' => [self::class, 'api_get_total_location_reviews'],
             'permission_callback' => function () {
+                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+                if ($user_id) {
+                    wp_set_current_user($user_id);
+                }
+
                 return current_user_can('manage_options');
             },
         ]);
@@ -319,4 +357,3 @@ class HyperSiteReviews {
         flush_rewrite_rules();
     }
 }
-
