@@ -343,7 +343,7 @@ class HyperSiteReviews {
 
         $location_key = 'locations/' . $location_id;
         try {
-            $reviews = GoogleDataHandler::get_account_location_reviews();
+            $reviews = GoogleDataHandler::get_initial_google_reviews();
             return rest_ensure_response(['reviews' => $reviews[$location_key] ?? []]);
         } catch (Exception $e) {
             return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);

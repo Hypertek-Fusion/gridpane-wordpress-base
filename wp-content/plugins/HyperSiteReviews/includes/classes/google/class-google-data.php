@@ -80,12 +80,15 @@ public static function get_locations_by_account($account_id) {
      * @return array
      * @throws Exception
      */
-public static function get_account_location_reviews() {
+public static function get_initial_google_reviews() {
     global $wpdb;
 
     $client = GoogleOAuthClient::get_client();
 
     try {
+        if(self::is_locations_table_empty()) {
+            self::get_initial_google_locations();
+        }
         $locations = self::get_all_accounts_locations();
         foreach ($locations as $location) {
             $location_id = $location['location_id'];
@@ -265,6 +268,14 @@ public static function is_locations_table_empty() {
     global $wpdb;
 
     $count = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}locations");
+
+    return $count == 0;
+}
+
+public static function is_reviews_table_empty() {
+    global $wpdb;
+
+    $count = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}reviews");
 
     return $count == 0;
 }
