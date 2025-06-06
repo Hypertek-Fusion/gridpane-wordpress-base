@@ -310,6 +310,8 @@ public static function get_initial_google_locations() {
         // Fetch all accounts
         if(self::is_accounts_table_empty()) {
             $accounts = self::get_google_accounts();
+        } else {
+            $accounts = self::get_all_accounts();
         }
 
         if(!$accounts) throw new Exception('$accounts is null');
