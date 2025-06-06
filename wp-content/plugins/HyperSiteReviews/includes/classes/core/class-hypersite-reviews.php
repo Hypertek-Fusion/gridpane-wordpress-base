@@ -320,8 +320,8 @@ class HyperSiteReviews {
     public static function api_get_account_locations_total($request) {
         $account_id = $request['account_id'];
         try {
-            $locations = GoogleDataHandler::get_locations_by_account();
-            return rest_ensure_response(['total' => count($locations[$account_id] ?? [])]);
+            $locations = GoogleDataHandler::get_account_locations_total($account_id);
+            return rest_ensure_response(['total' => count($locations ?? [])]);
         } catch (Exception $e) {
             return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
         }

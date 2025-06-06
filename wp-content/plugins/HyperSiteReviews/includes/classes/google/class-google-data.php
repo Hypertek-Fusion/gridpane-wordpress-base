@@ -108,12 +108,12 @@ class GoogleDataHandler {
     }
 
     /**
-     * Get the length of locations for a specific account.
+     * Get the total number of locations for a specific account.
      *
      * @param string $account_id The account ID.
      * @return int The number of locations for the specified account.
      */
-    public static function get_account_locations_length($account_id) {
+    public static function get_account_locations_total($account_id) {
         if (empty(self::$account_locations)) {
             self::get_locations_by_account();
         }
