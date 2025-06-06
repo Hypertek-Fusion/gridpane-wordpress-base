@@ -93,6 +93,7 @@ const getAccountLocationsLength = async (accountName) => {
         }
 
         const data = await response.json();
+        console.log('Location length data:', data);
         return data.total || 0;
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
