@@ -1,8 +1,5 @@
 <?php
-if ( ! defined('ABSPATH') ) exit;
-
-// TODO
-// Finish Form Flow
+if (!defined('ABSPATH')) exit;
 
 class HyperSiteReviews {
     private static $accounts = [];
@@ -13,20 +10,17 @@ class HyperSiteReviews {
         try {
             add_action('admin_menu', [self::class, 'add_admin_menus']);
             add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
-
             add_action('rest_api_init', function () {
-
                 $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE], 'logged_in');
                 if ($user_id) {
                     wp_set_current_user($user_id);
                 } else {
                     error_log('Failed to authenticate user via cookie.');
                 }
-
                 HyperSiteReviews::register_api_routes();
             });
 
-            if(HSREV_DEBUG) {
+            if (HSREV_DEBUG) {
                 add_action('admin_menu', [self::class, 'add_debug_admin_menus']);
             }
 
@@ -36,11 +30,9 @@ class HyperSiteReviews {
 
             add_action('admin_enqueue_scripts', function($hook) {
                 $plugin_url = plugin_dir_url(__DIR__);
-
+                
                 // Only load on plugin setup page
                 if (isset($_GET['page']) && $_GET['page'] === 'hypersite-reviews-setup') {
-                    // Get the root plugin URL
-
                     wp_enqueue_style(
                         'hsrev-setup-style',
                         $plugin_url . 'admin/css/setup-page.css',
@@ -60,7 +52,7 @@ class HyperSiteReviews {
                     wp_enqueue_script(
                         'hsrev-admin-script',
                         $plugin_url . 'admin/js/admin-scripts.js',
-                        ['jquery'], // Assuming you want to use jQuery
+                        ['jquery'],
                         filemtime(plugin_dir_path(__DIR__) . 'admin/js/admin-scripts.js'),
                         true
                     );
@@ -78,16 +70,14 @@ class HyperSiteReviews {
                         'nonce' => wp_create_nonce('wp_rest'),
                     ]);
                 } else if (isset($_GET['page']) && $_GET['page'] === 'hypersite-reviews-debug-settings') {
-                                        // Enqueue the admin scripts
                     wp_enqueue_script(
                         'hsrev-admin-script',
                         $plugin_url . 'admin/js/admin-scripts.js',
-                        [], // Assuming you want to use jQuery
+                        [],
                         filemtime(plugin_dir_path(__DIR__) . 'admin/js/admin-scripts.js'),
                         true
                     );
 
-                    // Localize the script to pass REST API URL and nonce
                     wp_localize_script('hsrev-admin-script', 'HSRevApi', [
                         'urls' => [
                             'accounts' => rest_url('hsrev/v1/accounts'),
@@ -166,11 +156,11 @@ class HyperSiteReviews {
     }
 
     public static function maybe_redirect_to_setup() {
-        if ( ! is_admin() || ! current_user_can('manage_options') ) {
+        if (!is_admin() || !current_user_can('manage_options')) {
             return;
         }
 
-        if ( get_option('hsrev_setup_complete') || get_option('hsrev_bypass_setup_page')) {
+        if (get_option('hsrev_setup_complete') || get_option('hsrev_bypass_setup_page')) {
             return;
         }
 
@@ -181,7 +171,7 @@ class HyperSiteReviews {
             'hypersite-reviews-settings',
         ], true);
 
-        if ( $is_hsrev_page && $current_page !== 'hypersite-reviews-setup' && ! get_option('hsrev_bypass_setup_page') ) {
+        if ($is_hsrev_page && $current_page !== 'hypersite-reviews-setup' && !get_option('hsrev_bypass_setup_page')) {
             wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
             exit;
         }
@@ -204,6 +194,7 @@ class HyperSiteReviews {
                 $client->revokeToken();
             }
             delete_option('hsrev_google_oauth_token');
+            delete_option('hsrev_google_refresh_token');
             echo '<div class="notice notice-success"><p>Disconnected from Google account.</p></div>';
         }
 
@@ -215,6 +206,9 @@ class HyperSiteReviews {
                 $error = $token['error_description'] ?? $token['error'];
             } else {
                 update_option('hsrev_google_oauth_token', $token);
+                if (!empty($token['refresh_token'])) {
+                    update_option('hsrev_google_refresh_token', $token['refresh_token']);
+                }
                 update_option('hsrev_setup_complete', true);
 
                 wp_safe_redirect(admin_url('admin.php?page=hypersite-reviews'));
@@ -229,8 +223,8 @@ class HyperSiteReviews {
     }
 
     public static function debug_settings_page() {
-        if(HSREV_DEBUG) {
-            if($_SERVER['REQUEST_METHOD'] === 'POST' && check_admin_referer('hsrev_debug_setting_set')) {
+        if (HSREV_DEBUG) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_admin_referer('hsrev_debug_setting_set')) {
                 $is_setup = isset($_POST['is-setup']) ? true : false;
                 update_option('hsrev_setup_complete', $is_setup);
                 $bypass_setup = isset($_POST['bypass-setup-page']) ? true : false;
@@ -245,14 +239,14 @@ class HyperSiteReviews {
     }
 
     public static function google_connect_page() {
-        if ( ! current_user_can('manage_options') ) {
+        if (!current_user_can('manage_options')) {
             wp_die('Unauthorized user');
         }
 
         $message = '';
         $error = false;
 
-        if ( ! empty($_GET['code']) ) {
+        if (!empty($_GET['code'])) {
             $code = sanitize_text_field(wp_unslash($_GET['code']));
             $client = self::get_google_client();
 
@@ -260,7 +254,7 @@ class HyperSiteReviews {
                 $token = $client->fetchAccessTokenWithAuthCode($code);
 
                 if (!empty($token['refresh_token'])) {
-                    error_log('Refresh token found: '. $token['refresh_token']);
+                    error_log('Refresh token found: ' . $token['refresh_token']);
                     update_option('hsrev_google_refresh_token', $token['refresh_token']);
                 } else {
                     error_log('No refresh token received from Google OAuth token response.');
@@ -284,61 +278,61 @@ class HyperSiteReviews {
         include HSREV_PATH . 'includes/admin/templates/google-connect-page.php';
     }
 
-    public static function get_google_client(): Google_Client {
+    public static function get_google_client() {
         $client = new Google_Client();
         $client->setClientId(HSREV_GOOGLE_CLIENT_ID);
         $client->setClientSecret(HSREV_GOOGLE_CLIENT_SECRET);
         $client->setRedirectUri(admin_url(HSREV_GOOGLE_REDIRECT_URI));
         $client->addScope('https://www.googleapis.com/auth/business.manage');
-        $client->setAccessType('offline'); // refresh tokens
-        $client->setPrompt('consent');
+        $client->setAccessType('offline'); // Request refresh tokens
+        $client->setPrompt('consent'); // Ask for consent to get a refresh token
 
+        // Retrieve the stored access token
         $token = get_option('hsrev_google_oauth_token');
         if ($token) {
             $client->setAccessToken($token);
+        }
+
+        // Refresh the token if it's expired
+        if ($client->isAccessTokenExpired()) {
+            self::refresh_google_token($client);
         }
 
         return $client;
     }
 
     /**
-     * Checks if the access token is expired, refreshes it if needed,
-     * updates the stored token, or clears tokens if refresh fails.
+     * Refresh the Google API token if needed.
      */
-    public static function refresh_google_token_if_needed(): bool {
-        $client = self::get_google_client();
+    public static function refresh_google_token(Google_Client $client): bool {
+        // Retrieve the stored refresh token
+        $refreshToken = get_option('hsrev_google_refresh_token');
+        if ($refreshToken) {
+            // Fetch a new access token using the refresh token
+            $client->fetchAccessTokenWithRefreshToken($refreshToken);
 
-        if ($client->isAccessTokenExpired()) {
-            $refreshToken = get_option('hsrev_google_refresh_token');
-
-            if ($refreshToken) {
-                $newToken = $client->fetchAccessTokenWithRefreshToken($refreshToken);
-
-                if (isset($newToken['error'])) {
-                    error_log('Error refreshing Google token: ' . ($newToken['error_description'] ?? $newToken['error']));
-                    // Token invalid, clear saved tokens to force reconnect
-                    delete_option('hsrev_google_oauth_token');
-                    return false;
-                } else {
-                    // Update the stored token with new token data
-                    update_option('hsrev_google_oauth_token', $client->getAccessToken());
-                    return true;
-                }
+            if ($client->getAccessToken()) {
+                // Update the stored token with new token data
+                update_option('hsrev_google_oauth_token', $client->getAccessToken());
+                return true;
             } else {
-                error_log('No refresh token available for Google API.');
+                error_log('Error refreshing Google token.');
                 delete_option('hsrev_google_oauth_token');
+                delete_option('hsrev_google_refresh_token');
                 return false;
             }
+        } else {
+            error_log('No refresh token available for Google API.');
+            delete_option('hsrev_google_oauth_token');
+            return false;
         }
-        // Token still valid, no action needed
-        return true;
     }
 
     // Gets Google Accounts
     public static function get_google_accounts() {
-        $client = HyperSiteReviews::get_google_client();
+        $client = self::get_google_client();
 
-        if (!HyperSiteReviews::refresh_google_token_if_needed()) {
+        if (!$client->getAccessToken()) {
             wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
             exit;
         }
@@ -350,7 +344,7 @@ class HyperSiteReviews {
         try {
             $response = $service->accounts->listAccounts();
 
-            foreach($response->getAccounts() as $account) {
+            foreach ($response->getAccounts() as $account) {
                 self::$accounts[$account->getName()] = $account;
             }
 
@@ -362,31 +356,31 @@ class HyperSiteReviews {
     }
 
     public static function get_accounts() {
-        if(empty(self::$accounts)) self::get_google_accounts();
+        if (empty(self::$accounts)) self::get_google_accounts();
         return self::$accounts;
     }
 
     public static function get_account_locations() {
-        if(empty(self::$accounts_locations)) self::get_locations_by_account();
+        if (empty(self::$accounts_locations)) self::get_locations_by_account();
         return self::$account_locations;
     }
 
     public static function get_locations_for_account($acc) {
-        if(empty(self::$accounts_locations)) self::get_locations_by_account();
+        if (empty(self::$accounts_locations)) self::get_locations_by_account();
         return self::$account_locations[$acc];
     }
 
     public static function get_location_reviews() {
-        if(empty(self::$accounts)) self::get_google_accounts();
-        if(empty(self::$account_locations)) self::get_locations_by_account();
-        if(empty(self::$location_reviews)) self::get_account_location_reviews();
+        if (empty(self::$accounts)) self::get_google_accounts();
+        if (empty(self::$account_locations)) self::get_locations_by_account();
+        if (empty(self::$location_reviews)) self::get_account_location_reviews();
         return self::$location_reviews;
     }
 
     // Takes an Account Object and returns the account ID
     public static function get_google_account_id($acc) {
         try {
-            if(! method_exists($acc, 'getName')) throw new Exception("Method 'getName()' does not exist.");
+            if (!method_exists($acc, 'getName')) throw new Exception("Method 'getName()' does not exist.");
             return str_replace('accounts/', '', $acc->getName());
         } catch (Exception $e) {
             error_log('Error getting Google Account ID: ' . $e->getMessage());
@@ -397,23 +391,23 @@ class HyperSiteReviews {
     // Gets the locations for each account
     public static function get_locations_by_account() {
         try {
-            $client = HyperSiteReviews::get_google_client();
+            $client = self::get_google_client();
 
-            if (!HyperSiteReviews::refresh_google_token_if_needed()) {
+            if (!$client->getAccessToken()) {
                 wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
                 exit;
             }
 
             $service = new Google\Service\MyBusinessBusinessInformation($client);
-            if(empty(self::$accounts)) self::get_google_accounts();
+            if (empty(self::$accounts)) self::get_google_accounts();
 
-            foreach(self::$accounts as $account) {
+            foreach (self::$accounts as $account) {
                 $curr_account = $account->getName();
                 $response = $service->accounts_locations->listAccountsLocations(
                     $curr_account,
                     ['readMask' => 'name,title']
                 );
-                foreach($response as $location) {
+                foreach ($response as $location) {
                     self::$account_locations[$curr_account][$location->getName()] = $location;
                 }
             }
@@ -447,7 +441,7 @@ class HyperSiteReviews {
             self::get_locations_by_account();
         }
         try {
-            if(null === self::$account_locations[$acc]) throw new Exception('No locations found.');
+            if (null === self::$account_locations[$acc]) throw new Exception('No locations found.');
 
             return count(self::$account_locations[$acc]);
         } catch (Exception $e) {
@@ -458,13 +452,13 @@ class HyperSiteReviews {
 
     public static function get_account_location_reviews() {
         try {
-            $client = HyperSiteReviews::get_google_client();
+            $client = self::get_google_client();
 
-            if(empty(self::$accounts)) self::get_google_accounts();
-            if(empty(self::$account_locations)) self::get_locations_by_account();
+            if (empty(self::$accounts)) self::get_google_accounts();
+            if (empty(self::$account_locations)) self::get_locations_by_account();
 
-            foreach(self::$account_locations as $acc => $loc) {
-                foreach($loc as $loc_k => $loc_v) {
+            foreach (self::$account_locations as $acc => $loc) {
+                foreach ($loc as $loc_k => $loc_v) {
                     $url = "https://mybusiness.googleapis.com/v4/{$acc}/{$loc_k}/reviews";
                     error_log($url);
                     $client->setAccessType('offline');
@@ -506,11 +500,10 @@ class HyperSiteReviews {
             error_log('Error getting reviews: ' . $e->getMessage());
             echo '<div class="notice notice-error"><p>Error getting reviews: ' . esc_html($e->getMessage()) . '</p></div>';
         }
-        
     }
 
     public static function get_total_location_reviews_length() {
-        if(empty(self::$location_reviews)) {
+        if (empty(self::$location_reviews)) {
             if (empty(self::$account_locations)) {
                 if (empty(self::$accounts)) {
                     self::get_google_accounts();
@@ -527,18 +520,18 @@ class HyperSiteReviews {
         return $count;
     }
 
-        public static function get_location_reviews_length($loc) {
-            if(empty(self::$location_reviews)) {
-                if (empty(self::$account_locations)) {
-                    if (empty(self::$accounts)) {
-                        self::get_google_accounts();
-                    }
-                    self::get_locations_by_account();
+    public static function get_location_reviews_length($loc) {
+        if (empty(self::$location_reviews)) {
+            if (empty(self::$account_locations)) {
+                if (empty(self::$accounts)) {
+                    self::get_google_accounts();
                 }
-                self::get_account_location_reviews();
+                self::get_locations_by_account();
             }
+            self::get_account_location_reviews();
+        }
         try {
-            if(null === self::$location_reviews[$loc]) throw new Exception('No locations found.');
+            if (null === self::$location_reviews[$loc]) throw new Exception('No locations found.');
 
             return count(self::$location_reviews[$loc]);
         } catch (Exception $e) {
@@ -547,38 +540,37 @@ class HyperSiteReviews {
         }
     }
 
-            public static function get_reviews_by_location($account_id, $location_id) {
-            if (empty(self::$location_reviews)) {
-                self::get_account_location_reviews();
-            }
-
-            return self::$location_reviews[$location_id] ?? [];
+    public static function get_reviews_by_location($account_id, $location_id) {
+        if (empty(self::$location_reviews)) {
+            self::get_account_location_reviews();
         }
 
-        public static function get_locations_by_account_id($account_id) {
-            if (empty(self::$account_locations)) {
-                if (empty(self::$accounts)) {
-                    self::get_google_accounts();
-                }
-                self::get_locations_by_account();
-            }
+        return self::$location_reviews[$location_id] ?? [];
+    }
 
-            return self::$account_locations[$account_id] ?? []; // Return locations for the specific account
+    public static function get_locations_by_account_id($account_id) {
+        if (empty(self::$account_locations)) {
+            if (empty(self::$accounts)) {
+                self::get_google_accounts();
+            }
+            self::get_locations_by_account();
         }
 
-        public static function get_all_locations() {
-            if (empty(self::$account_locations)) {
-                if (empty(self::$accounts)) {
-                    self::get_google_accounts();
-                }
-                self::get_locations_by_account();
-            }
+        return self::$account_locations[$account_id] ?? []; // Return locations for the specific account
+    }
 
-            return self::$account_locations ?? [];
+    public static function get_all_locations() {
+        if (empty(self::$account_locations)) {
+            if (empty(self::$accounts)) {
+                self::get_google_accounts();
+            }
+            self::get_locations_by_account();
         }
 
-        public static function register_api_routes() {
+        return self::$account_locations ?? [];
+    }
 
+    public static function register_api_routes() {
         // Get Google Accounts
         register_rest_route('hsrev/v1', '/accounts', [
             'methods'  => 'GET',
@@ -733,40 +725,39 @@ class HyperSiteReviews {
         }
     }
 
-        public static function api_get_location_reviews($request) {
-            $account_id = $request['account_id'];
-            $location_id = $request['location_id'];
+    public static function api_get_location_reviews($request) {
+        $account_id = $request['account_id'];
+        $location_id = $request['location_id'];
 
-            $account_key = 'accounts/' . $account_id;
-            $location_key = 'locations/' . $location_id;
+        $account_key = 'accounts/' . $account_id;
+        $location_key = 'locations/' . $location_id;
 
-            $page = (int) $request->get_param('page') ?: 1;
-            $per_page = (int) $request->get_param('per_page') ?: 10; // Default to 10 items per page
+        $page = (int) $request->get_param('page') ?: 1;
+        $per_page = (int) $request->get_param('per_page') ?: 10; // Default to 10 items per page
 
-            try {
-                $all_reviews = self::get_reviews_by_location($account_key, $location_key);
+        try {
+            $all_reviews = self::get_reviews_by_location($account_key, $location_key);
 
-                // Calculate pagination
-                $total_reviews = count($all_reviews);
-                $total_pages = ceil($total_reviews / $per_page);
-                $offset = ($page - 1) * $per_page;
+            // Calculate pagination
+            $total_reviews = count($all_reviews);
+            $total_pages = ceil($total_reviews / $per_page);
+            $offset = ($page - 1) * $per_page;
 
-                // Slice the reviews array to get the current page
-                $paged_reviews = array_slice($all_reviews, $offset, $per_page);
+            // Slice the reviews array to get the current page
+            $paged_reviews = array_slice($all_reviews, $offset, $per_page);
 
-                // Prepare response
-                $response = rest_ensure_response($paged_reviews);
+            // Prepare response
+            $response = rest_ensure_response($paged_reviews);
 
-                // Add pagination headers
-                $response->header('X-WP-Total', $total_reviews);
-                $response->header('X-WP-TotalPages', $total_pages);
+            // Add pagination headers
+            $response->header('X-WP-Total', $total_reviews);
+            $response->header('X-WP-TotalPages', $total_pages);
 
-                return $response;
-            } catch (Exception $e) {
-                return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
-            }
+            return $response;
+        } catch (Exception $e) {
+            return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
-
+    }
 
     public static function activate() {
         self::register_post_type();
