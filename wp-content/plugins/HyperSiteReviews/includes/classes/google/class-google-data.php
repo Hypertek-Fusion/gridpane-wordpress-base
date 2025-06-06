@@ -150,79 +150,49 @@ public static function get_account_location_reviews() {
 }
 
 
-        public static function get_locations_reviews_length() {
-        try {
-            $client = GoogleOAuthClient::get_client();
+public static function get_locations_reviews_length() {
+    global $wpdb;
 
-            if (empty(self::$accounts)) self::get_google_accounts();
-            if (empty(self::$account_locations)) self::get_locations_by_account();
+    try {
+        $locations = $wpdb->get_results("SELECT location_id FROM {$wpdb->prefix}locations", ARRAY_A);
 
-            foreach (self::$account_locations as $acc => $loc) {
-                foreach ($loc as $loc_k => $loc_v) {
-                    if(empty(self::$location_reviews[$loc_k]['total'])) {
-                    $url = "https://mybusiness.googleapis.com/v4/{$acc}/{$loc_k}/reviews";
-                    error_log($url);
-                    $client->setAccessType('offline');
-                    $client->refreshToken($client->getRefreshToken());
-                        $httpClient = $client->authorize();
+        foreach ($locations as $location) {
+            $location_id = $location['location_id'];
+            $review_count = $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s", 
+                $location_id
+            ));
 
-                        $response = $httpClient->get($url);
-
-                        if ($response->getStatusCode() === 200) {
-                            $reviewsData = json_decode($response->getBody()->getContents(), true);
-
-                            if ($reviewsData['totalReviewCount']) {
-                                self::$location_reviews[$loc_k]['total'] = $reviewsData['totalReviewCount'];
-                            }
-
-                        } else {
-                            error_log('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
-                            throw new Exception('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
-                        }
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            error_log('Error getting reviews count: ' . $e->getMessage());
-            echo '<div class="notice notice-error"><p>Error getting reviews: ' . esc_html($e->getMessage()) . '</p></div>';
+            error_log("Location ID: $location_id, Review Count: $review_count");
         }
+    } catch (Exception $e) {
+        error_log('Error getting reviews count: ' . $e->getMessage());
+        echo '<div class="notice notice-error"><p>Error getting reviews: ' . esc_html($e->getMessage()) . '</p></div>';
     }
+}
 
-    public static function get_location_reviews_length($acc, $loc) {
-        try {
-            $client = GoogleOAuthClient::get_client();
 
-            if (empty(self::$accounts)) self::get_google_accounts();
-            if (empty(self::$account_locations)) self::get_locations_by_account();
-            if (empty(self::$location_reviews[$loc]['total'])) {
-                    $url = "https://mybusiness.googleapis.com/v4/{$acc}/{$loc}/reviews";
-                    error_log($url);
-                    $client->setAccessType('offline');
-                    $client->refreshToken($client->getRefreshToken());
-                        $httpClient = $client->authorize();
+public static function get_location_reviews_length($acc, $loc) {
+    global $wpdb;
 
-                        $response = $httpClient->get($url);
+    try {
+        $review_count = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s",
+            $loc
+        ));
 
-                        if ($response->getStatusCode() === 200) {
-                            $reviewsData = json_decode($response->getBody()->getContents(), true);
-
-                            if ($reviewsData['totalReviewCount']) {
-                                self::$location_reviews[$loc]['total'] = $reviewsData['totalReviewCount'];
-                                return self::$location_reviews[$loc]['total'];
-                            } else {
-                                error_log('totalReviewCount not found.');
-                                throw new Exception('totalReviewCount not found.');
-                            }
-                        } else {
-                            error_log('Failed to fetch reviews count, HTTP code: ' . $response->getStatusCode());
-                            throw new Exception('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
-                        }
-            }
-        } catch (Exception $e) {
-            error_log('Error getting reviews count: ' . $e->getMessage());
-            echo '<div class="notice notice-error"><p>Error getting reviews: ' . esc_html($e->getMessage()) . '</p></div>';
+        if ($review_count !== null) {
+            return $review_count;
+        } else {
+            error_log('No reviews found for location.');
+            throw new Exception('No reviews found for location.');
         }
+    } catch (Exception $e) {
+        error_log('Error getting reviews count: ' . $e->getMessage());
+        echo '<div class="notice notice-error"><p>Error getting reviews: ' . esc_html($e->getMessage()) . '</p></div>';
     }
+}
+
 
     /**
      * Get the total number of locations for a specific account.
@@ -230,43 +200,58 @@ public static function get_account_location_reviews() {
      * @param string $account_id The account ID.
      * @return int The number of locations for the specified account.
      */
-    public static function get_account_locations_total($account_id) {
-        if (empty(self::$account_locations)) {
-            self::get_locations_by_account();
-        }
+public static function get_account_locations_total($account_id) {
+    global $wpdb;
 
-        return isset(self::$account_locations[$account_id]) ? count(self::$account_locations[$account_id]) : 0;
+    try {
+        $location_count = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}locations WHERE parent_account_id = %s",
+            $account_id
+        ));
+
+        return $location_count !== null ? $location_count : 0;
+    } catch (Exception $e) {
+        error_log('Error getting location count: ' . $e->getMessage());
+        throw new Exception('Failed to get location count: ' . $e->getMessage());
     }
+}
+
 
     /**
      * Get all accounts.
      *
      * @return array
      */
-    public static function get_all_accounts() {
-        if (empty(self::$accounts)) self::get_google_accounts();
-        return self::$accounts;
-    }
+public static function get_all_accounts() {
+    global $wpdb;
+
+    return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}accounts", ARRAY_A);
+}
+
 
     /**
      * Get all locations.
      *
      * @return array
      */
-    public static function get_all_locations() {
-        if (empty(self::$account_locations)) self::get_locations_by_account();
-        return self::$account_locations;
-    }
+public static function get_all_locations() {
+    global $wpdb;
+
+    return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}locations", ARRAY_A);
+}
+
 
     /**
      * Get all reviews.
      *
      * @return array
      */
-    public static function get_all_reviews() {
-        if (empty(self::$location_reviews)) self::get_account_location_reviews();
-        return self::$location_reviews;
-    }
+public static function get_all_reviews() {
+    global $wpdb;
+
+    return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}reviews", ARRAY_A);
+}
+
 }
 
 
