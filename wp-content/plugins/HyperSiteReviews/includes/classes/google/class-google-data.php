@@ -107,6 +107,79 @@ class GoogleDataHandler {
         }
     }
 
+        public static function get_locations_reviews_length() {
+        try {
+            $client = GoogleOAuthClient::get_client();
+
+            if (empty(self::$accounts)) self::get_google_accounts();
+            if (empty(self::$account_locations)) self::get_locations_by_account();
+
+            foreach (self::$account_locations as $acc => $loc) {
+                foreach ($loc as $loc_k => $loc_v) {
+                    if(empty(self::$location_reviews[$loc_k]['total'])) {
+                    $url = "https://mybusiness.googleapis.com/v4/{$acc}/{$loc_k}/reviews";
+                    error_log($url);
+                    $client->setAccessType('offline');
+                    $client->refreshToken($client->getRefreshToken());
+                        $httpClient = $client->authorize();
+
+                        $response = $httpClient->get($url);
+
+                        if ($response->getStatusCode() === 200) {
+                            $reviewsData = json_decode($response->getBody()->getContents(), true);
+
+                            if ($reviewsData['totalReviewCount']) {
+                                self::$location_reviews[$loc_k]['total'] = $reviewsData['totalReviewCount'];
+                            }
+
+                        } else {
+                            error_log('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
+                            throw new Exception('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
+                        }
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            error_log('Error getting reviews count: ' . $e->getMessage());
+            echo '<div class="notice notice-error"><p>Error getting reviews: ' . esc_html($e->getMessage()) . '</p></div>';
+        }
+    }
+
+    public static function get_location_reviews_length($loc) {
+        try {
+            $client = GoogleOAuthClient::get_client();
+
+            if (empty(self::$accounts)) self::get_google_accounts();
+            if (empty(self::$account_locations)) self::get_locations_by_account();
+            if (empty(self::$location_reviews[$loc]['total'])) {
+                    $url = "https://mybusiness.googleapis.com/v4/{$acc}/{$loc}/reviews";
+                    $client->setAccessType('offline');
+                    $client->refreshToken($client->getRefreshToken());
+                        $httpClient = $client->authorize();
+
+                        $response = $httpClient->get($url);
+
+                        if ($response->getStatusCode() === 200) {
+                            $reviewsData = json_decode($response->getBody()->getContents(), true);
+
+                            if ($reviewsData['totalReviewCount']) {
+                                self::$location_reviews[$loc]['total'] = $reviewsData['totalReviewCount'];
+                                return self::$location_reviews[$loc]['total'];
+                            } else {
+                                error_log('totalReviewCount not found.');
+                                throw new Exception('totalReviewCount not found.');
+                            }
+                        } else {
+                            error_log('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
+                            throw new Exception('Failed to fetch reviews gount, HTTP code: ' . $response->getStatusCode());
+                        }
+            }
+        } catch (Exception $e) {
+            error_log('Error getting reviews count: ' . $e->getMessage());
+            echo '<div class="notice notice-error"><p>Error getting reviews: ' . esc_html($e->getMessage()) . '</p></div>';
+        }
+    }
+
     /**
      * Get the total number of locations for a specific account.
      *
