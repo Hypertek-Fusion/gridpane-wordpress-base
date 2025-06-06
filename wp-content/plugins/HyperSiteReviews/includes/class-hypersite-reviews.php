@@ -78,6 +78,13 @@ class HyperSiteReviews {
                         true
                     );
 
+                    wp_enqueue_style(
+                        'hsrev-setup-style',
+                        $plugin_url . 'admin/css/debug-settings-page.css',
+                        [],
+                        filemtime(plugin_dir_path(__DIR__) . 'admin/css/debug-settings-page.css')
+                    );
+
                     wp_localize_script('hsrev-admin-script', 'HSRevApi', [
                         'urls' => [
                             'accounts' => rest_url('hsrev/v1/accounts'),

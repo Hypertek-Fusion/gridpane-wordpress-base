@@ -1,13 +1,14 @@
 <div class="wrap">
     <h1>HyperSite Reviews Debug Settings</h1>
+    <h2>Flags</h2>
+    <p>Handle any settings for debug purposes here.</p>
     <form method="post">
         <?php wp_nonce_field('hsrev_debug_setting_set'); ?>
-        <h2>Flags</h2>
-        <p>Handle any settings for debug purposes here.</p>
         <label>Setup Complete? : </label>
         <input type="checkbox" name="is-setup" <?php checked(get_option('hsrev_setup_complete'), true); ?>>
         <label>Bypass Setup? : </label>
         <input type="checkbox" name="bypass-setup-page" <?php checked(get_option('hsrev_bypass_setup_page'), true); ?>>
+        <label>Force Delete Google Oauth : </label>
         <input type="checkbox" name="force-delete-google-oauth">
         <input type="submit" value="Update Settings" class="button button-primary">
     </form>
