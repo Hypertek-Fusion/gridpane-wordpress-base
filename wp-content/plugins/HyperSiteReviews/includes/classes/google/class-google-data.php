@@ -206,7 +206,9 @@ public static function get_account_locations_total($account_id) {
      */
 public static function get_all_accounts() {
     global $wpdb;
-
+    if(self::is_accounts_table_empty()) {
+        self::get_google_accounts();
+    }
     return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}accounts", ARRAY_A);
 }
 
