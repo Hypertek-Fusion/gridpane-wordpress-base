@@ -76,7 +76,7 @@ class HyperSiteReviews {
                 filemtime(plugin_dir_path(__FILE__) . 'admin/js/setup-page.js'),
                 true
             );
-            wp_localize_script('hsrev-admin-script', 'HSRevApi', [
+            wp_localize_script('hsrev-setup-script', 'HSRevApi', [
                 'urls' => [
                     'accounts' => rest_url('hsrev/v1/accounts'),
                     'locations' => rest_url('hsrev/v1/locations'),
