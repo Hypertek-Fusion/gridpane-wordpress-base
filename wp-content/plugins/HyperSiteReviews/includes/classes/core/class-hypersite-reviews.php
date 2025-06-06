@@ -356,6 +356,9 @@ class HyperSiteReviews {
         $location_id = $request['location_id'];
         $location_key = 'locations/' . $location_id;
         try {
+            if(GoogleDataHandler::is_reviews_table_empty()) {
+                GoogleDataHandler::get_initial_google_reviews();
+            }
             $reviews = GoogleDataHandler::get_location_reviews_length($account_key, $location_key);
             return rest_ensure_response(['total' => $reviews ?? []]);
         } catch (Exception $e) {

@@ -89,7 +89,7 @@ public static function get_initial_google_reviews() {
         if(self::is_locations_table_empty()) {
             self::get_initial_google_locations();
         }
-        $locations = self::get_all_accounts_locations();
+        $locations = self::get_all_locations();
         foreach ($locations as $location) {
             $location_id = $location['location_id'];
             $url = "https://mybusiness.googleapis.com/v4/{$location['parent_account_id']}/{$location_id}/reviews";
