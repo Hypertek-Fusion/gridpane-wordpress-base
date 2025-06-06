@@ -302,6 +302,7 @@ class HyperSiteReviews {
         $account_id = $request['account_id'];
         $account_key = 'accounts/' . $account_id;
         try {
+            GoogleDataHandler::get_initial_google_locations();
             $locations = GoogleDataHandler::get_locations_by_account($account_key);
             
             return rest_ensure_response(['locations' => $locations ?? []]);

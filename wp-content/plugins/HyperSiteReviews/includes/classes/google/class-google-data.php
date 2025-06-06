@@ -253,6 +253,50 @@ public static function get_all_accounts_locations() {
     }
 }
 
+public static function get_initial_google_locations() {
+    global $wpdb;
+
+    $client = GoogleOAuthClient::get_client();
+
+    if (!$client->getAccessToken()) {
+        wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
+        exit;
+    }
+
+    $service = new Google\Service\MyBusinessBusinessInformation($client);
+
+    try {
+        // Fetch all accounts
+        $accounts = self::get_google_accounts();
+        
+        foreach ($accounts as $account) {
+            $account_id = $account['account_id'];
+            
+            // Fetch locations from Google API for the current account
+            $response = $service->accounts_locations->listAccountsLocations($account_id, ['readMask' => 'name,title,labels,languageCode,storeCode,websiteUri']);
+            
+            foreach ($response->getLocations() as $location) {
+                $wpdb->replace(
+                    $wpdb->prefix . 'locations',
+                    [
+                        'location_id' => $location->getName(),
+                        'parent_account_id' => $account_id,
+                        'title' => $location->getTitle(),
+                        'labels' => json_encode($location->getLabels()),
+                        'language_code' => $location->getLanguageCode(),
+                        'store_code' => $location->getStoreCode(),
+                        'website_uri' => $location->getWebsiteUri(),
+                    ]
+                );
+            }
+        }
+    } catch (Exception $e) {
+        error_log('Error fetching and storing locations: ' . $e->getMessage());
+        throw new Exception('Failed to fetch and store locations: ' . $e->getMessage());
+    }
+}
+
+
 
     /**
      * Get all reviews.
