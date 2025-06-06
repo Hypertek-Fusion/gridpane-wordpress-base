@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log('Location changed, clearing review cache');
                         window.HSRevData.data.reviewsCache = {};
                     }
-                    window.HSRevData.functions.getReviews(window.HSRevData.data.accountId, locationId);
+                    window.HSRevData.functions.getReviews(locationId);
                     window.HSRevData.data.locationId = locationId;
                     console.log(`Location ID set: ${locationId}`);
                 }
