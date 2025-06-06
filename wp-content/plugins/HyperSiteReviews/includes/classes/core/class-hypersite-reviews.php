@@ -188,6 +188,7 @@ class HyperSiteReviews {
                     update_option('hsrev_google_oauth_token', $token);
                     $message = 'Success! Google API connected and tokens stored.';
                     GoogleDataHandler::get_google_accounts();
+                    wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
                 }
             } catch (Exception $e) {
                 $error = true;
