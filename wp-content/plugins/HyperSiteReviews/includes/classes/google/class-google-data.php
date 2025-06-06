@@ -394,7 +394,7 @@ public static function get_reviews($location_id) {
 
     if (self::location_exists($location_id)) {
         // Use get_row to fetch the entire row as an associative array
-        return $wpdb->get_row($wpdb->prepare(
+        return $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM {$wpdb->prefix}reviews WHERE location_id = %s",
             $location_id
         ), ARRAY_A);
