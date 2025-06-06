@@ -321,7 +321,7 @@ class HyperSiteReviews {
         $account_id = $request['account_id'];
         try {
             $locations = GoogleDataHandler::get_account_locations_total($account_id);
-            return rest_ensure_response(['total' => count($locations ?? [])]);
+            return rest_ensure_response(['total' => $locations ?? []]);
         } catch (Exception $e) {
             return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
