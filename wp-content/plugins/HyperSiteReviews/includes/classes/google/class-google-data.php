@@ -56,7 +56,6 @@ public static function get_google_accounts() {
      */
 public static function get_locations_by_account($account_id) {
     global $wpdb;
-
     try {
 
         // Query the locations table for entries with the specified parent_account_id
@@ -65,8 +64,7 @@ public static function get_locations_by_account($account_id) {
             $account_id
         ), ARRAY_A);
 
-        
-
+    
         return $locations;
     } catch (Exception $e) {
         error_log('Error fetching locations for account ' . $account_id . ': ' . $e->getMessage());
@@ -87,7 +85,7 @@ public static function get_account_location_reviews() {
     $client = GoogleOAuthClient::get_client();
 
     try {
-        $locations = self::get_locations_by_account();
+        $locations = self::get_all_accounts_locations();
         foreach ($locations as $location) {
             $location_id = $location['location_id'];
             $url = "https://mybusiness.googleapis.com/v4/{$location['parent_account_id']}/{$location_id}/reviews";
@@ -218,6 +216,40 @@ public static function get_all_locations() {
     global $wpdb;
 
     return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}locations", ARRAY_A);
+}
+
+public static function get_all_accounts_locations() {
+    global $wpdb;
+
+    try {
+        // Fetch all accounts
+        $accounts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}accounts", ARRAY_A);
+
+        // Initialize an array to hold accounts and their locations
+        $accounts_locations = [];
+
+        // Fetch locations for each account
+        foreach ($accounts as $account) {
+            $account_id = $account['account_id'];
+
+            // Fetch locations for the current account
+            $locations = $wpdb->get_results($wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}locations WHERE parent_account_id = %s",
+                $account_id
+            ), ARRAY_A);
+
+            // Store account data along with its locations
+            $accounts_locations[$account_id] = [
+                'account' => $account,
+                'locations' => $locations,
+            ];
+        }
+
+        return $accounts_locations;
+    } catch (Exception $e) {
+        error_log('Error fetching all accounts and their locations: ' . $e->getMessage());
+        throw new Exception('Failed to fetch all accounts and locations: ' . $e->getMessage());
+    }
 }
 
 
