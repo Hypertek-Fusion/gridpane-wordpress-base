@@ -54,42 +54,19 @@ public static function get_google_accounts() {
      * @return array
      * @throws Exception
      */
-public static function get_locations_by_account() {
+public static function get_locations_by_account($account_id) {
     global $wpdb;
 
-    $client = GoogleOAuthClient::get_client();
-
-    if (!$client->getAccessToken()) {
-        wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
-        exit;
-    }
-
-    $service = new Google\Service\MyBusinessBusinessInformation($client);
-
     try {
-        $accounts = self::get_google_accounts();
-        foreach ($accounts as $account) {
-            $curr_account = $account['account_id'];
-            $response = $service->accounts_locations->listAccountsLocations($curr_account, ['readMask' => 'name,title']);
+        // Query the locations table for entries with the specified parent_account_id
+        $locations = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM {$wpdb->prefix}locations WHERE parent_account_id = %s",
+            $account_id
+        ), ARRAY_A);
 
-            foreach ($response as $location) {
-                $wpdb->replace(
-                    $wpdb->prefix . 'locations',
-                    [
-                        'location_id' => $location->getName(),
-                        'parent_account_id' => $curr_account,
-                        'title' => $location->getTitle(),
-                        'labels' => json_encode($location->getLabels()),
-                        'language_code' => $location->getLanguageCode(),
-                        'store_code' => $location->getStoreCode(),
-                        'website_uri' => $location->getWebsiteUri(),
-                    ]
-                );
-            }
-        }
-        return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}locations", ARRAY_A);
+        return $locations;
     } catch (Exception $e) {
-        error_log('Error fetching locations: ' . $e->getMessage());
+        error_log('Error fetching locations for account ' . $account_id . ': ' . $e->getMessage());
         throw new Exception('Failed to fetch locations: ' . $e->getMessage());
     }
 }
