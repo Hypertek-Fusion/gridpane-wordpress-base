@@ -261,6 +261,7 @@ class HyperSiteReviews {
 
                 if (!empty($token['refresh_token'])) {
                     error_log('Refresh token found: '. $token['refresh_token']);
+                    update_option('hsrev_google_refresh_token', $token['refresh_token']);
                 } else {
                     error_log('No refresh token received from Google OAuth token response.');
                 }
@@ -308,7 +309,7 @@ class HyperSiteReviews {
         $client = self::get_google_client();
 
         if ($client->isAccessTokenExpired()) {
-            $refreshToken = $client->getRefreshToken();
+            $refreshToken = get_option('hsrev_google_refresh_token');
 
             if ($refreshToken) {
                 $newToken = $client->fetchAccessTokenWithRefreshToken($refreshToken);
