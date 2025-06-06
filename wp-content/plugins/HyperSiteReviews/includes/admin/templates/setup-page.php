@@ -41,7 +41,7 @@
                             <div class="selection-table__heading"><p>Location Name</p></div>
                             <div class="selection-table__heading"><p># of Reviews</p></div>
                         </div>
-                        <div id="location-rows"></div> <!-- Placeholder for location rows -->
+                        <div id="location-rows"></div>
                     </div>
                 </div>
             </form>
