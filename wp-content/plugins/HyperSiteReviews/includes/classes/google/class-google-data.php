@@ -11,27 +11,42 @@ class GoogleDataHandler {
      * @return array
      * @throws Exception
      */
-    public static function get_google_accounts() {
-        $client = GoogleOAuthClient::get_client();
+public static function get_google_accounts() {
+    global $wpdb;
 
-        if (!$client->getAccessToken()) {
-            wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
-            exit;
-        }
+    $client = GoogleOAuthClient::get_client();
 
-        $service = new Google\Service\MyBusinessAccountManagement($client);
-
-        try {
-            $response = $service->accounts->listAccounts();
-            foreach ($response->getAccounts() as $account) {
-                self::$accounts[$account->getName()] = $account;
-            }
-            return self::$accounts;
-        } catch (Exception $e) {
-            error_log('Error fetching business accounts: ' . $e->getMessage());
-            throw new Exception('Failed to fetch accounts: ' . $e->getMessage());
-        }
+    if (!$client->getAccessToken()) {
+        wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
+        exit;
     }
+
+    $service = new Google\Service\MyBusinessAccountManagement($client);
+
+    try {
+        $response = $service->accounts->listAccounts();
+        foreach ($response->getAccounts() as $account) {
+            $wpdb->replace(
+                $wpdb->prefix . 'accounts',
+                [
+                    'account_id' => $account->getName(),
+                    'account_name' => $account->getAccountName(),
+                    'account_number' => $account->getAccountNumber(),
+                    'permission_level' => $account->getPermissionLevel(),
+                    'primary_owner' => $account->getPrimaryOwner(),
+                    'role' => $account->getRole(),
+                    'type' => $account->getType(),
+                    'verification_state' => $account->getVerificationState(),
+                    'vetted_state' => $account->getVettedState(),
+                ]
+            );
+        }
+        return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}accounts", ARRAY_A);
+    } catch (Exception $e) {
+        error_log('Error fetching business accounts: ' . $e->getMessage());
+        throw new Exception('Failed to fetch accounts: ' . $e->getMessage());
+    }
+}
 
     /**
      * Get locations for each account.
@@ -39,32 +54,46 @@ class GoogleDataHandler {
      * @return array
      * @throws Exception
      */
-    public static function get_locations_by_account() {
-        $client = GoogleOAuthClient::get_client();
+public static function get_locations_by_account() {
+    global $wpdb;
 
-        if (!$client->getAccessToken()) {
-            wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
-            exit;
-        }
+    $client = GoogleOAuthClient::get_client();
 
-        $service = new Google\Service\MyBusinessBusinessInformation($client);
-
-        if (empty(self::$accounts)) self::get_google_accounts();
-
-        try {
-            foreach (self::$accounts as $account) {
-                $curr_account = $account->getName();
-                $response = $service->accounts_locations->listAccountsLocations($curr_account, ['readMask' => 'name,title']);
-                foreach ($response as $location) {
-                    self::$account_locations[$curr_account][$location->getName()] = $location;
-                }
-            }
-            return self::$account_locations;
-        } catch (Exception $e) {
-            error_log('Error fetching locations: ' . $e->getMessage());
-            throw new Exception('Failed to fetch locations: ' . $e->getMessage());
-        }
+    if (!$client->getAccessToken()) {
+        wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
+        exit;
     }
+
+    $service = new Google\Service\MyBusinessBusinessInformation($client);
+
+    try {
+        $accounts = self::get_google_accounts();
+        foreach ($accounts as $account) {
+            $curr_account = $account['account_id'];
+            $response = $service->accounts_locations->listAccountsLocations($curr_account, ['readMask' => 'name,title']);
+
+            foreach ($response as $location) {
+                $wpdb->replace(
+                    $wpdb->prefix . 'locations',
+                    [
+                        'location_id' => $location->getName(),
+                        'parent_account_id' => $curr_account,
+                        'title' => $location->getTitle(),
+                        'labels' => json_encode($location->getLabels()),
+                        'language_code' => $location->getLanguageCode(),
+                        'store_code' => $location->getStoreCode(),
+                        'website_uri' => $location->getWebsiteUri(),
+                    ]
+                );
+            }
+        }
+        return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}locations", ARRAY_A);
+    } catch (Exception $e) {
+        error_log('Error fetching locations: ' . $e->getMessage());
+        throw new Exception('Failed to fetch locations: ' . $e->getMessage());
+    }
+}
+
 
     /**
      * Get reviews for each location.
@@ -72,40 +101,54 @@ class GoogleDataHandler {
      * @return array
      * @throws Exception
      */
-    public static function get_account_location_reviews() {
-        $client = GoogleOAuthClient::get_client();
+public static function get_account_location_reviews() {
+    global $wpdb;
 
-        if (empty(self::$accounts)) self::get_google_accounts();
-        if (empty(self::$account_locations)) self::get_locations_by_account();
+    $client = GoogleOAuthClient::get_client();
 
-        try {
-            foreach (self::$account_locations as $acc => $loc) {
-                foreach ($loc as $loc_k => $loc_v) {
-                    $url = "https://mybusiness.googleapis.com/v4/{$acc}/{$loc_k}/reviews";
-                    $httpClient = $client->authorize();
-                    $response = $httpClient->get($url);
+    try {
+        $locations = self::get_locations_by_account();
+        foreach ($locations as $location) {
+            $location_id = $location['location_id'];
+            $url = "https://mybusiness.googleapis.com/v4/{$location['parent_account_id']}/{$location_id}/reviews";
+            $httpClient = $client->authorize();
+            $response = $httpClient->get($url);
+            
+            if ($response->getStatusCode() === 200) {
+                $reviewsData = json_decode($response->getBody()->getContents(), true);
+                $reviews = $reviewsData['reviews'] ?? null;
 
-                    if ($response->getStatusCode() === 200) {
-                        $reviewsData = json_decode($response->getBody()->getContents(), true);
-                        $reviews = $reviewsData['reviews'] ?? null;
-
-                        if ($reviews) {
-                            foreach ($reviews as $review) {
-                                self::$location_reviews[$loc_k][$review['reviewId']] = $review;
-                            }
-                        }
-                    } else {
-                        error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
-                        throw new Exception('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
+                if ($reviews) {
+                    foreach ($reviews as $review) {
+                        $wpdb->replace(
+                            $wpdb->prefix . 'reviews',
+                            [
+                                'review_id' => $review['reviewId'],
+                                'location_id' => $location_id,
+                                'reviewer_display_name' => $review['reviewer']['displayName'],
+                                'reviewer_profile_photo_url' => $review['reviewer']['profilePhotoUrl'],
+                                'star_rating' => $review['starRating'],
+                                'comment' => $review['comment'],
+                                'create_time' => $review['createTime'],
+                                'update_time' => $review['updateTime'],
+                                'review_reply_comment' => $review['reviewReply']['comment'] ?? null,
+                                'review_reply_update_time' => $review['reviewReply']['updateTime'] ?? null,
+                            ]
+                        );
                     }
                 }
+            } else {
+                error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
+                throw new Exception('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
             }
-            return self::$location_reviews;
-        } catch (Exception $e) {
-            error_log('Error fetching reviews: ' . $e->getMessage());
-            throw new Exception('Failed to fetch reviews: ' . $e->getMessage());
         }
+        return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}reviews", ARRAY_A);
+    } catch (Exception $e) {
+        error_log('Error fetching reviews: ' . $e->getMessage());
+        throw new Exception('Failed to fetch reviews: ' . $e->getMessage());
     }
+}
+
 
         public static function get_locations_reviews_length() {
         try {
