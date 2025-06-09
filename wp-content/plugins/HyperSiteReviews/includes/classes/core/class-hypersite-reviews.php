@@ -418,15 +418,16 @@ public static function register_api_routes() {
 
         public static function api_get_location_reviews($request) {
             $location_id = $request['location_id'];
+            $location_key = 'locations/' . $location_id;
             try {
                 $page = $request->get_param('page');
                 $per_page = $request->get_param('per_page');
 
                 // Fetch paginated reviews
-                $reviews = GoogleDataHandler::get_reviews($location_id, $page, $per_page);
+                $reviews = GoogleDataHandler::get_reviews($location_key, $page, $per_page);
 
                 // Get total number of reviews for pagination
-                $total_reviews = GoogleDataHandler::get_total_reviews_count($location_id);
+                $total_reviews = GoogleDataHandler::get_total_reviews_count($location_key);
 
                 return rest_ensure_response([
                     'reviews' => $reviews,
