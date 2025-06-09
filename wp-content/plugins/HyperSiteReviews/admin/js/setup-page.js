@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return Array.from(currentCheckboxes).some(cb => cb.checked);
     };
 
-    const selectAllReviews = (element) => {
+const selectAllReviews = (element) => {
         const reviewCheckboxes = pages[currentPage].querySelectorAll('input[name*="selected-review-"][type="checkbox"]');
         const locationId = window.HSRevData.data.locationId;
         const reviews = window.HSRevData.data.reviewsCache[locationId] || [];
@@ -46,7 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to update the hidden input field with selected reviews
     const updateHiddenInput = () => {
         const hiddenInput = document.getElementById('selected_reviews');
-        hiddenInput.value = Array.from(window.HSRevData.data.selectedReviews).join(',');
+        const filteredReviewIds = Array.from(window.HSRevData.data.selectedReviews).filter(id => id.startsWith('AbFvOq'));
+        hiddenInput.value = filteredReviewIds.join(',');
     };
 
     const getCheckedAccountId = () => {
