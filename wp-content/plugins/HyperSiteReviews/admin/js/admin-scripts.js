@@ -263,7 +263,8 @@ const populateReviews = (reviewsData) => {
     if (window.HSRevData.functions.selectAllReviews) {
         const selectAllReviewsCheckBox = document.getElementById('select-all-reviews');
         selectAllReviewsCheckBox.addEventListener('change', () => {
-            window.HSRevData.functions.selectAllReviews(selectAllReviewsCheckBox)
+            window.HSRevData.functions.selectAllReviews(selectAllReviewsCheckBox);
+            window.HSRevData.functions.attachCheckboxListeners(reviewRowsContainer);
         })
     }
 };
