@@ -83,6 +83,10 @@ class GoogleDataHandler
     {
         global $wpdb;
         try {
+            if (self::is_locations_table_empty()) {
+                self::get_initial_google_locations();
+            }
+
             // Calculate offset
             $offset = ($page - 1) * $per_page;
 
