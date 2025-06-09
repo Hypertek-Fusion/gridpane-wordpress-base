@@ -527,7 +527,7 @@ class GoogleDataHandler
 
             // Update the SQL query to include the is_selected condition
             return $wpdb->get_results($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}reviews WHERE location_id = %s AND is_selected = TRUE LIMIT %d OFFSET %d",
+                "SELECT reviewe_display_name, reviewer_profile_photo_url, comment, create_time FROM {$wpdb->prefix}reviews WHERE location_id = %s AND is_selected = TRUE LIMIT %d OFFSET %d",
                 $location_id,
                 $per_page,
                 $offset
