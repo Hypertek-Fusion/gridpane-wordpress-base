@@ -241,15 +241,27 @@ public static function get_location_reviews_length($loc) {
             } else {
                 if($indexed_count !== $review_count) {
                     self::get_initial_location_reviews($loc);
+
+                    $indexed_count = $wpdb->get_var($wpdb->prepare(
+                        "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s",
+                        $loc
+                    ));
+
+                    if ($indexed_count !== null) {
+                        return $indexed_count;
+                    } else {
+                        error_log('No reviews found for location.');
+                        throw new Exception('No reviews found for location.');
+                    }
+                } else {
+                    if ($indexed_count !== null) {
+                        return $indexed_count;
+                    } else {
+                        error_log('No reviews found for location.');
+                        throw new Exception('No reviews found for location.');
+                    }
                 }
             }
-        }
-
-        if ($review_count !== null) {
-            return $review_count;
-        } else {
-            error_log('No reviews found for location.');
-            throw new Exception('No reviews found for location.');
         }
     } catch (Exception $e) {
         error_log('Error getting reviews count: ' . $e->getMessage());
