@@ -144,6 +144,7 @@ public static function get_initial_location_reviews($loc_id) {
 
     try {
         if (self::location_exists($loc_id)) {
+            error_log('Loc ID: ' .  $loc_id);
             self::get_initial_google_locations();
         }
         
