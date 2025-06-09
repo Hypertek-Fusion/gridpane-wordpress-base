@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.HSRevData.functions = window.HSRevData.functions || {};
     window.HSRevData.data = window.HSRevData.data || {};
 
+    // Prevent default form submission
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault(); // Prevents the form from being submitted
+    });
+
     // Function to check if any checkbox is selected on the current page
     const isAnyCheckboxCheckedOnCurrentPage = () => {
         const currentCheckboxes = pages[currentPage].querySelectorAll('input:not([name="select-all-reviews"])[type="checkbox"]');
@@ -40,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateButtonState = () => {
-        if(currentPage !== 2) {
+        if (currentPage !== 2) {
             nextButton.innerText = 'Next Page';
         } else {
             nextButton.innerText = 'Submit';
@@ -111,8 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
             currentPage++;
             showPage(currentPage);
         } else if (currentPage === 2 && isAnyCheckboxCheckedOnCurrentPage()) {
-            // Submit the form if on the last page
-            document.querySelector('form').submit();
+            // Only submit the form when on the last page
+            form.removeEventListener('submit', (e) => e.preventDefault()); // Re-enable form submission
+            form.submit();
         }
     });
 
