@@ -142,9 +142,44 @@ class HyperSiteReviews
             delete_option('hsrev_google_refresh_token');
             echo '<div class="notice notice-success"><p>Disconnected from Google account.</p></div>';
         }
+        /*
 
+                Array
+        (
+            [selected-account] => accounts/107907910442986685413
+            [selected-location] => locations/16180520220509144628
+            [selected_reviews] => AbFvOqk-0YTGbZhJo85mvGOcZQ9OhZm4oi8ANcwmZD28RpKb-_IbRfKyJyXEU6Y_9tcLTSSZaiyPGQ,AbFvOqk1BMb_xOBJ8dxDwJD9KULPReJYmXpcJOhucBFx0nMCNwBqn6wKnGDjtgESaUd7f4Yv4yD8hQ,AbFvOqk29OiVIIhEbt_i9wctbZAhlcz7jYwQEud2d32Ngo2G53Rfmk5vtfKmbbi9KqICFPzBebSE,AbFvOqk2vBMoj0rq56_F3JFstmZjj2Zgz-CtZjd5o0vMXPdfBXw4KO631EQBed9nZdcQp7ejkqyyhw,AbFvOqk55EvJaHFl4dDkUnWxL-1QsbaI_McEM28DbX6FJQh9zW8RsSplFh_vasTizwSooAcNDiCb1w,AbFvOqk5XVzXB_NVHdXu1xLb57KODV3nGz2OlwKdTmTgIkpALeJU9MaQkp4M-6ONcDNhLfe-LgLB,AbFvOqk98o7AZ6tAI7nD6gBXahFqYUb3mP2i5GroqAn_4opY1R_Pi4bX7IQtaNBls7-xH4sdNEIt5g,AbFvOqkB7XeNJakrAmyPZG0ZyLfsiLC-gkHkyn9CRbYtZKZ6CyvW_B6barpP8XwB9cWG2pwEbY1fsQ,AbFvOqkBIOydGrvf_iRDbHNP4iVHdwYfwvtgdKcVBLr5-BtNKIOlw4el-EG60EZA-lW4fImqXMn8Aw,AbFvOqkeB4v9w9vNoy0PUpboOiK3CMbdP5n9Yo-h5YA5DqZdXH6xjAJtJRD-aSTsQeyKZA,AbFvOqkgs6kIxPqQOxNwrJdpl2O9YSqC--UzKwA8ZDOHhFH7C7guBQDhdFf_ORxt4rDCM86GXrfq,AbFvOqkGSyb96Mtu-Ef6ADADuMPWeg22jnxtmLpqLZOjC8lXhrIAxIIw_RB0Za5vaFblB34IQr3t,AbFvOqkhctE2zoo1jy6ERRPJlhqK5FXLaajYRZpIKv64qvWSpNqsispZQEx4tVUbDmZwsvb3sCxnPg,AbFvOqkHnJ8o0gIJpnaTlGXj_g4mKLmCV8Mwy6qQm-ECtcU0JeGmRi4s4EpOxiRLBXeQNlevHLvuLw,AbFvOqkifPMQbC-E_yV47E0evLkkeTrtTg6BhC-hUCQcOMU3uRJ7pPpv4Jv86jyV1VKfqyezCS17Kg,AbFvOqkIyAiys7vqCL5GpikiOCimGMZg7pxWs0mKruwIV5y9Oa3AvOjd3nztJECYN1JQHOcxM21M,AbFvOqkJF4EnNf_oZroD1P6fx94ZvGaIyMGYJjepp9YJn2DwmlwvYdb20Mai8THgDI4sYmxiC1uQoQ,AbFvOqklJwDEkja35mrZnw8S-yjjBJftKifvpQoQsSCMXsxm1j2NoM-CXyN8qN4plWdipztJBij6WA,AbFvOqkmQimAamryUMyBlrHhYN8oQC_SjXS0_TGqahPzKND8rU_UD4sWNt9npA-sH9cbwdv57ZgaAA,AbFvOqkoi7HH3QMmXHb0btk7kXVd0P8eOTQx55RkfSyd-WhhjssIOuooUdjlvnJlKSQot2xwHrkdIA
+            [select-all-reviews] => on
+            [selected-review-AbFvOqkgs6kIxPqQOxNwrJdpl2O9YSqC--UzKwA8ZDOHhFH7C7guBQDhdFf_ORxt4rDCM86GXrfq] => AbFvOqkgs6kIxPqQOxNwrJdpl2O9YSqC--UzKwA8ZDOHhFH7C7guBQDhdFf_ORxt4rDCM86GXrfq
+            [selected-review-AbFvOqkGSyb96Mtu-Ef6ADADuMPWeg22jnxtmLpqLZOjC8lXhrIAxIIw_RB0Za5vaFblB34IQr3t] => AbFvOqkGSyb96Mtu-Ef6ADADuMPWeg22jnxtmLpqLZOjC8lXhrIAxIIw_RB0Za5vaFblB34IQr3t
+            [selected-review-AbFvOqkhctE2zoo1jy6ERRPJlhqK5FXLaajYRZpIKv64qvWSpNqsispZQEx4tVUbDmZwsvb3sCxnPg] => AbFvOqkhctE2zoo1jy6ERRPJlhqK5FXLaajYRZpIKv64qvWSpNqsispZQEx4tVUbDmZwsvb3sCxnPg
+            [selected-review-AbFvOqkHnJ8o0gIJpnaTlGXj_g4mKLmCV8Mwy6qQm-ECtcU0JeGmRi4s4EpOxiRLBXeQNlevHLvuLw] => AbFvOqkHnJ8o0gIJpnaTlGXj_g4mKLmCV8Mwy6qQm-ECtcU0JeGmRi4s4EpOxiRLBXeQNlevHLvuLw
+            [selected-review-AbFvOqkifPMQbC-E_yV47E0evLkkeTrtTg6BhC-hUCQcOMU3uRJ7pPpv4Jv86jyV1VKfqyezCS17Kg] => AbFvOqkifPMQbC-E_yV47E0evLkkeTrtTg6BhC-hUCQcOMU3uRJ7pPpv4Jv86jyV1VKfqyezCS17Kg
+            [selected-review-AbFvOqkIyAiys7vqCL5GpikiOCimGMZg7pxWs0mKruwIV5y9Oa3AvOjd3nztJECYN1JQHOcxM21M] => AbFvOqkIyAiys7vqCL5GpikiOCimGMZg7pxWs0mKruwIV5y9Oa3AvOjd3nztJECYN1JQHOcxM21M
+            [selected-review-AbFvOqkJF4EnNf_oZroD1P6fx94ZvGaIyMGYJjepp9YJn2DwmlwvYdb20Mai8THgDI4sYmxiC1uQoQ] => AbFvOqkJF4EnNf_oZroD1P6fx94ZvGaIyMGYJjepp9YJn2DwmlwvYdb20Mai8THgDI4sYmxiC1uQoQ
+            [selected-review-AbFvOqklJwDEkja35mrZnw8S-yjjBJftKifvpQoQsSCMXsxm1j2NoM-CXyN8qN4plWdipztJBij6WA] => AbFvOqklJwDEkja35mrZnw8S-yjjBJftKifvpQoQsSCMXsxm1j2NoM-CXyN8qN4plWdipztJBij6WA
+            [selected-review-AbFvOqkmQimAamryUMyBlrHhYN8oQC_SjXS0_TGqahPzKND8rU_UD4sWNt9npA-sH9cbwdv57ZgaAA] => AbFvOqkmQimAamryUMyBlrHhYN8oQC_SjXS0_TGqahPzKND8rU_UD4sWNt9npA-sH9cbwdv57ZgaAA
+            [selected-review-AbFvOqkoi7HH3QMmXHb0btk7kXVd0P8eOTQx55RkfSyd-WhhjssIOuooUdjlvnJlKSQot2xwHrkdIA] => AbFvOqkoi7HH3QMmXHb0btk7kXVd0P8eOTQx55RkfSyd-WhhjssIOuooUdjlvnJlKSQot2xwHrkdIA
+        )
+
+        */
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            global $wpdb;
+
             error_log(print_r($_POST, true));
+            $selected_reviews = explode(',', $_POST['selected_reviews']);
+
+            $placeholders = implode(', ', array_fill(0, count($selected_reviews), '%s'));
+
+            // Prepare and execute the SQL statement
+            $sql = $wpdb->prepare(
+                "UPDATE wp_reviews SET is_selected = TRUE WHERE review_id IN ($placeholders)",
+                $selected_reviews
+            );
+
+            $wpdb->query($sql);
+
+            update_option('hsrev_setup_complete', true);
         }
 
         // Handle OAuth callback

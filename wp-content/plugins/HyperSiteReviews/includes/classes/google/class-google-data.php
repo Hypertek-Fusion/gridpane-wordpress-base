@@ -139,7 +139,8 @@ class GoogleDataHandler
                         $nextPageToken = $reviewsData['nextPageToken'] ?? null;
 
                         foreach ($fetchedReviews as $review) {
-                            if($review['comment']) {
+                            $review_comment = $review['comment'] ?? null;
+                            if($review_comment) {
                                     $wpdb->replace(
                                     $wpdb->prefix . 'reviews',
                                     [
@@ -200,7 +201,8 @@ class GoogleDataHandler
                     $nextPageToken = $reviewsData['nextPageToken'] ?? null;
 
                     foreach ($fetchedReviews as $review) {
-                        if($review['comment']) {
+                        $review_comment = $review['comment'] ?? null;
+                        if($review_comment) {
                             $wpdb->replace(
                                 $wpdb->prefix . 'reviews',
                                 [
