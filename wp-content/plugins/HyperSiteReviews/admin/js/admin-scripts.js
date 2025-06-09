@@ -194,24 +194,38 @@ const getLocationReviewCount = async (accountId, locationId) => {
 // Prefetch all reviews for a location
 const prefetchReviews = async (locationId) => {
     try {
-        const url = HSRevApi.urls.locationReviewsBase.replace('%s', locationId.replace('locations/', ''));
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-WP-Nonce': HSRevApi.nonce
-            }
-        });
+        let allReviews = [];
+        let page = 1;
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+        while (true) {
+            const url = `${HSRevApi.urls.locationReviewsBase.replace('%s', locationId.replace('locations/', ''))}?page=${page}&per_page=${perPage}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WP-Nonce': HSRevApi.nonce
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+
+            const reviewsData = await response.json();
+            allReviews = allReviews.concat(reviewsData.reviews);
+
+            // Break if there are no more reviews to fetch
+            if (reviewsData.reviews.length < perPage) {
+                break;
+            }
+
+            page++;
         }
 
-        const reviewsData = await response.json();
         window.HSRevData.data.reviewsCache = window.HSRevData.data.reviewsCache || {};
-        window.HSRevData.data.reviewsCache[locationId] = reviewsData.reviews; // Cache all reviews
+        window.HSRevData.data.reviewsCache[locationId] = allReviews; // Cache all reviews
 
-        console.log('Reviews for Location (prefetched):', reviewsData);
+        console.log('All Reviews for Location (prefetched):', allReviews);
 
         // Initialize pagination
         reviewsPage = 1;
