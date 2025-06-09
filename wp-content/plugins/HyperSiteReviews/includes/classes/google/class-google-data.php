@@ -264,7 +264,7 @@ class GoogleDataHandler
 
         try {
             // Check if data is stale based on a last updated timestamp.
-            $shouldUpdate = self::should_update_review_count($loc);
+            //$shouldUpdate = self::should_update_review_count($loc);
 
             // Fetch the count from the database
             $indexed_count = $wpdb->get_var($wpdb->prepare(
