@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateButtonState = () => {
         if(currentPage !== 2) {
-            nextButton.innerText = 'Submit';
-        } else {
             nextButton.innerText = 'Next Page';
+        } else {
+            nextButton.innerText = 'Submit';
         }
         nextButton.disabled = !isAnyCheckboxCheckedOnCurrentPage();
     };
