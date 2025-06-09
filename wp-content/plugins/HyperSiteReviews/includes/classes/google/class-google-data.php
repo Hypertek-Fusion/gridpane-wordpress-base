@@ -347,8 +347,7 @@ class GoogleDataHandler
      *
      * @return array
      */
-    public static function get_all_accounts($page, $per_page)
-    {
+    public static function get_all_accounts($page = 1, $per_page = 10) {
         global $wpdb;
 
         if (self::is_accounts_table_empty()) {
