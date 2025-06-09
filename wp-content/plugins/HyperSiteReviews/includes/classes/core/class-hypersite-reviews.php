@@ -180,6 +180,7 @@ class HyperSiteReviews
             $wpdb->query($sql);
 
             update_option('hsrev_setup_complete', true);
+            wp_redirect(admin_url('admin.php?page=hypersite-reviews'));
         }
 
         // Handle OAuth callback
