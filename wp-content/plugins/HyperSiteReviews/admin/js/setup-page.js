@@ -22,10 +22,24 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const selectAllReviews = (element) => {
-        const reviewCheckbox = pages[currentPage].querySelectorAll('input[name*="selected-review-"][type="checkbox"]');
-        Array.from(reviewCheckbox).forEach(cb => cb.checked = element.checked);
+        const reviewCheckboxes = pages[currentPage].querySelectorAll('input[name*="selected-review-"][type="checkbox"]');
+        const locationId = window.HSRevData.data.locationId;
+        const reviews = window.HSRevData.data.reviewsCache[locationId] || [];
+
+        Array.from(reviewCheckboxes).forEach(cb => {
+            const reviewId = cb.value;
+            cb.checked = element.checked;
+            
+            if (element.checked) {
+                window.HSRevData.data.selectedReviews.add(reviewId);
+            } else {
+                window.HSRevData.data.selectedReviews.delete(reviewId);
+            }
+        });
+
         updateButtonState();
-    }
+    };
+
 
     // Function to get the checked account ID
     const getCheckedAccountId = () => {

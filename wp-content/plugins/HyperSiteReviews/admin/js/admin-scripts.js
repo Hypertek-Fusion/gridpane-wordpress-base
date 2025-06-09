@@ -9,6 +9,11 @@ function getAccountLocationsUrl(accountId) {
 let reviewsPage = 1;
 let perPage = 10; // Default reviews per page
 
+// Initialize selected reviews set
+window.HSRevData = window.HSRevData || {};
+window.HSRevData.data = window.HSRevData.data || {};
+window.HSRevData.data.selectedReviews = new Set();
+
 const getUsers = async () => {
     try {
         const accountRowsContainer = document.getElementById('account-rows');
@@ -246,11 +251,12 @@ const populateReviews = (page, perPage) => {
     const paginatedReviews = reviews.slice(start, end);
 
     const reviewRows = paginatedReviews.map(review => {
+        const isChecked = window.HSRevData.data.selectedReviews.has(review.review_id);
         const reviewRow = document.createElement('div');
         reviewRow.classList.add('rows');
         reviewRow.innerHTML = `
             <div class="row-item">
-                <input type="checkbox" name="selected-review-${review.review_id}" value=${review.review_id}>
+                <input type="checkbox" name="selected-review-${review.review_id}" value="${review.review_id}" ${isChecked ? 'checked' : ''}>
                 <div class="row-item__cell" data-type="reviewer">${review.reviewer_display_name}</div>
                 <div class="row-item__cell" data-type="rating">${review.star_rating}</div>
                 <div class="row-item__cell" data-type="comment">${review.comment}</div>
@@ -267,8 +273,9 @@ const populateReviews = (page, perPage) => {
 
     if (window.HSRevData.functions.selectAllReviews) {
         const selectAllReviewsCheckBox = document.getElementById('select-all-reviews');
+        selectAllReviewsCheckBox.checked = paginatedReviews.every(review => window.HSRevData.data.selectedReviews.has(review.review_id));
         selectAllReviewsCheckBox.addEventListener('change', () => {
-            window.HSRevData.functions.selectAllReviews(selectAllReviewsCheckBox);
+            window.HSRevData.functions.selectAllReviews(selectAllReviewsCheckBox, paginatedReviews);
             window.HSRevData.functions.attachCheckboxListeners(reviewRowsContainer);
         });
     }
@@ -286,6 +293,15 @@ window.HSRevData = window.HSRevData || {};
 window.HSRevData.functions = window.HSRevData.functions || {};
 window.HSRevData.functions.getLocations = getLocations;
 window.HSRevData.functions.prefetchReviews = prefetchReviews;
+
+// Updated function to select all reviews
+window.HSRevData.functions.selectAllReviews = (selectAllCheckbox, reviews) => {
+    if (selectAllCheckbox.checked) {
+        reviews.forEach(review => window.HSRevData.data.selectedReviews.add(review.review_id));
+    } else {
+        reviews.forEach(review => window.HSRevData.data.selectedReviews.delete(review.review_id));
+    }
+};
 
 // Pagination UI setup
 document.getElementById('reviews-per-page').addEventListener('change', function() {
