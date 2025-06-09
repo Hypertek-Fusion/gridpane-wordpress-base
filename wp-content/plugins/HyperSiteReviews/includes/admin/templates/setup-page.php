@@ -49,7 +49,7 @@
                     <div class="selection-table" data-select-type="review">
                         <p>Reviews for the selected location:</p>
                         <div class="selection-table__heading-row">
-                            <div class="selection-table__heading"><p><input type="checkbox" name="select-all-reviews"></p></div>
+                            <div class="selection-table__heading"><p><input id="select-all-reviews"  type="checkbox" name="select-all-reviews"></p></div>
                             <div class="selection-table__heading"><p>Reviewer</p></div>
                             <div class="selection-table__heading"><p>Rating</p></div>
                             <div class="selection-table__heading"><p>Comment</p></div>
