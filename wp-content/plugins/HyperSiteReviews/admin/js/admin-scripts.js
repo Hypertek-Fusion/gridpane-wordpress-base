@@ -101,21 +101,19 @@ const getAccountLocationsLength = async (accountId) => {
 
 const getLocations = async (accountId) => {
     const locationRowsContainer = document.getElementById('location-rows');
+    const locationsCache = window.HSRevData.data.locationsCache || {};
 
-    if (window.HSRevData.data.locationsCache && window.HSRevData.data.locationsCache[accountId]) {
+    // Use cached data if available
+    if (locationsCache[accountId]) {
         console.log('Using cached locations');
-        populateLocations(window.HSRevData.data.locationsCache[accountId]);
+        populateLocations(locationsCache[accountId]);
         return;
     }
 
-    try {
-        locationRowsContainer.innerHTML = '';
-        const loading = document.createElement('div');
-        loading.style.textAlign = 'center';
-        loading.innerText = 'Fetching locations. Please wait ...';
-        loading.classList.add('row-item');
-        locationRowsContainer.appendChild(loading);
+    // Show loading message
+    locationRowsContainer.innerHTML = '<div style="text-align: center;" class="row-item">Fetching locations. Please wait ...</div>';
 
+    try {
         const url = getAccountLocationsUrl(accountId.replace('accounts/', ''));
         const response = await fetch(url, {
             method: 'GET',
@@ -130,14 +128,15 @@ const getLocations = async (accountId) => {
         }
 
         const locationsData = await response.json();
-
-        window.HSRevData.data.locationsCache = window.HSRevData.data.locationsCache || {};
-        window.HSRevData.data.locationsCache[accountId] = locationsData;
+        locationsCache[accountId] = locationsData;
+        window.HSRevData.data.locationsCache = locationsCache;
 
         console.log('Locations for Account:', locationsData);
         populateLocations(locationsData);
+
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
+        locationRowsContainer.innerHTML = '<div style="text-align: center;" class="row-item">Error fetching locations. Please try again later.</div>';
     }
 };
 
