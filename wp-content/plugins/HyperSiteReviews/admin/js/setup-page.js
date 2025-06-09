@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to check if any checkbox is selected on the current page
     const isAnyCheckboxCheckedOnCurrentPage = () => {
-        const currentCheckboxes = pages[currentPage].querySelectorAll('input:not([name="selected-reviews"])[type="checkbox"]');
+        const currentCheckboxes = pages[currentPage].querySelectorAll('input:not([name="select-all-reviews"])[type="checkbox"]');
         return Array.from(currentCheckboxes).some(cb => cb.checked);
     };
 
