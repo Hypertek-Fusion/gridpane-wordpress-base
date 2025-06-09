@@ -401,6 +401,20 @@ public static function register_api_routes() {
         }
     }
 
+    public static function api_get_account_locations_total($request) {
+        $account_id = $request['account_id'];
+        $account_key = 'accounts/' . $account_id;
+        try {
+            if(GoogleDataHandler::is_locations_table_empty()) {
+                GoogleDataHandler::get_initial_google_locations();
+            }
+            $locations = GoogleDataHandler::get_account_locations_total($account_key);
+            return rest_ensure_response(['total' => $locations ?? []]);
+        } catch (Exception $e) {
+            return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
+        }
+    }
+
         public static function api_get_location_reviews($request) {
             $location_id = $request['location_id'];
             try {
@@ -424,22 +438,6 @@ public static function register_api_routes() {
                 return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
             }
         }
-
-        public static function api_get_locations_reviews($request) {
-        $location_id = $request['location_id'];
-        $location_key = 'locations/' . $location_id;
-        try {
-            $page = $request->get_param('page');
-            $per_page = $request->get_param('per_page');
-
-            $reviews = GoogleDataHandler::get_initial_location_reviews($location_id);
-
-            $reviews = GoogleDataHandler::get_reviews($location_key);
-            return rest_ensure_response(['reviews' => $reviews]);
-        } catch (Exception $e) {
-            return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
-        }
-    }
 
     public static function api_get_location_reviews_total($request) {
         $location_id = $request['location_id'];
