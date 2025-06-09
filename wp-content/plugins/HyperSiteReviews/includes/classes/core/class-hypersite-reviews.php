@@ -96,7 +96,6 @@ class HyperSiteReviews {
                     'locations' => rest_url('hsrev/v1/locations'),
                     'accountLocationsBase' => rest_url('hsrev/v1/accounts/%s/locations'),
                     'totalAccountLocations' => rest_url('hsrev/v1/accounts/%s/total-locations'),
-                    'reviewsBase' => rest_url('hsrev/v1/accounts/%s/locations/%s/reviews'),
                     'totalLocationReviews' => rest_url('hsrev/v1/accounts/%s/locations/%s/total-reviews'),
                     'locationReviewsBase' => rest_url('hsrev/v1/locations/%s/reviews'),
                 ],
@@ -215,104 +214,155 @@ class HyperSiteReviews {
         ]);
     }
 
-    public static function register_api_routes() {
-        // Register REST API routes
-        register_rest_route('hsrev/v1', '/accounts', [
-            'methods' => 'GET',
-            'callback' => [self::class, 'api_get_accounts'],
-            'permission_callback' => function () {
-                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
-                if ($user_id) {
-                    wp_set_current_user($user_id);
-                }
-
-                return current_user_can('manage_options');
-            },
-        ]);
-
-        register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations', [
-            'methods' => 'GET',
-            'callback' => [self::class, 'api_get_account_locations'],
-            'permission_callback' => function () {
-                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
-                if ($user_id) {
-                    wp_set_current_user($user_id);
-                }
-
-                return current_user_can('manage_options');
-            },
-        ]);
-
-        register_rest_route('hsrev/v1', '/locations', [
-            'methods' => 'GET',
-            'callback' => [self::class, 'api_get_all_locations'],
-            'permission_callback' => function () {
-                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
-                if ($user_id) {
-                    wp_set_current_user($user_id);
-                }
-
-                return current_user_can('manage_options');
-            },
-        ]);
-
-        register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/total-locations', [
-            'methods' => 'GET',
-            'callback' => [self::class, 'api_get_account_locations_total'],
-            'permission_callback' => function () {
-                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
-                if ($user_id) {
-                    wp_set_current_user($user_id);
-                }
-
-                return current_user_can('manage_options');
-            },
-        ]);
-
-        register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations/(?P<location_id>[^\/]+)/reviews', [
-            'methods' => 'GET',
-            'callback' => [self::class, 'api_get_location_reviews'],
-            'permission_callback' => function () {
-                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
-                if ($user_id) {
-                    wp_set_current_user($user_id);
-                }
-
-                return current_user_can('manage_options');
-            },
-        ]);
-
-        register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations/(?P<location_id>[^\/]+)/total-reviews', [
-            'methods' => 'GET',
-            'callback' => [self::class, 'api_get_location_reviews_total'],
-            'permission_callback' => function () {
-                $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
-                if ($user_id) {
-                    wp_set_current_user($user_id);
-                }
-
-                return current_user_can('manage_options');
-            },
-        ]);
-
-        register_rest_route('hsrev/v1', '/locations/(?P<location_id>[^\/]+)/reviews', [
+public static function register_api_routes() {
+    // Register REST API routes
+    register_rest_route('hsrev/v1', '/accounts', [
         'methods' => 'GET',
-        'callback' => [self::class, 'api_get_locations_reviews'],
+        'callback' => [self::class, 'api_get_accounts'],
+        'args' => [
+            'page' => [
+                'default' => 1,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_numeric($param) && $param > 0;
+                }
+            ],
+            'per_page' => [
+                'default' => 10,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_numeric($param) && $param > 0;
+                }
+            ]
+        ],
         'permission_callback' => function () {
             $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
             if ($user_id) {
                 wp_set_current_user($user_id);
             }
-
             return current_user_can('manage_options');
         },
     ]);
-    }
+
+    register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations', [
+        'methods' => 'GET',
+        'callback' => [self::class, 'api_get_account_locations'],
+        'args' => [
+            'page' => [
+                'default' => 1,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_numeric($param) && $param > 0;
+                }
+            ],
+            'per_page' => [
+                'default' => 10,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_numeric($param) && $param > 0;
+                }
+            ]
+        ],
+        'permission_callback' => function () {
+            $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+            if ($user_id) {
+                wp_set_current_user($user_id);
+            }
+            return current_user_can('manage_options');
+        },
+    ]);
+
+    register_rest_route('hsrev/v1', '/locations', [
+        'methods' => 'GET',
+        'callback' => [self::class, 'api_get_all_locations'],
+        'args' => [
+            'page' => [
+                'default' => 1,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_numeric($param) && $param > 0;
+                }
+            ],
+            'per_page' => [
+                'default' => 10,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_numeric($param) && $param > 0;
+                }
+            ]
+        ],
+        'permission_callback' => function () {
+            $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+            if ($user_id) {
+                wp_set_current_user($user_id);
+            }
+            return current_user_can('manage_options');
+        },
+    ]);
+
+    register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/total-locations', [
+        'methods' => 'GET',
+        'callback' => [self::class, 'api_get_account_locations_total'],
+        'permission_callback' => function () {
+            $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+            if ($user_id) {
+                wp_set_current_user($user_id);
+            }
+            return current_user_can('manage_options');
+        },
+    ]);
+
+    register_rest_route('hsrev/v1', '/accounts/(?P<account_id>[^\/]+)/locations/(?P<location_id>[^\/]+)/total-reviews', [
+        'methods' => 'GET',
+        'callback' => [self::class, 'api_get_location_reviews_total'],
+        'permission_callback' => function () {
+            $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+            if ($user_id) {
+                wp_set_current_user($user_id);
+            }
+            return current_user_can('manage_options');
+        },
+    ]);
+
+    register_rest_route('hsrev/v1', '/locations/(?P<location_id>[^\/]+)/reviews', [
+        'methods' => 'GET',
+        'callback' => [self::class, 'api_get_location_reviews'],
+        'args' => [
+            'page' => [
+                'default' => 1,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_numeric($param) && $param > 0;
+                }
+            ],
+            'per_page' => [
+                'default' => 10,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_numeric($param) && $param > 0;
+                }
+            ]
+        ],
+        'permission_callback' => function () {
+            $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+            if ($user_id) {
+                wp_set_current_user($user_id);
+            }
+            return current_user_can('manage_options');
+        },
+    ]);
+}
 
     public static function api_get_accounts($request) {
         try {
-            $accounts = GoogleDataHandler::get_all_accounts();
-            return rest_ensure_response(['accounts' => $accounts]);
+            $page = $request->get_param('page');
+            $per_page = $request->get_param('per_page');
+
+            // Fetch paginated accounts
+            $accounts = GoogleDataHandler::get_all_accounts($page, $per_page);
+
+            // Get total number of accounts for pagination
+            $total_accounts = GoogleDataHandler::get_total_accounts_count();
+
+            return rest_ensure_response([
+                'accounts' => $accounts,
+                'total' => $total_accounts,
+                'page' => $page,
+                'per_page' => $per_page,
+                'total_pages' => ceil($total_accounts / $per_page),
+            ]);
         } catch (Exception $e) {
             return new WP_Error('account_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
@@ -320,14 +370,23 @@ class HyperSiteReviews {
 
     public static function api_get_account_locations($request) {
         $account_id = $request['account_id'];
-        $account_key = 'accounts/' . $account_id;
         try {
-            if(GoogleDataHandler::is_locations_table_empty()) {
-                GoogleDataHandler::get_initial_google_locations();
-            }
-            $locations = GoogleDataHandler::get_locations_by_account($account_key);
-            
-            return rest_ensure_response(['locations' => $locations ?? []]);
+            $page = $request->get_param('page');
+            $per_page = $request->get_param('per_page');
+
+            // Fetch paginated locations
+            $locations = GoogleDataHandler::get_locations_by_account($account_id, $page, $per_page);
+
+            // Get total number of locations for pagination
+            $total_locations = GoogleDataHandler::get_total_locations_count($account_id);
+
+            return rest_ensure_response([
+                'locations' => $locations,
+                'total' => $total_locations,
+                'page' => $page,
+                'per_page' => $per_page,
+                'total_pages' => ceil($total_locations / $per_page),
+            ]);
         } catch (Exception $e) {
             return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
@@ -342,36 +401,37 @@ class HyperSiteReviews {
         }
     }
 
-    public static function api_get_account_locations_total($request) {
-        $account_id = $request['account_id'];
-        $account_key = 'accounts/' . $account_id;
-        try {
-            if(GoogleDataHandler::is_locations_table_empty()) {
-                GoogleDataHandler::get_initial_google_locations();
+        public static function api_get_location_reviews($request) {
+            $location_id = $request['location_id'];
+            try {
+                $page = $request->get_param('page');
+                $per_page = $request->get_param('per_page');
+
+                // Fetch paginated reviews
+                $reviews = GoogleDataHandler::get_reviews($location_id, $page, $per_page);
+
+                // Get total number of reviews for pagination
+                $total_reviews = GoogleDataHandler::get_total_reviews_count($location_id);
+
+                return rest_ensure_response([
+                    'reviews' => $reviews,
+                    'total' => $total_reviews,
+                    'page' => $page,
+                    'per_page' => $per_page,
+                    'total_pages' => ceil($total_reviews / $per_page),
+                ]);
+            } catch (Exception $e) {
+                return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
             }
-            $locations = GoogleDataHandler::get_account_locations_total($account_key);
-            return rest_ensure_response(['total' => $locations ?? []]);
-        } catch (Exception $e) {
-            return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
-    }
-
-    public static function api_get_location_reviews($request) {
-        $location_id = $request['location_id'];
-
-        $location_key = 'locations/' . $location_id;
-        try {
-            $reviews = GoogleDataHandler::get_initial_google_reviews();
-            return rest_ensure_response(['reviews' => $reviews[$location_key] ?? []]);
-        } catch (Exception $e) {
-            return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
-        }
-    }
 
         public static function api_get_locations_reviews($request) {
         $location_id = $request['location_id'];
         $location_key = 'locations/' . $location_id;
         try {
+            $page = $request->get_param('page');
+            $per_page = $request->get_param('per_page');
+
             $reviews = GoogleDataHandler::get_initial_location_reviews($location_id);
 
             $reviews = GoogleDataHandler::get_reviews($location_key);
@@ -382,15 +442,13 @@ class HyperSiteReviews {
     }
 
     public static function api_get_location_reviews_total($request) {
-        $account_id = $request['account_id'];
-        $account_key = 'accounts/' . $account_id;
         $location_id = $request['location_id'];
         $location_key = 'locations/' . $location_id;
         try {
             if(GoogleDataHandler::is_locations_table_empty()) {
                 GoogleDataHandler::get_initial_google_locations();
             }
-            $reviews = GoogleDataHandler::get_location_reviews_length($account_key, $location_key);
+            $reviews = GoogleDataHandler::get_location_reviews_length( $location_key);
             return rest_ensure_response(['total' => $reviews ?? []]);
         } catch (Exception $e) {
             return new WP_Error('location_review_total_fetch_failed', $e->getMessage(), ['status' => 500]);

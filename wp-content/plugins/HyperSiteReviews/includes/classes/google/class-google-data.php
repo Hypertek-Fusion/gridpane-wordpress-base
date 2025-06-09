@@ -1,8 +1,5 @@
 <?php
 
-// TODO
-// Get single account lookup
-// Get single location lookup
 
 class GoogleDataHandler {
 
@@ -55,19 +52,18 @@ public static function get_google_accounts() {
      * @return array
      * @throws Exception
      */
-public static function get_locations_by_account($account_id) {
+public static function get_locations_by_account($account_id, $page, $per_page) {
     global $wpdb;
     try {
-        error_log('Account ID: ');
-        error_log(print_r($account_id, true));
-        // Query the locations table for entries with the specified parent_account_id
-        $locations = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM {$wpdb->prefix}locations WHERE parent_account_id = %s",
-            $account_id
+        // Calculate offset
+        $offset = ($page - 1) * $per_page;
+
+        return $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM {$wpdb->prefix}locations WHERE parent_account_id = %s LIMIT %d OFFSET %d",
+            $account_id,
+            $per_page,
+            $offset
         ), ARRAY_A);
-        error_log(print_r($locations, true));
-    
-        return $locations;
     } catch (Exception $e) {
         error_log('Error fetching locations for account ' . $account_id . ': ' . $e->getMessage());
         throw new Exception('Failed to fetch locations: ' . $e->getMessage());
@@ -203,13 +199,12 @@ public static function get_locations_reviews_length() {
     }
 }
 
-
-public static function get_location_reviews_length($acc, $loc) {
+public static function get_location_reviews_length($loc) {
     global $wpdb;
 
     try {
         $review_count = $wpdb->get_var($wpdb->prepare(
-            "SELECT total_reviews FROM {$wpdb->prefix}locations WHERE location_id = %s",
+            "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s",
             $loc
         ));
 
@@ -258,12 +253,21 @@ public static function get_account_locations_total($account_id) {
      *
      * @return array
      */
-public static function get_all_accounts() {
+public static function get_all_accounts($page, $per_page) {
     global $wpdb;
-    if(self::is_accounts_table_empty()) {
+
+    if (self::is_accounts_table_empty()) {
         self::get_google_accounts();
     }
-    return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}accounts", ARRAY_A);
+
+    // Calculate offset
+    $offset = ($page - 1) * $per_page;
+
+    return $wpdb->get_results($wpdb->prepare(
+        "SELECT * FROM {$wpdb->prefix}accounts LIMIT %d OFFSET %d",
+        $per_page,
+        $offset
+    ), ARRAY_A);
 }
 
     /**
@@ -389,38 +393,44 @@ public static function get_location($location_id) {
     return null;
 }
 
-public static function get_reviews($location_id) {
+public static function get_reviews($location_id, $page, $per_page) {
     global $wpdb;
 
     if (self::location_exists($location_id)) {
-        // Use get_row to fetch the entire row as an associative array
+        // Calculate offset
+        $offset = ($page - 1) * $per_page;
+
         return $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM {$wpdb->prefix}reviews WHERE location_id = %s",
-            $location_id
+            "SELECT * FROM {$wpdb->prefix}reviews WHERE location_id = %s LIMIT %d OFFSET %d",
+            $location_id,
+            $per_page,
+            $offset
         ), ARRAY_A);
     }
 
-    // Return null if the location does not exist
     return null;
 }
 
-    /**
-     * Check if a review exists in the database.
-     *
-     * @param string $review_id The review ID to check.
-     * @return bool True if the review exists, false otherwise.
-     */
-    public static function review_exists($review_id) {
-        global $wpdb;
-        
-        $exists = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE review_id = %s",
-            $review_id
-        ));
+public static function get_total_accounts_count() {
+    global $wpdb;
+    return $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}accounts");
+}
 
-        return $exists > 0;
-    }
+public static function get_total_locations_count($account_id) {
+    global $wpdb;
+    return $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM {$wpdb->prefix}locations WHERE parent_account_id = %s",
+        $account_id
+    ));
+}
 
+public static function get_total_reviews_count($location_id) {
+    global $wpdb;
+    return $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s",
+        $location_id
+    ));
+}
 
 
 public static function get_initial_google_locations() {

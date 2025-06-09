@@ -6,12 +6,6 @@ function getAccountLocationsUrl(accountId) {
     return HSRevApi.urls.accountLocationsBase.replace('%s', accountId);
 }
 
-function getReviewsUrl(accountId, locationId) {
-    return HSRevApi.urls.reviewsBase
-        .replace('%s', accountId)
-        .replace('%s', locationId);
-}
-
 const getUsers = async () => {
     try {
         const accountRowsContainer = document.getElementById('account-rows');
