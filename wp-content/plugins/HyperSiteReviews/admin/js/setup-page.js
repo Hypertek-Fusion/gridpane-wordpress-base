@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const selectAllReviews = (element) => {
-        const reviewCheckbox = pages[currentPage].querySelectorAll('input[name*="selected-review-item"][type="checkbox"]');
+        const reviewCheckbox = pages[currentPage].querySelectorAll('input[name*="selected-review-"][type="checkbox"]');
         Array.from(reviewCheckbox).forEach(cb => cb.checked = element.checked);
         updateButtonState();
     }
