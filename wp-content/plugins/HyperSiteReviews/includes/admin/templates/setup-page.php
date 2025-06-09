@@ -42,7 +42,7 @@
                         <div id="location-rows"></div>
                     </div>
                 </div>
-
+                <input type="hidden" name="selected_reviews" id="selected_reviews">
                 <div class="setup-page" data-page="3">
                     <div class="selection-table" data-select-type="review">
                         <p>Reviews for the selected location:</p>

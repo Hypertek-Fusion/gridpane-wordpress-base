@@ -8,11 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.HSRevData = window.HSRevData || {};
     window.HSRevData.functions = window.HSRevData.functions || {};
     window.HSRevData.data = window.HSRevData.data || {};
+    window.HSRevData.data.selectedReviews = new Set();
 
     // Prevent default form submission
     const form = document.querySelector('form');
     form.addEventListener('submit', (e) => {
         e.preventDefault(); // Prevents the form from being submitted
+        submitForm(); // Handle form submission
     });
 
     // Function to check if any checkbox is selected on the current page
@@ -37,11 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        updateHiddenInput();
         updateButtonState();
     };
 
+    // Function to update the hidden input field with selected reviews
+    const updateHiddenInput = () => {
+        const hiddenInput = document.getElementById('selected_reviews');
+        hiddenInput.value = Array.from(window.HSRevData.data.selectedReviews).join(',');
+    };
 
-    // Function to get the checked account ID
     const getCheckedAccountId = () => {
         const selectedCheckbox = pages[0].querySelector('input[type="checkbox"]:checked');
         if (selectedCheckbox) {
@@ -50,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
     };
 
-    // Function to get the checked location ID
     const getCheckedLocationId = () => {
         const selectedCheckbox = pages[1].querySelector('input[type="checkbox"]:checked');
         if (selectedCheckbox) {
@@ -68,21 +74,25 @@ document.addEventListener('DOMContentLoaded', () => {
         nextButton.disabled = !isAnyCheckboxCheckedOnCurrentPage();
     };
 
-    // Attach checkbox event listeners
     const attachCheckboxListeners = (container) => {
         const checkboxes = container.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(c => {
             c.addEventListener('change', e => {
                 const clickedCheckbox = e.target;
-                const otherCheckboxes = Array.from(checkboxes).filter(cb => cb !== clickedCheckbox);
-                otherCheckboxes.forEach(cb => cb.checked = false);
+                const reviewId = clickedCheckbox.value;
+                
+                if (clickedCheckbox.checked) {
+                    window.HSRevData.data.selectedReviews.add(reviewId);
+                } else {
+                    window.HSRevData.data.selectedReviews.delete(reviewId);
+                }
 
+                updateHiddenInput();
                 updateButtonState();
             });
         });
     };
 
-    // Function to show the current page and hide others
     const showPage = (index) => {
         pages.forEach((page, i) => {
             page.style.display = i === index ? 'block' : 'none';
@@ -92,10 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateButtonState();
     };
 
-    // Initial setup
     showPage(currentPage);
 
-    // Button event listeners
     prevButton.addEventListener('click', () => {
         if (currentPage > 0) {
             currentPage--;
@@ -131,19 +139,15 @@ document.addEventListener('DOMContentLoaded', () => {
             currentPage++;
             showPage(currentPage);
         } else if (currentPage === 2 && isAnyCheckboxCheckedOnCurrentPage()) {
-            // Only submit the form when on the last page
-            form.removeEventListener('submit', (e) => e.preventDefault()); // Re-enable form submission
-            form.submit();
+            form.submit(); // Only submit the form when on the last page
         }
     });
 
-    // Attach listeners for account checkboxes once they are populated
     if (window.HSRevData && window.HSRevData.functions) {
         window.HSRevData.functions.attachCheckboxListeners = attachCheckboxListeners;
         window.HSRevData.functions.selectAllReviews = selectAllReviews;
     }
 
-    // Attach listeners to checkboxes on the initial page load
     if (pages[currentPage]) {
         attachCheckboxListeners(pages[currentPage]);
     }
