@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return Array.from(currentCheckboxes).some(cb => cb.checked);
     };
 
+    const selectAllReviews = (element) => {
+        const reviewCheckbox = pages[currentPage].querySelectorAll('input[name="selected-reviews"][type="checkbox"]');
+        return Array.from(reviewCheckbox).forEach(cb => cb.checked === element.checked);
+    }
+
     // Function to get the checked account ID
     const getCheckedAccountId = () => {
         const selectedCheckbox = pages[0].querySelector('input[type="checkbox"]:checked');
@@ -105,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Attach listeners for account checkboxes once they are populated
     if (window.HSRevData && window.HSRevData.functions) {
         window.HSRevData.functions.attachCheckboxListeners = attachCheckboxListeners;
+        window.HSRevData.functions.selectAllReviews = selectAllReviews;
     }
 
     // Attach listeners to checkboxes on the initial page load
