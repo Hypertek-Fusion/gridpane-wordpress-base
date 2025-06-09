@@ -541,8 +541,6 @@ class GoogleDataHandler
     {
         global $wpdb;
 
-        $client = GoogleOAuthClient::get_client();
-
         if (self::location_exists($location_id)) {
 
             // Update the SQL query to include the is_selected condition
