@@ -106,6 +106,16 @@ class HyperSiteReviews
                 'nonce' => wp_create_nonce('wp_rest'),
             ]);
         }
+
+        // Localize frontend scripts
+        if( ! is_admin() ) {
+            wp_localize_script('hsrev-admin-script', 'HyperSiteReviews', [
+                'urls' => [
+                    'reviews' => rest_url('hsrev/v1/public/reviews'),
+                ],
+                'nonce' => wp_create_nonce('wp_rest'),
+            ]);
+        }
     }
 
     public static function maybe_redirect_to_setup()
