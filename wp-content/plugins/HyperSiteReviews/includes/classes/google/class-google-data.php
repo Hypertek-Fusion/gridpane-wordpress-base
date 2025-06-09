@@ -230,7 +230,12 @@ public static function get_location_reviews_length($loc) {
             $loc
         ));
 
-        $url = "https://mybusiness.googleapis.com/v4/{$parent_account_id}/{$location_id}/reviews";
+        $parent_account_id = $wpdb->get_var($wpdb->prepare(
+            "SELECT paren_account_id FROM {$wpdb->prefix}locations WHERE location_id = %s",
+            $loc
+        ));
+
+        $url = "https://mybusiness.googleapis.com/v4/{$parent_account_id}/{$loc}/reviews";
         $httpClient = $client->authorize();
         $response = $httpClient->get($url);
             
