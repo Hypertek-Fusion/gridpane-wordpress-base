@@ -223,10 +223,27 @@ public static function get_location_reviews_length($loc) {
     global $wpdb;
 
     try {
-        $review_count = $wpdb->get_var($wpdb->prepare(
+        $indexed_count = $wpdb->get_var($wpdb->prepare(
             "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s",
             $loc
         ));
+
+        $url = "https://mybusiness.googleapis.com/v4/{$parent_account_id}/{$location_id}/reviews";
+        $httpClient = $client->authorize();
+        $response = $httpClient->get($url);
+            
+        if ($response->getStatusCode() === 200) {
+            $reviewsData = json_decode($response->getBody()->getContents(), true);
+            $review_count = $reviewsData['totalReviewCount'] ?? null;
+
+            if(!$review_count) {
+                return 0;
+            } else {
+                if($indexed_count !== $review_count) {
+                    self::get_initial_location_reviews($loc);
+                }
+            }
+        }
 
         if ($review_count !== null) {
             return $review_count;
