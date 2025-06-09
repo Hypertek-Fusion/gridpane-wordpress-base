@@ -183,6 +183,11 @@ class HyperSiteReviews
             wp_redirect(admin_url('admin.php?page=hypersite-reviews'));
         }
 
+        if(get_option('hsrev_setup_complete')) {
+            wp_redirect(admin_url('admin.php?page=hypersite-reviews'));
+            exit;
+        }
+
         // Handle OAuth callback
         if (isset($_GET['code'])) {
             try {
