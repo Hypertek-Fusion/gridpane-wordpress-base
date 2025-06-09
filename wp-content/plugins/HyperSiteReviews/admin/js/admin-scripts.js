@@ -192,18 +192,12 @@ const getLocationReviewCount = async (accountId, locationId) => {
 };
 
 // Updated getReviews function to accept pagination parameters
+// Fetch reviews with pagination
 const getReviews = async (locationId, page = 1, perPage = 10) => {
     const reviewRowsContainer = document.getElementById('review-rows');
-
-    if (window.HSRevData.data.reviewsCache && window.HSRevData.data.reviewsCache[locationId]) {
-        console.log('Using cached reviews');
-        populateReviews(window.HSRevData.data.reviewsCache[locationId]);
-        return;
-    }
+    reviewRowsContainer.innerHTML = '<div>Loading reviews...</div>';
 
     try {
-        reviewRowsContainer.innerHTML = '<div>Loading reviews...</div>';
-
         const url = `${HSRevApi.urls.locationReviewsBase.replace('%s', locationId.replace('locations/', ''))}?page=${page}&per_page=${perPage}`;
         const response = await fetch(url, {
             method: 'GET',
@@ -225,21 +219,20 @@ const getReviews = async (locationId, page = 1, perPage = 10) => {
         console.log('Reviews for Location:', reviewsData);
         populateReviews(reviewsData);
 
-        // Update pagination controls
         updatePaginationControls(reviewsData.total, page, perPage);
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
 };
 
-// Function to update pagination controls
+// Update the pagination controls based on the current page and total reviews
 const updatePaginationControls = (total, currentPage, perPage) => {
     const totalPages = Math.ceil(total / perPage);
-    document.querySelector('.page-prev').disabled = currentPage <= 1;
-    document.querySelector('.page-next').disabled = currentPage >= totalPages;
+    document.getElementById('reviews-prev').disabled = currentPage <= 1;
+    document.getElementById('reviews-next').disabled = currentPage >= totalPages;
 };
 
-// Function to populate reviews for a selected location
+// Populate reviews in the DOM
 const populateReviews = (reviewsData) => {
     const reviewRowsContainer = document.getElementById('review-rows');
     const reviewRows = [];
