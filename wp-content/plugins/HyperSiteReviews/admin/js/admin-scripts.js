@@ -247,6 +247,7 @@ const populateReviews = (reviewsData) => {
         reviewRow.classList.add('rows');
         reviewRow.innerHTML = `
             <div class="row-item">
+                <input type="checkbox" name="selected-reviews">
                 <div class="row-item__cell" data-type="reviewer">${review.reviewer_display_name}</div>
                 <div class="row-item__cell" data-type="rating">${review.star_rating}</div>
                 <div class="row-item__cell" data-type="comment">${review.comment}</div>
