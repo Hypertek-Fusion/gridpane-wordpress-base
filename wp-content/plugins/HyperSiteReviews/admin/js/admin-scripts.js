@@ -55,7 +55,7 @@ const populateAccounts = async (accountsData) => {
             accountRow.classList.add('rows');
             accountRow.innerHTML = `
                 <div class="row-item" data-account-id="${accountId}">
-                    <input type="checkbox" name="selected-account">
+                    <input type="checkbox" name="selected-account" value="${accountId}">
                     <div class="row-item__cell" data-type="name">${accountId}</div>
                     <div class="row-item__cell" data-type="account-name">${account.account_name}</div>
                     <div class="row-item__cell" data-type="type">${account.type}</div>
@@ -155,7 +155,7 @@ const populateLocations = async (locationsData) => {
             locationRow.classList.add('rows');
             locationRow.innerHTML = `
                 <div class="row-item" data-location-id="${location.location_id}">
-                    <input type="checkbox" name="selected-location">
+                    <input type="checkbox" name="selected-location" value="${location.location_id}">
                     <div class="row-item__cell" data-type="id">${location.location_id}</div>
                     <div class="row-item__cell" data-type="name">${location.title}</div>
                     <div class="row-item__cell" data-type="review-count">${reviewCount}</div>
@@ -247,7 +247,7 @@ const populateReviews = (reviewsData) => {
         reviewRow.classList.add('rows');
         reviewRow.innerHTML = `
             <div class="row-item">
-                <input type="checkbox" name="review-${review.review_id}">
+                <input type="checkbox" name="selected-review-item" value=${review.review_id}>
                 <div class="row-item__cell" data-type="reviewer">${review.reviewer_display_name}</div>
                 <div class="row-item__cell" data-type="rating">${review.star_rating}</div>
                 <div class="row-item__cell" data-type="comment">${review.comment}</div>
