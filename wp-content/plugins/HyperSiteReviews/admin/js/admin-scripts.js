@@ -7,7 +7,7 @@ function getAccountLocationsUrl(accountId) {
 }
 
 let reviewsPage = 1;
-const perPage = 10; // You can adjust this number to change how many reviews per page you want
+let perPage = 10; // Default reviews per page
 
 const getUsers = async () => {
     try {
@@ -267,7 +267,7 @@ const populateReviews = (reviewsData) => {
         selectAllReviewsCheckBox.addEventListener('change', () => {
             window.HSRevData.functions.selectAllReviews(selectAllReviewsCheckBox);
             window.HSRevData.functions.attachCheckboxListeners(reviewRowsContainer);
-        })
+        });
     }
 };
 
@@ -276,3 +276,31 @@ window.HSRevData = window.HSRevData || {};
 window.HSRevData.functions = window.HSRevData.functions || {};
 window.HSRevData.functions.getLocations = getLocations;
 window.HSRevData.functions.getReviews = getReviews;
+
+// Pagination UI setup
+document.getElementById('reviews-per-page').addEventListener('change', function() {
+    perPage = parseInt(this.value, 10);
+    reviewsPage = 1; // Reset to first page on perPage change
+    const locationId = window.HSRevData.data.locationId;
+    if (locationId) {
+        getReviews(locationId, reviewsPage, perPage);
+    }
+});
+
+document.getElementById('reviews-prev').addEventListener('click', function() {
+    if (reviewsPage > 1) {
+        reviewsPage--;
+        const locationId = window.HSRevData.data.locationId;
+        if (locationId) {
+            getReviews(locationId, reviewsPage, perPage);
+        }
+    }
+});
+
+document.getElementById('reviews-next').addEventListener('click', function() {
+    reviewsPage++;
+    const locationId = window.HSRevData.data.locationId;
+    if (locationId) {
+        getReviews(locationId, reviewsPage, perPage);
+    }
+});
