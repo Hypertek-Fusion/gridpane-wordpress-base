@@ -104,12 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else if (currentPage === 1) {
                 const locationId = getCheckedLocationId();
-                if (locationId && window.HSRevData.functions.getReviews) {
+                if (locationId && window.HSRevData.functions.prefetchReviews) {
                     if (window.HSRevData.data.locationId !== locationId) {
                         console.log('Location changed, clearing review cache');
                         window.HSRevData.data.reviewsCache = {};
                     }
-                    window.HSRevData.functions.getReviews(locationId);
+                    window.HSRevData.functions.prefetchReviews(locationId);
                     window.HSRevData.data.locationId = locationId;
                     console.log(`Location ID set: ${locationId}`);
                 }

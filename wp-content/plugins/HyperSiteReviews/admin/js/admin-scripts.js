@@ -191,14 +191,10 @@ const getLocationReviewCount = async (accountId, locationId) => {
     }
 };
 
-// Updated getReviews function to accept pagination parameters
-// Fetch reviews with pagination
-const getReviews = async (locationId, page = 1, perPage = 10) => {
-    const reviewRowsContainer = document.getElementById('review-rows');
-    reviewRowsContainer.innerHTML = '<div>Loading reviews...</div>';
-
+// Prefetch all reviews for a location
+const prefetchReviews = async (locationId) => {
     try {
-        const url = `${HSRevApi.urls.locationReviewsBase.replace('%s', locationId.replace('locations/', ''))}?page=${page}&per_page=${perPage}`;
+        const url = HSRevApi.urls.locationReviewsBase.replace('%s', locationId.replace('locations/', ''));
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -212,32 +208,30 @@ const getReviews = async (locationId, page = 1, perPage = 10) => {
         }
 
         const reviewsData = await response.json();
-
         window.HSRevData.data.reviewsCache = window.HSRevData.data.reviewsCache || {};
-        window.HSRevData.data.reviewsCache[locationId] = reviewsData;
+        window.HSRevData.data.reviewsCache[locationId] = reviewsData.reviews; // Cache all reviews
 
-        console.log('Reviews for Location:', reviewsData);
-        populateReviews(reviewsData);
+        console.log('Reviews for Location (prefetched):', reviewsData);
 
-        updatePaginationControls(reviewsData.total, page, perPage);
+        // Initialize pagination
+        reviewsPage = 1;
+        populateReviews(reviewsPage, perPage);
+
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
 };
 
-// Update the pagination controls based on the current page and total reviews
-const updatePaginationControls = (total, currentPage, perPage) => {
-    const totalPages = Math.ceil(total / perPage);
-    document.getElementById('reviews-prev').disabled = currentPage <= 1;
-    document.getElementById('reviews-next').disabled = currentPage >= totalPages;
-};
-
-// Populate reviews in the DOM
-const populateReviews = (reviewsData) => {
+// Populate reviews for the current page
+const populateReviews = (page, perPage) => {
     const reviewRowsContainer = document.getElementById('review-rows');
-    const reviewRows = [];
+    const locationId = window.HSRevData.data.locationId;
+    const reviews = window.HSRevData.data.reviewsCache[locationId] || [];
+    const start = (page - 1) * perPage;
+    const end = start + perPage;
+    const paginatedReviews = reviews.slice(start, end);
 
-    reviewsData.reviews.forEach(review => {
+    const reviewRows = paginatedReviews.map(review => {
         const reviewRow = document.createElement('div');
         reviewRow.classList.add('rows');
         reviewRow.innerHTML = `
@@ -249,11 +243,13 @@ const populateReviews = (reviewsData) => {
                 <div class="row-item__cell" data-type="date">${new Date(review.create_time).toLocaleDateString()}</div>
             </div>
         `;
-        reviewRows.push(reviewRow);
+        return reviewRow;
     });
 
     reviewRowsContainer.innerHTML = '';
     reviewRowsContainer.append(...reviewRows);
+
+    updatePaginationControls(reviews.length, page, perPage);
 
     if (window.HSRevData.functions.selectAllReviews) {
         const selectAllReviewsCheckBox = document.getElementById('select-all-reviews');
@@ -264,11 +260,18 @@ const populateReviews = (reviewsData) => {
     }
 };
 
+// Update the pagination controls based on the current page and total reviews
+const updatePaginationControls = (total, currentPage, perPage) => {
+    const totalPages = Math.ceil(total / perPage);
+    document.getElementById('reviews-prev').disabled = currentPage <= 1;
+    document.getElementById('reviews-next').disabled = currentPage >= totalPages;
+};
+
 // Expose functions to the global scope
 window.HSRevData = window.HSRevData || {};
 window.HSRevData.functions = window.HSRevData.functions || {};
 window.HSRevData.functions.getLocations = getLocations;
-window.HSRevData.functions.getReviews = getReviews;
+window.HSRevData.functions.prefetchReviews = prefetchReviews;
 
 // Pagination UI setup
 document.getElementById('reviews-per-page').addEventListener('change', function() {
@@ -276,7 +279,7 @@ document.getElementById('reviews-per-page').addEventListener('change', function(
     reviewsPage = 1; // Reset to first page on perPage change
     const locationId = window.HSRevData.data.locationId;
     if (locationId) {
-        getReviews(locationId, reviewsPage, perPage);
+        populateReviews(reviewsPage, perPage);
     }
 });
 
@@ -285,7 +288,7 @@ document.getElementById('reviews-prev').addEventListener('click', function() {
         reviewsPage--;
         const locationId = window.HSRevData.data.locationId;
         if (locationId) {
-            getReviews(locationId, reviewsPage, perPage);
+            populateReviews(reviewsPage, perPage);
         }
     }
 });
@@ -294,6 +297,6 @@ document.getElementById('reviews-next').addEventListener('click', function() {
     reviewsPage++;
     const locationId = window.HSRevData.data.locationId;
     if (locationId) {
-        getReviews(locationId, reviewsPage, perPage);
+        populateReviews(reviewsPage, perPage);
     }
 });
