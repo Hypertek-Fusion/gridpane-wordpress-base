@@ -542,15 +542,14 @@ class GoogleDataHandler
         global $wpdb;
 
         if (self::location_exists($location_id)) {
-
-            // Update the SQL query to include the is_selected condition
-            return $wpdb->get_results($wpdb->prepare(
+            // Use get_var to get a single value (count)
+            return $wpdb->get_var($wpdb->prepare(
                 "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s AND is_selected = TRUE",
-                $location_id,
-            ), ARRAY_A);
+                $location_id
+            ));
         }
 
-        return null;
+        return 0; // Return 0 if the location does not exist
     }
 
     public static function get_total_accounts_count()
