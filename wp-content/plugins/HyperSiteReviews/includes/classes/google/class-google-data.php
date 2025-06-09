@@ -222,6 +222,8 @@ public static function get_locations_reviews_length() {
 public static function get_location_reviews_length($loc) {
     global $wpdb;
 
+    $client = GoogleOAuthClient::get_client();
+
     try {
         $indexed_count = $wpdb->get_var($wpdb->prepare(
             "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s",
