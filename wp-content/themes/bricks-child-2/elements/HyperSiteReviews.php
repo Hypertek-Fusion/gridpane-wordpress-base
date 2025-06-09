@@ -33,7 +33,7 @@ class Prefix_Element_Test extends \Bricks\Element {
 
   // Methods: Frontend-specific
   public function enqueue_scripts() {
-    wp_enqueue_script( 'hypersite-reviews', HSREV_URL . 'public/js/custom.js', [], '1.0', true );
+    wp_enqueue_script( 'hypersite-reviews', HSREV_URL . 'public/js/hypersite-reviews.js', [], '1.0', true );
   }
   public function render() {
     $root_classes[] = 'hypersite-reviews';
