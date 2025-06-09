@@ -135,21 +135,23 @@ class GoogleDataHandler
                         $nextPageToken = $reviewsData['nextPageToken'] ?? null;
 
                         foreach ($fetchedReviews as $review) {
-                            $wpdb->replace(
-                                $wpdb->prefix . 'reviews',
-                                [
-                                    'review_id' => $review['reviewId'],
-                                    'location_id' => $location_id,
-                                    'reviewer_display_name' => $review['reviewer']['displayName'],
-                                    'reviewer_profile_photo_url' => $review['reviewer']['profilePhotoUrl'],
-                                    'star_rating' => $review['starRating'],
-                                    'comment' => $review['comment'],
-                                    'create_time' => $review['createTime'],
-                                    'update_time' => $review['updateTime'],
-                                    'review_reply_comment' => $review['reviewReply']['comment'] ?? null,
-                                    'review_reply_update_time' => $review['reviewReply']['updateTime'] ?? null,
-                                ]
-                            );
+                            if($review['comment']) {
+                                    $wpdb->replace(
+                                    $wpdb->prefix . 'reviews',
+                                    [
+                                        'review_id' => $review['reviewId'],
+                                        'location_id' => $location_id,
+                                        'reviewer_display_name' => $review['reviewer']['displayName'],
+                                        'reviewer_profile_photo_url' => $review['reviewer']['profilePhotoUrl'],
+                                        'star_rating' => $review['starRating'],
+                                        'comment' => $review['comment'],
+                                        'create_time' => $review['createTime'],
+                                        'update_time' => $review['updateTime'],
+                                        'review_reply_comment' => $review['reviewReply']['comment'] ?? null,
+                                        'review_reply_update_time' => $review['reviewReply']['updateTime'] ?? null,
+                                    ]
+                                );
+                            }
                         }
                     } else {
                         error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
@@ -163,8 +165,6 @@ class GoogleDataHandler
             throw new Exception('Failed to fetch reviews: ' . $e->getMessage());
         }
     }
-
-
 
     public static function get_initial_location_reviews($loc_id)
     {
@@ -196,21 +196,23 @@ class GoogleDataHandler
                     $nextPageToken = $reviewsData['nextPageToken'] ?? null;
 
                     foreach ($fetchedReviews as $review) {
-                        $wpdb->replace(
-                            $wpdb->prefix . 'reviews',
-                            [
-                                'review_id' => $review['reviewId'],
-                                'location_id' => $locations['location_id'],
-                                'reviewer_display_name' => $review['reviewer']['displayName'],
-                                'reviewer_profile_photo_url' => $review['reviewer']['profilePhotoUrl'],
-                                'star_rating' => $review['starRating'],
-                                'comment' => $review['comment'],
-                                'create_time' => $review['createTime'],
-                                'update_time' => $review['updateTime'],
-                                'review_reply_comment' => $review['reviewReply']['comment'] ?? null,
-                                'review_reply_update_time' => $review['reviewReply']['updateTime'] ?? null,
-                            ]
-                        );
+                        if($review['comment']) {
+                            $wpdb->replace(
+                                $wpdb->prefix . 'reviews',
+                                [
+                                    'review_id' => $review['reviewId'],
+                                    'location_id' => $locations['location_id'],
+                                    'reviewer_display_name' => $review['reviewer']['displayName'],
+                                    'reviewer_profile_photo_url' => $review['reviewer']['profilePhotoUrl'],
+                                    'star_rating' => $review['starRating'],
+                                    'comment' => $review['comment'],
+                                    'create_time' => $review['createTime'],
+                                    'update_time' => $review['updateTime'],
+                                    'review_reply_comment' => $review['reviewReply']['comment'] ?? null,
+                                    'review_reply_update_time' => $review['reviewReply']['updateTime'] ?? null,
+                                ]
+                            );
+                        }
                     }
                     $reviews = array_merge($reviews, $fetchedReviews);
                 } else {
@@ -495,33 +497,6 @@ class GoogleDataHandler
         if (self::location_exists($location_id)) {
             // Calculate offset
             $offset = ($page - 1) * $per_page;
-
-            $indexed_count = $wpdb->get_var($wpdb->prepare(
-                "SELECT total_reviews FROM {$wpdb->prefix}locations WHERE location_id = %s",
-                $location_id
-            ));
-
-            $parent_account_id = $wpdb->get_var($wpdb->prepare(
-                "SELECT parent_account_id FROM {$wpdb->prefix}locations WHERE location_id = %s",
-                $location_id
-            ));
-
-            $url = "https://mybusiness.googleapis.com/v4/{$parent_account_id}/{$location_id}/reviews";
-            $httpClient = $client->authorize();
-            $response = $httpClient->get($url);
-
-            if ($response->getStatusCode() === 200) {
-                $reviewsData = json_decode($response->getBody()->getContents(), true);
-                $review_count = $reviewsData['totalReviewCount'] ?? null;
-
-                if (!$review_count) {
-                    return 0;
-                } else {
-                    if ($indexed_count !== $review_count) {
-                        self::get_initial_location_reviews($location_id);
-                    }
-                }
-            }
 
             return $wpdb->get_results($wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}reviews WHERE location_id = %s LIMIT %d OFFSET %d",
