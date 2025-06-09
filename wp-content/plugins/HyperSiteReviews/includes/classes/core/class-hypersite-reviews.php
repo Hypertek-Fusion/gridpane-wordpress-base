@@ -137,6 +137,10 @@ class HyperSiteReviews {
             echo '<div class="notice notice-success"><p>Disconnected from Google account.</p></div>';
         }
 
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            error_log(print_r($_POST, true));
+        }
+
         // Handle OAuth callback
         if (isset($_GET['code'])) {
             try {
