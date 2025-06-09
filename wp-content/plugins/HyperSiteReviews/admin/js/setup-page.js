@@ -110,6 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             currentPage++;
             showPage(currentPage);
+        } else if (currentPage === 2 && isAnyCheckboxCheckedOnCurrentPage()) {
+            // Submit the form if on the last page
+            document.querySelector('form').submit();
         }
     });
 
