@@ -295,6 +295,11 @@ class HyperSiteReviews {
         'methods' => 'GET',
         'callback' => [self::class, 'api_get_locations_reviews'],
         'permission_callback' => function () {
+            $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
+            if ($user_id) {
+                wp_set_current_user($user_id);
+            }
+
             return current_user_can('manage_options');
         },
     ]);
