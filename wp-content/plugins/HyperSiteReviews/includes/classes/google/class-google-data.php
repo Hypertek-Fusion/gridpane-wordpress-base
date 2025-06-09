@@ -234,8 +234,6 @@ class GoogleDataHandler
         }
     }
 
-
-
     public static function get_locations_reviews_length()
     {
         global $wpdb;
@@ -310,7 +308,6 @@ class GoogleDataHandler
             throw new Exception('Failed to get reviews count: ' . $e->getMessage());
         }
     }
-
 
     /**
      * Get the total number of locations for a specific account.
@@ -512,6 +509,46 @@ class GoogleDataHandler
                 $location_id,
                 $per_page,
                 $offset
+            ), ARRAY_A);
+        }
+
+        return null;
+    }
+
+    public static function get_selected_reviews($location_id, $page, $per_page)
+    {
+        global $wpdb;
+
+        $client = GoogleOAuthClient::get_client();
+
+        if (self::location_exists($location_id)) {
+            // Calculate offset
+            $offset = ($page - 1) * $per_page;
+
+            // Update the SQL query to include the is_selected condition
+            return $wpdb->get_results($wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}reviews WHERE location_id = %s AND is_selected = TRUE LIMIT %d OFFSET %d",
+                $location_id,
+                $per_page,
+                $offset
+            ), ARRAY_A);
+        }
+
+        return null;
+    }
+
+    public static function get_total_selected_reviews($location_id)
+    {
+        global $wpdb;
+
+        $client = GoogleOAuthClient::get_client();
+
+        if (self::location_exists($location_id)) {
+
+            // Update the SQL query to include the is_selected condition
+            return $wpdb->get_results($wpdb->prepare(
+                "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s AND is_selected = TRUE",
+                $location_id,
             ), ARRAY_A);
         }
 
