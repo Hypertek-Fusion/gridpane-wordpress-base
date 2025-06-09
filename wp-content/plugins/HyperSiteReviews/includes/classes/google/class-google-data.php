@@ -83,22 +83,29 @@ public static function get_initial_google_reviews() {
     $client = GoogleOAuthClient::get_client();
 
     try {
-        if(self::is_locations_table_empty()) {
+        if (self::is_locations_table_empty()) {
             self::get_initial_google_locations();
         }
         $locations = self::get_all_locations();
         foreach ($locations as $location) {
             $location_id = $location['location_id'];
-            $url = "https://mybusiness.googleapis.com/v4/{$location['parent_account_id']}/{$location_id}/reviews";
             $httpClient = $client->authorize();
-            $response = $httpClient->get($url);
-            
-            if ($response->getStatusCode() === 200) {
-                $reviewsData = json_decode($response->getBody()->getContents(), true);
-                $reviews = $reviewsData['reviews'] ?? null;
+            $nextPageToken = '';
 
-                if ($reviews) {
-                    foreach ($reviews as $review) {
+            do {
+                $url = "https://mybusiness.googleapis.com/v4/{$location['parent_account_id']}/{$location_id}/reviews";
+                if (!empty($nextPageToken)) {
+                    $url .= '?pageToken=' . urlencode($nextPageToken);
+                }
+
+                $response = $httpClient->get($url);
+
+                if ($response->getStatusCode() === 200) {
+                    $reviewsData = json_decode($response->getBody()->getContents(), true);
+                    $fetchedReviews = $reviewsData['reviews'] ?? [];
+                    $nextPageToken = $reviewsData['nextPageToken'] ?? null;
+
+                    foreach ($fetchedReviews as $review) {
                         $wpdb->replace(
                             $wpdb->prefix . 'reviews',
                             [
@@ -115,11 +122,11 @@ public static function get_initial_google_reviews() {
                             ]
                         );
                     }
+                } else {
+                    error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
+                    throw new Exception('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
                 }
-            } else {
-                error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
-                throw new Exception('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
-            }
+            } while (!empty($nextPageToken));
         }
         return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}reviews", ARRAY_A);
     } catch (Exception $e) {
@@ -129,26 +136,36 @@ public static function get_initial_google_reviews() {
 }
 
 
+
 public static function get_initial_location_reviews($loc_id) {
-        global $wpdb;
+    global $wpdb;
 
     $client = GoogleOAuthClient::get_client();
 
     try {
-        if(self::location_exists($loc_id)) {
+        if (self::location_exists($loc_id)) {
             self::get_initial_google_locations();
         }
+        
         $locations = self::get_location($loc_id);
-        $url = "https://mybusiness.googleapis.com/v4/{$location['parent_account_id']}/{$locations['location_id']}/reviews";
         $httpClient = $client->authorize();
-        $response = $httpClient->get($url);
-            
-        if ($response->getStatusCode() === 200) {
-            $reviewsData = json_decode($response->getBody()->getContents(), true);
-            $reviews = $reviewsData['reviews'] ?? null;
+        $nextPageToken = '';
+        $reviews = [];
 
-            if ($reviews) {
-                foreach ($reviews as $review) {
+        do {
+            $url = "https://mybusiness.googleapis.com/v4/{$locations['parent_account_id']}/{$locations['location_id']}/reviews";
+            if (!empty($nextPageToken)) {
+                $url .= '?pageToken=' . urlencode($nextPageToken);
+            }
+
+            $response = $httpClient->get($url);
+
+            if ($response->getStatusCode() === 200) {
+                $reviewsData = json_decode($response->getBody()->getContents(), true);
+                $fetchedReviews = $reviewsData['reviews'] ?? [];
+                $nextPageToken = $reviewsData['nextPageToken'] ?? null;
+
+                foreach ($fetchedReviews as $review) {
                     $wpdb->replace(
                         $wpdb->prefix . 'reviews',
                         [
@@ -165,17 +182,20 @@ public static function get_initial_location_reviews($loc_id) {
                         ]
                     );
                 }
+                $reviews = array_merge($reviews, $fetchedReviews);
             } else {
                 error_log('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
                 throw new Exception('Failed to fetch reviews, HTTP code: ' . $response->getStatusCode());
             }
-        }
-        return $wpdb->get_results("SELECT * FROM {$wpdb->prefix}reviews", ARRAY_A);
+        } while (!empty($nextPageToken));
+
+        return $reviews;
     } catch (Exception $e) {
         error_log('Error fetching reviews: ' . $e->getMessage());
         throw new Exception('Failed to fetch reviews: ' . $e->getMessage());
     }
 }
+
 
 
 public static function get_locations_reviews_length() {
@@ -396,9 +416,38 @@ public static function get_location($location_id) {
 public static function get_reviews($location_id, $page, $per_page) {
     global $wpdb;
 
+    $client = GoogleOAuthClient::get_client();
+
     if (self::location_exists($location_id)) {
         // Calculate offset
         $offset = ($page - 1) * $per_page;
+
+        $indexed_count = $wpdb->get_var($wpdb->prepare(
+            "SELECT total_reviews FROM {$wpdb->prefix}locations WHERE location_id = %s",
+            $location_id
+        ));
+
+        $parent_account_id = $wpdb->get_var($wpdb->prepare(
+            "SELECT paren_account_id FROM {$wpdb->prefix}locations WHERE location_id = %s",
+            $location_id
+        ));
+        
+        $url = "https://mybusiness.googleapis.com/v4/{$parent_account_id}/{$location_id}/reviews";
+        $httpClient = $client->authorize();
+        $response = $httpClient->get($url);
+            
+        if ($response->getStatusCode() === 200) {
+            $reviewsData = json_decode($response->getBody()->getContents(), true);
+            $review_count = $reviewsData['totalReviewCount'] ?? null;
+
+            if(!$review_count) {
+                return 0;
+            } else {
+                if($indexed_count !== $review_count) {
+                    self::get_initial_location_reviews($location_id);
+                }
+            }
+        }
 
         return $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM {$wpdb->prefix}reviews WHERE location_id = %s LIMIT %d OFFSET %d",
@@ -584,8 +633,6 @@ public static function get_initial_google_location($acc_id) {
         throw new Exception('Failed to fetch and store locations: ' . $e->getMessage());
     }
 }
-
-
 
     /**
      * Get all reviews.
