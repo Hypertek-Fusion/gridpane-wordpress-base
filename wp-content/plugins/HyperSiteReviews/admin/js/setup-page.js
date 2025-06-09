@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const selectAllReviews = (element) => {
         const reviewCheckbox = pages[currentPage].querySelectorAll('input[name*="review-"][type="checkbox"]');
-        return Array.from(reviewCheckbox).forEach(cb => cb.checked = element.checked);
+        Array.from(reviewCheckbox).forEach(cb => cb.checked = element.checked);
+        updateButtonState();
     }
 
     // Function to get the checked account ID
