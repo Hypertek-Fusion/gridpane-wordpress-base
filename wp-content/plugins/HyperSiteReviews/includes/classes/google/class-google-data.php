@@ -325,6 +325,10 @@ class GoogleDataHandler
                 self::get_google_accounts();
             }
 
+            if (self::is_locations_table_empty()) {
+                self::get_initial_google_locations();
+            }
+
             $location_count = $wpdb->get_var($wpdb->prepare(
                 "SELECT COUNT(*) FROM {$wpdb->prefix}locations WHERE parent_account_id = %s",
                 $account_id
