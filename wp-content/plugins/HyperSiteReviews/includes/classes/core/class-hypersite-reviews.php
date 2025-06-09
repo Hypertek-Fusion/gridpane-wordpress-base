@@ -376,7 +376,7 @@ class HyperSiteReviews
             },
         ]);
 
-        register_rest_route('hsrev/v1', 'public/locations/(?P<location_id>[^\/]+)/reviews', [
+        register_rest_route('hsrev/v1', 'public/reviews', [
             'methods' => 'GET',
             'callback' => [self::class, 'api_get_location_selected_reviews'],
             'args' => [
