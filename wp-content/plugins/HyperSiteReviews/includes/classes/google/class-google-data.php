@@ -231,7 +231,7 @@ public static function get_location_reviews_length($loc) {
         ));
 
         $parent_account_id = $wpdb->get_var($wpdb->prepare(
-            "SELECT paren_account_id FROM {$wpdb->prefix}locations WHERE location_id = %s",
+            "SELECT parent_account_id FROM {$wpdb->prefix}locations WHERE location_id = %s",
             $loc
         ));
 
@@ -464,7 +464,7 @@ public static function get_reviews($location_id, $page, $per_page) {
         ));
 
         $parent_account_id = $wpdb->get_var($wpdb->prepare(
-            "SELECT paren_account_id FROM {$wpdb->prefix}locations WHERE location_id = %s",
+            "SELECT parent_account_id FROM {$wpdb->prefix}locations WHERE location_id = %s",
             $location_id
         ));
         
