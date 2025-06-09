@@ -6,6 +6,9 @@ function getAccountLocationsUrl(accountId) {
     return HSRevApi.urls.accountLocationsBase.replace('%s', accountId);
 }
 
+let reviewsPage = 1;
+const perPage = 10; // You can adjust this number to change how many reviews per page you want
+
 const getUsers = async () => {
     try {
         const accountRowsContainer = document.getElementById('account-rows');
@@ -94,7 +97,6 @@ const getAccountLocationsLength = async (accountId) => {
 const getLocations = async (accountId) => {
     const locationRowsContainer = document.getElementById('location-rows');
 
-    // Check if locations are already cached
     if (window.HSRevData.data.locationsCache && window.HSRevData.data.locationsCache[accountId]) {
         console.log('Using cached locations');
         populateLocations(window.HSRevData.data.locationsCache[accountId]);
@@ -124,7 +126,6 @@ const getLocations = async (accountId) => {
 
         const locationsData = await response.json();
 
-        // Cache the fetched locations
         window.HSRevData.data.locationsCache = window.HSRevData.data.locationsCache || {};
         window.HSRevData.data.locationsCache[accountId] = locationsData;
 
@@ -139,11 +140,10 @@ const populateLocations = async (locationsData) => {
     const locationRowsContainer = document.getElementById('location-rows');
     const locationRows = [];
 
-    // Convert the locations object into an array
     const locationsArray = locationsData.locations;
 
     await Promise.all(locationsArray.map(async location => {
-        if(window.HSRevData.data.accountId) {
+        if (window.HSRevData.data.accountId) {
             const reviewCount = await getLocationReviewCount(window.HSRevData.data.accountId, location.location_id);
             const locationRow = document.createElement('div');
             locationRow.classList.add('rows');
@@ -159,7 +159,7 @@ const populateLocations = async (locationsData) => {
         }
     }));
 
-    locationRowsContainer.innerHTML = ''; // Clear loading message
+    locationRowsContainer.innerHTML = '';
     locationRowsContainer.append(...locationRows);
 
     if (window.HSRevData.functions.attachCheckboxListeners) {
@@ -191,10 +191,10 @@ const getLocationReviewCount = async (accountId, locationId) => {
     }
 };
 
-const getReviews = async (locationId) => {
+// Updated getReviews function to accept pagination parameters
+const getReviews = async (locationId, page = 1, perPage = 10) => {
     const reviewRowsContainer = document.getElementById('review-rows');
 
-    // Check if reviews are already cached
     if (window.HSRevData.data.reviewsCache && window.HSRevData.data.reviewsCache[locationId]) {
         console.log('Using cached reviews');
         populateReviews(window.HSRevData.data.reviewsCache[locationId]);
@@ -204,8 +204,7 @@ const getReviews = async (locationId) => {
     try {
         reviewRowsContainer.innerHTML = '<div>Loading reviews...</div>';
 
-        const url = HSRevApi.urls.locationReviewsBase
-            .replace('%s', locationId.replace('locations/', ''));
+        const url = `${HSRevApi.urls.locationReviewsBase.replace('%s', locationId.replace('locations/', ''))}?page=${page}&per_page=${perPage}`;
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -220,15 +219,24 @@ const getReviews = async (locationId) => {
 
         const reviewsData = await response.json();
 
-        // Cache the fetched reviews
         window.HSRevData.data.reviewsCache = window.HSRevData.data.reviewsCache || {};
         window.HSRevData.data.reviewsCache[locationId] = reviewsData;
 
         console.log('Reviews for Location:', reviewsData);
         populateReviews(reviewsData);
+
+        // Update pagination controls
+        updatePaginationControls(reviewsData.total, page, perPage);
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
+};
+
+// Function to update pagination controls
+const updatePaginationControls = (total, currentPage, perPage) => {
+    const totalPages = Math.ceil(total / perPage);
+    document.querySelector('.page-prev').disabled = currentPage <= 1;
+    document.querySelector('.page-next').disabled = currentPage >= totalPages;
 };
 
 // Function to populate reviews for a selected location
@@ -251,7 +259,7 @@ const populateReviews = (reviewsData) => {
         reviewRows.push(reviewRow);
     });
 
-    reviewRowsContainer.innerHTML = ''; // Clear loading message
+    reviewRowsContainer.innerHTML = '';
     reviewRowsContainer.append(...reviewRows);
 
     if (window.HSRevData.functions.selectAllReviews) {
