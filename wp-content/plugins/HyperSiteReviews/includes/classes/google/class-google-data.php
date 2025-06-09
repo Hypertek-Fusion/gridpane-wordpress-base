@@ -272,7 +272,7 @@ class GoogleDataHandler
                 $loc
             ));
 
-            if ($shouldUpdate) {
+            if (false) {
                 $parent_account_id = $wpdb->get_var($wpdb->prepare(
                     "SELECT parent_account_id FROM {$wpdb->prefix}locations WHERE location_id = %s",
                     $loc
