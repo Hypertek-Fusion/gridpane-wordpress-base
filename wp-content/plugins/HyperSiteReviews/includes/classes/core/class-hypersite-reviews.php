@@ -370,12 +370,13 @@ public static function register_api_routes() {
 
     public static function api_get_account_locations($request) {
         $account_id = $request['account_id'];
+        $account_key = 'accounts/' . $account_id;
         try {
             $page = $request->get_param('page');
             $per_page = $request->get_param('per_page');
 
             // Fetch paginated locations
-            $locations = GoogleDataHandler::get_locations_by_account($account_id, $page, $per_page);
+            $locations = GoogleDataHandler::get_locations_by_account($account_key, $page, $per_page);
 
             // Get total number of locations for pagination
             $total_locations = GoogleDataHandler::get_total_locations_count($account_id);
