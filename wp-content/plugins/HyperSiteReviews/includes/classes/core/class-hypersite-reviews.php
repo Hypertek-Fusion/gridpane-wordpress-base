@@ -125,7 +125,7 @@ class HyperSiteReviews
         }
     }
 
-    public static function enqueue_frontend_scripts() {
+    public static function enqueue_frontend_scripts($hook) {
         // Localize frontend scripts
         if( ! is_admin() ) {
             wp_localize_script('hsrev-frontend', 'HyperSiteReviews', [
