@@ -9,7 +9,7 @@
     justify-items: center;
 }
 
-div[class*="-table__heading"] {
+div[class*="-table__heading-row"] {
     font-weight: 600;
     text-align: center;
 }
