@@ -446,7 +446,7 @@ class GoogleDataHandler
         return $count == 0;
     }
 
-    public static function is_location_reviews__empty($loc)
+    public static function is_location_reviews_empty($loc)
     {
         global $wpdb;
 
