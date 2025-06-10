@@ -41,10 +41,12 @@ add_filter( 'bricks/builder/i18n', function( $i18n ) {
 function get_author_initials()
 {
     $name_field = esc_html__(get_field("testimonial_name"));
-    $full_name = explode(" ", $name_field);
-    $first_name_initial = substr($full_name[0], 0, 1);
-    $last_name_initial = substr($full_name[1], 0, 1);
-    return $first_name_initial . $last_name_initial;
+    if($name_field) {
+        $full_name = explode(" ", $name_field);
+        $first_name_initial = substr($full_name[0], 0, 1);
+        $last_name_initial = substr($full_name[1], 0, 1);
+        return $first_name_initial . $last_name_initial;
+    }
 }
 
 add_action('rest_api_init', function () {
