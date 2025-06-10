@@ -593,6 +593,11 @@ class HyperSiteReviews
             if (GoogleDataHandler::is_locations_table_empty()) {
                 GoogleDataHandler::get_initial_google_locations();
             }
+
+            if(GoogleDataHandler::is_reviews_table_empty()) {
+                GoogleDataHandler::get_initial_location_reviews($location_key);
+            }
+            
             $reviews = GoogleDataHandler::get_location_reviews_length($location_key);
             return rest_ensure_response(['total' => $reviews ?? []]);
         } catch (Exception $e) {
