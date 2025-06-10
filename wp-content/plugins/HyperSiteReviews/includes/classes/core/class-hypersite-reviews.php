@@ -172,6 +172,8 @@ class HyperSiteReviews
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             global $wpdb;
 
+            error_log(print_r($_POST, true));
+
             // Set the selected account to selected
             if (!empty($_POST['selected-account'])) {
                 $selected_account = $_POST['selected-account'];
