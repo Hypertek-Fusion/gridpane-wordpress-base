@@ -127,10 +127,10 @@ class HyperSiteReviews
 
     public static function enqueue_frontend_scripts($hook) {
         wp_enqueue_script(
-            'hsrev-admin-script',
+            'hsrev-frontend',
             HSREV_URL . 'public/js/hypersite-reviews.js',
             [],
-            filemtime(HSREV_PATH . 'public/js/hypersite-reviews.js'),
+            '1.0',
             true
         );
         // Localize frontend scripts
