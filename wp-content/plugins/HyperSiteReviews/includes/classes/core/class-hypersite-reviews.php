@@ -104,6 +104,20 @@ class HyperSiteReviews
                 filemtime(HSREV_PATH . 'admin/js/setup-page.js'),
                 true
             );
+        }
+            wp_enqueue_style(
+                'hsrev-setup-style',
+                HSREV_URL . 'admin/css/main.css',
+                [],
+                filemtime(HSREV_PATH . 'admin/css/main.css')
+            );
+            wp_enqueue_script(
+                'hsrev-setup-script',
+                HSREV_URL . 'admin/js/setup-page.js',
+                [],
+                filemtime(HSREV_PATH . 'admin/js/setup-page.js'),
+                true
+            );
             wp_enqueue_script(
                 'hsrev-admin-script',
                 HSREV_URL . 'admin/js/admin-scripts.js',
@@ -122,7 +136,6 @@ class HyperSiteReviews
                 ],
                 'nonce' => wp_create_nonce('wp_rest'),
             ]);
-        }
     }
 
     public static function enqueue_frontend_scripts($hook) {
