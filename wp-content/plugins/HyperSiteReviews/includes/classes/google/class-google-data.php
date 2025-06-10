@@ -552,6 +552,21 @@ class GoogleDataHandler
         return 0; // Return 0 if the location does not exist
     }
 
+    function set_selected_account($account_id) {
+    global $wpdb;
+    $accounts_table = $wpdb->prefix . 'accounts';
+    
+    // Unselect any currently selected account
+    $wpdb->query("UPDATE $accounts_table SET is_selected = FALSE WHERE is_selected = TRUE");
+    
+    // Set the desired account to selected
+    $wpdb->update(
+        $accounts_table,
+        array('is_selected' => TRUE),
+        array('account_id' => $account_id)
+    );
+}
+
     public static function get_total_accounts_count()
     {
         global $wpdb;

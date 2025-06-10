@@ -1,6 +1,26 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
+/*
+
+Array
+(
+[selected-account] => accounts/107907910442986685413
+[selected-location] => locations/16358334009052137920
+[selected_reviews] => accounts/107907910442986685413,locations/16358334009052137920,AbFvOqk5uy-3ZeBy6VYDw1x-K4u_nAvvew8I9LwXWMB6NTnhA0wnFk3VCV7BsT1irgBbZ1ceHfXbMg,AbFvOqk6Cn8qL1dxwCglkMwqJQmnccTL7-vfv9jnetXSMo5SjNRY0uDRQMgO9Y2qFdv5YmYo7BrQPA,AbFvOqkD963SC-EdE4g8Pt_TaY3C70VCE6vXmWvQEYdNYFqFB6Yu9MLP7KErDu1fzvTWcLBior3HSg,AbFvOqkHexwsyWiCgIcY3U57tBW95mC77MkcUo-tJiJMCktAjWE8yJ7KkGDv4SmhVHInriO0OAr7sA,AbFvOqkn-qp4cga-KlSZarF1mVuZYRqy-y_UGJOXEYAlE9nE47Y13asD4xXyqzrTn6z8ICTvDF4QXQ,AbFvOqkSZ1BWJcFhc4JYDqJBOQWhFyHMPIKqM9NRvu6cSIjL3V9M5lrMzvm0uSUcUvpIH7v3-8IZGQ,AbFvOql-BjPNO7eC3w4dbfAsW7GOcmKMfId1to97jrnsI-po7RH3V9VJaoJr1VlSz5c03ypAbslMgQ,AbFvOql4kRf__LAjZ9WkOIytzGoLI_Pc3JU2YPMtsvovndxT8xfsQD4K4161-ul9J3kZPyBVdnaB,AbFvOqlb9EnxZj2wzVeHIFV9VnFA_Xa7-fVkCyh72jqprUBg5agABzB7iRZiCmM3jHSoFajjUpEhOQ,AbFvOqldEh_AFpkpUpAs6IQvtBgNlcyCQ4kktmFlqDhNkERGtgbubp1JczeX1Wh6MYz06yjRqEpDbw,AbFvOqlfn-MvDdTDBZynBHvkXzW8PVQJV0kK3VJsiGeHWcm2AQykGB17_m5bjh3pnrNl6t3OxhkIAQ,AbFvOqlhis_xM4ypGe3KFldZcfXlnK8sNDjsoMCc-KtBVLT-lhqkUdE6ZhDYZYQwud7ZR8xqFj-Png,AbFvOqlzBtjPV9d8Yb71maKCaQcW0o9B99rBe1W2kJu7w3hsyrQ9cxVAeOY_KKv1yP2H41B_CJIR,AbFvOqlZVxkAu5StZmxwdgtKLVcpItu47jHWnGbBcAAc_Gcaese0CK8GeLtjERzDLAPZDT4vTELAnA,AbFvOqmBfo5tWtloecH1idd5FjGWKtl_LOh_kuLG1RfdnQhy2TATwCOk5Y_X9NMi4Pw0GyyCLF0WeA,AbFvOqmfmP8wz4RCJo75Bp0_47xXeICe_pqNlEB4bHjyUAZPz1vNlCvcNLjBVhFX_C-lOKV2r1BiPg,AbFvOqmgivTl188FNvb4_DwPbwKaMYHyrPW2WaRvkeh_Y7KzK7g9d81naurBCPf0sDFDcJnM0narGQ,AbFvOqmgpOhNGOLxYMJdlFHDV_LGOjwZGoP__LXIY773vtAaZNgmR9T4AjGa_ooPad3Dy_pq58LU5Q,AbFvOqmjTK2rjLOCCby35KL8NK_raGhvMOjxwtH6nhcLKPSSy14yAaVuAYBo9mAZrUxuNpH776cLsA,AbFvOqmoIrY-JJUcPku4MroPdF-C_oAw9CJVEGsZFxjEvMwdnCk5uMl7ZAqQy7kBDBj9XkpN_4vUjg,AbFvOqn2uKXXGH-QF63LY5PPeQD0AfGiYQN_zM7iv_cgYu-8IEyvP2B78jYBFq5tdvEbeBYpsyydgQ,AbFvOqna9u9l4loAUw7HnjGBzSEsqGSc4k9RI3O34zRs0TUOpdRNCBE_1vjyuP0694iLDBtB1sKhrw,AbFvOqnh-iqRBPs1f-ttdLMBUP82sib_lCDw55YZykAq1DM1V0N_uE3yNmk91L17o5akx1B6W9IijA,AbFvOqnhqnmH8KLiID6WGL6rjcjHDmzUTT7Qm1B4qKaK_H7MvQpSyyf6wv-0WKNdYP-ZJxBFDziS,AbFvOqnkCyvOKxHqLQoRKszHV80dIJYjfnno2b45Mo0N_C53MsMwdHziXDSJAYZXzb3UlMIfdO6Klg,AbFvOqnn4PSjv6OY1Vz_hSKH0fN3SJNdg7ZOYqU_QHBqYsNWRwXLLN1v9VLxcY8PPwz6qBy_iPTJZA,AbFvOqnNk0C-kEjgmiPQbMQtPRaa0LXrZJAMHkyX1um58lDa7FME5dV991Xv1GJnVJNZ2jti2PeB,AbFvOqnUtTBtw28Gz2kwrrYIP0mg9tDwrXigMqLWZYcswC2TZRiEIzDOycRiMgStMBuJ1LPiDSFk,AbFvOqnxl6mHqUtQ91_W62q53JkgmwycBSdjWEyIRVyUNj4p0wWmOy8tOP_ZVuE2yLVM9eXV55hQsQ
+[select-all-reviews] => on
+[selected-review-AbFvOqn2uKXXGH-QF63LY5PPeQD0AfGiYQN_zM7iv_cgYu-8IEyvP2B78jYBFq5tdvEbeBYpsyydgQ] => AbFvOqn2uKXXGH-QF63LY5PPeQD0AfGiYQN_zM7iv_cgYu-8IEyvP2B78jYBFq5tdvEbeBYpsyydgQ
+[selected-review-AbFvOqna9u9l4loAUw7HnjGBzSEsqGSc4k9RI3O34zRs0TUOpdRNCBE_1vjyuP0694iLDBtB1sKhrw] => AbFvOqna9u9l4loAUw7HnjGBzSEsqGSc4k9RI3O34zRs0TUOpdRNCBE_1vjyuP0694iLDBtB1sKhrw
+[selected-review-AbFvOqnh-iqRBPs1f-ttdLMBUP82sib_lCDw55YZykAq1DM1V0N_uE3yNmk91L17o5akx1B6W9IijA] => AbFvOqnh-iqRBPs1f-ttdLMBUP82sib_lCDw55YZykAq1DM1V0N_uE3yNmk91L17o5akx1B6W9IijA
+[selected-review-AbFvOqnhqnmH8KLiID6WGL6rjcjHDmzUTT7Qm1B4qKaK_H7MvQpSyyf6wv-0WKNdYP-ZJxBFDziS] => AbFvOqnhqnmH8KLiID6WGL6rjcjHDmzUTT7Qm1B4qKaK_H7MvQpSyyf6wv-0WKNdYP-ZJxBFDziS
+[selected-review-AbFvOqnkCyvOKxHqLQoRKszHV80dIJYjfnno2b45Mo0N_C53MsMwdHziXDSJAYZXzb3UlMIfdO6Klg] => AbFvOqnkCyvOKxHqLQoRKszHV80dIJYjfnno2b45Mo0N_C53MsMwdHziXDSJAYZXzb3UlMIfdO6Klg
+[selected-review-AbFvOqnn4PSjv6OY1Vz_hSKH0fN3SJNdg7ZOYqU_QHBqYsNWRwXLLN1v9VLxcY8PPwz6qBy_iPTJZA] => AbFvOqnn4PSjv6OY1Vz_hSKH0fN3SJNdg7ZOYqU_QHBqYsNWRwXLLN1v9VLxcY8PPwz6qBy_iPTJZA
+[selected-review-AbFvOqnNk0C-kEjgmiPQbMQtPRaa0LXrZJAMHkyX1um58lDa7FME5dV991Xv1GJnVJNZ2jti2PeB] => AbFvOqnNk0C-kEjgmiPQbMQtPRaa0LXrZJAMHkyX1um58lDa7FME5dV991Xv1GJnVJNZ2jti2PeB
+[selected-review-AbFvOqnUtTBtw28Gz2kwrrYIP0mg9tDwrXigMqLWZYcswC2TZRiEIzDOycRiMgStMBuJ1LPiDSFk] => AbFvOqnUtTBtw28Gz2kwrrYIP0mg9tDwrXigMqLWZYcswC2TZRiEIzDOycRiMgStMBuJ1LPiDSFk
+[selected-review-AbFvOqnxl6mHqUtQ91_W62q53JkgmwycBSdjWEyIRVyUNj4p0wWmOy8tOP_ZVuE2yLVM9eXV55hQsQ] => AbFvOqnxl6mHqUtQ91_W62q53JkgmwycBSdjWEyIRVyUNj4p0wWmOy8tOP_ZVuE2yLVM9eXV55hQsQ
+)
+*/
+
 class HyperSiteReviews
 {
     public static function init()
@@ -155,6 +175,26 @@ class HyperSiteReviews
   
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             global $wpdb;
+
+            // Set the selected account to selected
+            if (!empty($_POST['selected-account'])) {
+                $selected_account = $_POST['selected-account'];
+                $wpdb->update(
+                    "{$wpdb->prefix}accounts",
+                    array('is_selected' => TRUE),
+                    array('account_id' => $selected_account)
+                );
+            }
+
+            // Set the selected location to selected
+            if (!empty($_POST['selected-location'])) {
+                $selected_location = $_POST['selected-location'];
+                $wpdb->update(
+                    "{$wpdb->prefix}locations",
+                    array('is_selected' => TRUE),
+                    array('location_id' => $selected_location)
+                );
+            }
 
             error_log(print_r($_POST, true));
             $selected_reviews = explode(',', $_POST['selected_reviews']);
@@ -570,6 +610,7 @@ class HyperSiteReviews
             type VARCHAR(255),
             verification_state VARCHAR(255),
             vetted_state VARCHAR(255),
+            is_selected BOOLEAN NOT NULL DEFAULT FALSE,
             PRIMARY KEY  (account_id)
         ) $charset_collate;";
 
@@ -584,6 +625,7 @@ class HyperSiteReviews
             store_code VARCHAR(255),
             website_uri TEXT,
             total_reviews SMALLINT UNSIGNED,
+            is_selected BOOLEAN NOT NULL DEFAULT FALSE,
             PRIMARY KEY  (location_id),
             FOREIGN KEY  (parent_account_id) REFERENCES $accounts_table(account_id) ON DELETE CASCADE
         ) $charset_collate;";
