@@ -144,7 +144,7 @@ class HyperSiteReviews
 
         $is_hsrev_page = in_array($current_page, ['hypersite-reviews', 'hypersite-reviews-settings'], true);
 
-        if ($is_hsrev_page && $current_page !== 'hypersite-reviews-setup' && !get_option('hsrev_bypass_setup_page')) {
+        if ($is_hsrev_page && $current_page !== 'hypersite-reviews-setup' && !get_option('hsrev_setup_complete') && !get_option('hsrev_bypass_setup_page')) {
             wp_redirect(admin_url('admin.php?page=hypersite-reviews-setup'));
             exit;
         }
