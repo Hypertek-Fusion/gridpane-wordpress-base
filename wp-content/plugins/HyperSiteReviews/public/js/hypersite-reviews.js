@@ -4,7 +4,7 @@ const getReviews = async () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-WP-Nonce': HSRevApi.nonce
+                'X-WP-Nonce': HyperSiteReviews.nonce
             }
         });
 
