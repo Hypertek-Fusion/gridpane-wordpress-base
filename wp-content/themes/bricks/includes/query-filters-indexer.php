@@ -1,8 +1,6 @@
 <?php
 namespace Bricks;
 
-use Error;
-
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class Query_Filters_Indexer {
@@ -225,6 +223,9 @@ class Query_Filters_Indexer {
 				$query_type = 'wp_user_query';
 			}
 		}
+
+		// Ready to execute the job, for WPML to switch the language (@since 1.12.2)
+		do_action( 'bricks_execute_filter_index_job', $job );
 
 		$total          = $job['total'] ?? 0;
 		$processing_row = $job['processed'] ?? 0;
@@ -530,7 +531,7 @@ class Query_Filters_Indexer {
 			// NOTE: 'exclude_from_search' => false not in use as we might miss some post types which are excluded from search
 			$post_types = array_diff(
 				get_post_types(),
-				[ 'revision', 'custom_css', 'customize_changeset', 'oembed_cache', 'user_request' ], // Not necessary to index these post types as nobody will use filters on these (@since 1.x)
+				[ 'revision', 'custom_css', 'customize_changeset', 'oembed_cache', 'user_request' ], // Not necessary to index these post types as nobody will use filters on these (@since 1.12.2)
 			);
 
 			$args = [

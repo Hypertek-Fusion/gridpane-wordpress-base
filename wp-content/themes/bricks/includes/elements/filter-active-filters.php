@@ -375,22 +375,32 @@ class Filter_Active_Filters extends Filter_Element {
 		if ( $filter_action === 'filter' ) {
 			// Handle range filter - Use labelMin and labelMax
 			if ( in_array( $instance_name, [ 'filter-range' ] ) ) {
-				$min_label = $settings['labelMin'] ?? '';
-				$max_label = $settings['labelMax'] ?? '';
-				$mode      = $settings['displayMode'] ?? 'range';
-				$separator = $settings['labelThousandSeparator'] ?? false;
-				$sep_label = $settings['labelSeparatorText'] ?? ',';
-				$use_sep   = $mode === 'range' && $separator; // Only use separator if mode is range
+				$min_label       = $settings['labelMin'] ?? '';
+				$max_label       = $settings['labelMax'] ?? '';
+				$mode            = $settings['displayMode'] ?? 'range';
+				$separator       = $settings['labelThousandSeparator'] ?? false;
+				$sep_label       = $settings['labelSeparatorText'] ?? ',';
+				$use_sep         = $mode === 'range' && $separator; // Only use separator if mode is range
+				$label_direction = $settings['labelDirection'] ?? false; // @since 1.12.2
 
 				if ( is_array( $value ) ) {
 					$min_label_value = $use_sep ? number_format( $value[0], 0, '.', $sep_label ) : $value[0];
 					$max_label_value = $use_sep ? number_format( $value[1], 0, '.', $sep_label ) : $value[1];
-					$label           = "{$min_label} {$min_label_value} - {$max_label} {$max_label_value}";
-					$value           = $value[0]; // Change the value to min value only - no array value
+
+					// Set label direction based on the filter setting (@since 1.12.2)
+					if ( $label_direction === 'row-reverse' ) {
+						$label = "{$min_label_value} {$min_label} - {$max_label_value} {$max_label}";
+					} else {
+						$label = "{$min_label} {$min_label_value} - {$max_label} {$max_label_value}";
+					}
+
+					$value = $value[0]; // Change the value to min value only - no array value
 				} else {
 					// Thousand separator
 					$label_value = $use_sep ? number_format( $value, 0, '.', $sep_label ) : $value;
-					$label       = "{$min_label} {$label_value}";
+
+					// Set label direction based on the filter setting (@since 1.12.2)
+					$label = $label_direction === 'row-reverse' ? "{$label_value} {$min_label}" : "{$min_label} {$label_value}";
 				}
 			}
 
@@ -409,8 +419,8 @@ class Filter_Active_Filters extends Filter_Element {
 				$data_matched_value = array_filter(
 					$choices,
 					function( $choice ) use ( $value ) {
-						// DB value must use urldecode first when comparing with user input value (@since 1.12)
-						return self::is_option_value_matched( esc_attr( urldecode( $choice['filter_value'] ) ), esc_attr( $value ) );
+						// DB value must use rawurldecode first when comparing with user input value (@since 1.12)
+						return self::is_option_value_matched( esc_attr( rawurldecode( $choice['filter_value'] ) ), esc_attr( $value ) );
 					}
 				);
 
@@ -453,8 +463,9 @@ class Filter_Active_Filters extends Filter_Element {
 				}
 			}
 		}
+
 		// Sort
-		else {
+		elseif ( $filter_action === 'sort' ) {
 			// Only filter-select and filter-radio has sort options
 			if ( ! in_array( $instance_name, [ 'filter-select', 'filter-radio' ], true ) ) {
 				return false;
@@ -467,6 +478,22 @@ class Filter_Active_Filters extends Filter_Element {
 			if ( $sort_info ) {
 				$label = $sort_info['optionLabel'] ?? $value;
 			}
+		}
+
+		// Per page
+		else {
+			// Only filter-select and filter-radio has sort options
+			if ( ! in_array( $instance_name, [ 'filter-select', 'filter-radio' ], true ) ) {
+				return false;
+			}
+
+			// No per page options, the value is not matched with any per page options
+			if ( empty( $filter_info['per_page_options'] ) || ! in_array( $value, $filter_info['per_page_options'] ) ) {
+				return false;
+			}
+
+			$label = (int) $value;
+			$value = (int) $value;
 		}
 
 		// Add active filter prefix, suffix or title attribute

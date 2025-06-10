@@ -78,9 +78,28 @@ class Element_Template extends Element {
 		// Performance improvement for AJAX popup (@since 1.9.8)
 		$template_type = Templates::get_template_type( $template_id );
 
+		// Determine if we should skip rendering the popup template
 		if ( $template_type === 'popup' ) {
+			$skip                    = false;
 			$popup_template_settings = Helpers::get_template_settings( $template_id );
+
 			if ( isset( $popup_template_settings['popupAjax'] ) && in_array( $template_id, Popups::$looping_ajax_popup_ids ) ) {
+				static $looping_element_ids = []; // Holds looping element IDs (@since 1.12.2)
+				$looping_element_id         = Query::get_query_element_id();
+
+				if ( ! $looping_element_id ) {
+					$skip = true;
+				} else {
+					if ( ! in_array( $looping_element_id, $looping_element_ids ) ) {
+						// We need to render the same popup template if looping element ID is not in the array, so we can have multiple brxe-{looping-element-id} classes generated for the same popup template (all sharing the same popup template) (@since 1.12.2)
+						$looping_element_ids[] = $looping_element_id;
+					} else {
+						$skip = true;
+					}
+				}
+			}
+
+			if ( $skip ) {
 				return;
 			}
 		}

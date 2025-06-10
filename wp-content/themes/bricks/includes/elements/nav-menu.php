@@ -874,7 +874,6 @@ class Element_Nav_Menu extends Element {
 			'label' => esc_html__( 'Top', 'bricks' ),
 			'type'  => 'number',
 			'units' => true,
-			'large' => true,
 			'css'   => [
 				[
 					'selector' => '.bricks-mobile-menu-wrapper',
@@ -888,7 +887,6 @@ class Element_Nav_Menu extends Element {
 			'label'       => esc_html__( 'Width', 'bricks' ),
 			'type'        => 'number',
 			'units'       => true,
-			'large'       => true,
 			'css'         => [
 				[
 					'property' => 'width',
@@ -903,7 +901,6 @@ class Element_Nav_Menu extends Element {
 			'label' => esc_html__( 'Height', 'bricks' ),
 			'type'  => 'number',
 			'units' => true,
-			'large' => true,
 			'css'   => [
 				[
 					'property' => 'height',

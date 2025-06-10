@@ -198,6 +198,11 @@ class Element_Svg extends Element {
 			}
 		}
 
+		// Maybe imported template without importing images. Try to get from placeholder (@since 1.12.2)
+		if ( ! $svg && isset( $settings['file']['path'] ) && $settings['file']['path'] !== '' ) {
+			$svg = Helpers::file_get_contents( $settings['file']['path'] );
+		}
+
 		// Return: No SVG
 		if ( ! $svg ) {
 			return $this->render_element_placeholder( [ 'title' => esc_html__( 'No SVG selected.', 'bricks' ) ] );

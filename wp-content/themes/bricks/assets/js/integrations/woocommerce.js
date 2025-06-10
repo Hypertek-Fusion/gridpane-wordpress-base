@@ -448,6 +448,33 @@ function bricksWooProductGalleryEnhance() {
 			}
 		})
 	})
+
+	/**
+	 * Observer, that will resize gallery when it's intersecting
+	 *
+	 * Fixes issue with gallery not resizing properly, if hidden by default.
+	 *
+	 * Example: Inside nested tabs, accordion, etc.
+	 *
+	 * @since 1.12.2
+	 */
+	const imageGalleryObserver = new IntersectionObserver((entries) => {
+		entries.forEach((entry) => {
+			// Skip, if not intersecting
+			if (!entry.isIntersecting) return
+
+			// Resize the gallery
+			jQuery(entry.target).resize()
+
+			// Unobserve, as we only need to resize once (performance)
+			imageGalleryObserver.unobserve(entry.target)
+		})
+	})
+
+	// Observe all galleries and thumbnail sliders (@since 1.12.2)
+	jQuery('.woocommerce-product-gallery, .brx-product-gallery-thumbnail-slider').each(function () {
+		imageGalleryObserver.observe(this)
+	})
 }
 
 /**

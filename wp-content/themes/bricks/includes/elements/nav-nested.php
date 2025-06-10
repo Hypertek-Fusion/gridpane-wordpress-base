@@ -315,7 +315,6 @@ class Element_Nav_Nested extends Element {
 			'label' => esc_html__( 'Gap', 'bricks' ),
 			'type'  => 'number',
 			'units' => true,
-			'large' => true,
 			'css'   => [
 				[
 					'property' => 'gap',
@@ -423,7 +422,6 @@ class Element_Nav_Nested extends Element {
 			'label'    => esc_html__( 'Min. width', 'bricks' ),
 			'type'     => 'number',
 			'units'    => true,
-			'large'    => true,
 			'css'      => [
 				[
 					'property' => 'min-width',
@@ -527,7 +525,6 @@ class Element_Nav_Nested extends Element {
 			'group'       => 'dropdown',
 			'label'       => esc_html__( 'Z-index', 'bricks' ),
 			'type'        => 'number',
-			'large'       => true,
 			'css'         => [
 				[
 					'property' => 'z-index',
@@ -735,7 +732,6 @@ class Element_Nav_Nested extends Element {
 			'label' => esc_html__( 'Width', 'bricks' ),
 			'type'  => 'number',
 			'units' => true,
-			'large' => true,
 			'css'   => [
 				[
 					'property' => 'width',
@@ -749,7 +745,6 @@ class Element_Nav_Nested extends Element {
 			'label' => esc_html__( 'Height', 'bricks' ),
 			'type'  => 'number',
 			'units' => true,
-			'large' => true,
 			'css'   => [
 				[
 					'property' => 'height',

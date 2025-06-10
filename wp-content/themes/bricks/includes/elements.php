@@ -89,10 +89,13 @@ class Elements {
 			'svg',
 			'instagram-feed',
 
+			// Query
+			'pagination',
+			'query-results-summary', // @since 1.12.2
+
 			// WordPress
 			'wordpress',
 			'posts',
-			'pagination',
 			'nav-menu',
 			'sidebar',
 			'search',

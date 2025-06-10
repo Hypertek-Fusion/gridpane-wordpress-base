@@ -773,6 +773,11 @@ class Element_Posts extends Custom_Render_Element {
 
 		// No results: Empty by default (@since 1.4)
 		if ( ! $posts_query->found_posts ) {
+			// Insert Loop marker for the first loop item (@since 1.12.3)
+			if ( ! $is_load_more_request ) {
+				echo $query->get_loop_marker();
+			}
+
 			echo $query->get_no_results_content();
 
 			return;
@@ -856,6 +861,11 @@ class Element_Posts extends Custom_Render_Element {
 		if ( $this->lazy_load() ) {
 			$image_atts['class'] .= ' bricks-lazy-hidden';
 			$image_atts['class'] .= ' bricks-lazy-load-isotope';
+		}
+
+		// Insert Loop marker for the first loop item (@since 1.12.3)
+		if ( ! $is_load_more_request ) {
+			echo $query->get_loop_marker();
 		}
 
 		$post_index = 0;

@@ -504,7 +504,6 @@ class Element_Image extends Element {
 			'label'       => esc_html__( 'Size', 'bricks' ),
 			'type'        => 'select',
 			'inline'      => true,
-			'large'       => true,
 			'options'     => [
 				'auto'    => esc_html__( 'Auto', 'bricks' ),
 				'cover'   => esc_html__( 'Cover', 'bricks' ),
@@ -519,7 +518,6 @@ class Element_Image extends Element {
 			'label'    => esc_html__( 'Custom size', 'bricks' ),
 			'type'     => 'number',
 			'units'    => true,
-			'large'    => true,
 			'required' => [ 'maskSize', '=', 'custom' ],
 		];
 
@@ -829,6 +827,7 @@ class Element_Image extends Element {
 
 				// External image URL
 				elseif ( ! empty( $source_image['url'] ) ) {
+					$source_image['url'] = str_replace( ' ', '%20', $source_image['url'] ); // URL should not contain space, we replace it with %20 (@since 1.12.3)
 					$this->set_attribute( "source_{$index}", 'srcset', esc_attr( $source_image['url'] ) );
 				}
 

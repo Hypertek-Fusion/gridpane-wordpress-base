@@ -23,7 +23,11 @@ class Polylang {
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_scripts' ] );
 
+		// Choose which Bricks post metas to copy when duplicating a post
 		add_filter( 'pll_copy_post_metas', [ $this, 'copy_bricks_post_metas' ], 10, 3 );
+
+		// Modify Bricks IDs when copying post metas (@since 1.12.2)
+		// add_filter( 'pll_translate_post_meta', [ $this, 'unique_bricks_ids' ], 10, 2 );
 
 		add_filter( 'bricks/search_form/home_url', [ $this, 'modify_search_form_home_url' ] );
 
@@ -36,9 +40,17 @@ class Polylang {
 		add_filter( 'bricks/posts/query_vars', [ $this, 'add_language_query_var' ], 100, 3 );
 		add_filter( 'bricks/get_templates/query_vars', [ $this, 'add_template_language_query_var' ], 100 );
 		add_filter( 'bricks/get_templates_query/cache_key', [ $this, 'add_template_language_cache_key' ] );
+		add_filter( 'bricks/database/get_all_templates_cache_key', [ $this, 'get_all_templates_cache_key' ] );
+		add_filter( 'bricks/database/bricks_get_all_templates_by_type_args', [ $this, 'polylang_get_all_templates_args' ] );
 
 		// Add language code to populate correct export template link (@since 1.10)
 		add_filter( 'bricks/export_template_args', [ $this, 'add_export_template_arg' ], 10, 2 );
+
+		// Reassign filter element IDs for translated posts (fix DB AJAX) (@since 1.12.2)
+		add_filter( 'bricks/fix_filter_element_db', [ $this, 'fix_filter_element_db' ], 10, 3 );
+
+		// Add language code to filter element data (@since 1.12.2)
+		add_filter( 'bricks/query_filters/element_data', [ $this, 'set_filter_element_language' ], 10, 3 );
 	}
 
 	/**
@@ -92,6 +104,44 @@ class Polylang {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Add current language to cache key
+	 * Unable to use get_locale() in API endpoint
+	 *
+	 * @since 1.12.2
+	 */
+	public function get_all_templates_cache_key( $cache_key ) {
+		// Retrieve the current language on page load
+		$current_lang = self::get_current_language();
+
+		// Use Database::$page_data['language'] if set (API request)
+		if ( isset( Database::$page_data['language'] ) && ! empty( Database::$page_data['language'] ) ) {
+			$current_lang = sanitize_key( Database::$page_data['language'] );
+		}
+
+		return $current_lang . "_$cache_key";
+	}
+
+	/**
+	 * Add language query var when getting all templates (database.php)
+	 *
+	 * @since 1.12.2
+	 */
+	public function polylang_get_all_templates_args( $query_args ) {
+		// Retrieve the current language on page load
+		$current_lang = self::get_current_language();
+
+		// Use Database::$page_data['language'] if set (API request)
+		if ( isset( Database::$page_data['language'] ) && ! empty( Database::$page_data['language'] ) ) {
+			$current_lang = sanitize_key( Database::$page_data['language'] );
+		}
+
+		// Set the language query var
+		$query_args['lang'] = $current_lang;
+
+		return $query_args;
 	}
 
 	/**
@@ -185,6 +235,20 @@ class Polylang {
 		}
 
 		return array_merge( $metas, $additional_metas );
+	}
+
+	/**
+	 * Modify Bricks IDs when translating/copy post meta
+	 *
+	 * @since 1.12.2
+	 */
+	public function unique_bricks_ids( $value, $meta_key ) {
+		if ( ! in_array( $meta_key, [ BRICKS_DB_PAGE_HEADER, BRICKS_DB_PAGE_CONTENT, BRICKS_DB_PAGE_FOOTER ], true ) ) {
+			return $value;
+		}
+
+		// Ensure each Bricks ID is unique
+		return \Bricks\Helpers::generate_new_element_ids( $value );
 	}
 
 	/**
@@ -335,5 +399,58 @@ class Polylang {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Reassign new IDs for filter elements when fixing the filter element DB
+	 *
+	 * @since 1.12.2
+	 */
+	public function fix_filter_element_db( $handled, $post_id, $template_type ) {
+		$language_code = self::get_post_language_code( $post_id );
+
+		if ( empty( $language_code ) ) {
+			return $handled;
+		}
+
+		$default_language = pll_default_language( 'slug' );
+
+		// If default language, skip
+		if ( $language_code === $default_language ) {
+			return $handled;
+		}
+
+		// We need to reassign new IDs for filter elements
+		$filter_elements = \Bricks\Query_Filters::filter_controls_elements();
+
+		// Ensure each Filter element Bricks ID is unique
+		$bricks_elements = Database::get_data( $post_id, $template_type );
+
+		$bricks_elements = \Bricks\Helpers::generate_new_element_ids( $bricks_elements, $filter_elements );
+
+		// Update the post meta with the new elements, will auto update custom element DB and reindex
+		update_post_meta( $post_id, Database::get_bricks_data_key( $template_type ), $bricks_elements );
+
+		// Return true to indicate the filter element DB has been handled
+		return true;
+	}
+
+	/**
+	 * Insert language code into the element settings
+	 *
+	 * @since 1.12.2
+	 */
+	public function set_filter_element_language( $data, $element, $post_id ) {
+		// Get the language code of the post
+		$language_code = self::get_post_language_code( $post_id );
+
+		if ( empty( $language_code ) ) {
+			return $data;
+		}
+
+		// Insert the language code into the element settings
+		$data['language'] = $language_code;
+
+		return $data;
 	}
 }

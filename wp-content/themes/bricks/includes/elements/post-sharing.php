@@ -51,6 +51,7 @@ class Element_Post_Sharing extends Element {
 						'pinterest' => 'Pinterest',
 						'telegram'  => 'Telegram',
 						'vkontakte' => 'VKontakte',
+						'bluesky'   => 'Bluesky',
 						'email'     => esc_html__( 'Email', 'bricks' ),
 					],
 				],
@@ -96,6 +97,7 @@ class Element_Post_Sharing extends Element {
 				[ 'service' => 'pinterest' ],
 				[ 'service' => 'telegram' ],
 				[ 'service' => 'vkontakte' ],
+				[ 'service' => 'bluesky' ],
 				[ 'service' => 'email' ],
 			],
 		];
@@ -284,6 +286,18 @@ class Element_Post_Sharing extends Element {
 						'tooltip' => sprintf( esc_html__( 'Share on %s', 'bricks' ), $aria_label ),
 						'class'   => 'vkontakte',
 						'icon'    => $icon ? $icon : Helpers::file_get_contents( BRICKS_PATH_ASSETS . 'svg/frontend/vkontakte.svg' ),
+					];
+					break;
+
+				case 'bluesky':
+					$aria_label = 'Bluesky';
+
+					$data = [
+						'url'     => "https://bsky.app/intent/compose?text={$title}%20{$url}",
+						// translators: %s: Service name
+						'tooltip' => sprintf( esc_html__( 'Share on %s', 'bricks' ), $aria_label ),
+						'class'   => 'bluesky',
+						'icon'    => $icon ? $icon : Helpers::file_get_contents( BRICKS_PATH_ASSETS . 'svg/frontend/bluesky.svg' ),
 					];
 					break;
 

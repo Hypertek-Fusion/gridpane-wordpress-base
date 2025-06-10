@@ -233,20 +233,22 @@ class Field_Acf {
 				break;
 
 			case 'user':
-				// ACF allows for single or multiple users
-				$temp_value    = $acf_field['multiple'] ? $acf_value : [ $acf_value ];
-				$return_format = $acf_field['return_format'] ?? false;
-				$temp_value    = $return_format === 'id' ? $temp_value : wp_list_pluck( $temp_value, 'ID' );
+				if ( ! empty( $acf_value ) ) { // Avoid PHP warning when using wp_list_pluck (@since 1.12.2)
+					// ACF allows for single or multiple users
+					$temp_value    = $acf_field['multiple'] ? $acf_value : [ $acf_value ];
+					$return_format = $acf_field['return_format'] ?? false;
+					$temp_value    = $return_format === 'id' ? $temp_value : wp_list_pluck( $temp_value, 'ID' );
 
-				foreach ( $temp_value as $user_id ) {
-					$user = get_user_by( 'ID', $user_id );
-					if ( $user ) {
-						$acf_field['brx_label'][ $user_id ] = $user->display_name ?? $user->nickname;
+					foreach ( $temp_value as $user_id ) {
+						$user = get_user_by( 'ID', $user_id );
+						if ( $user ) {
+							$acf_field['brx_label'][ $user_id ] = $user->display_name ?? $user->nickname;
+						}
 					}
-				}
 
-				$acf_value    = $temp_value;
-				$set_value_id = true;
+					$acf_value    = $temp_value;
+					$set_value_id = true;
+				}
 
 				break;
 

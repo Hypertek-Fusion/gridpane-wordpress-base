@@ -52,7 +52,6 @@ class Element_Offcanvas extends Element {
 			'label' => esc_html__( 'Width', 'bricks' ),
 			'type'  => 'number',
 			'units' => true,
-			'large' => true,
 			'css'   => [
 				[
 					'property' => 'width',
@@ -65,7 +64,6 @@ class Element_Offcanvas extends Element {
 			'label' => esc_html__( 'Height', 'bricks' ),
 			'type'  => 'number',
 			'units' => true,
-			'large' => true,
 			'css'   => [
 				[
 					'property' => 'height',

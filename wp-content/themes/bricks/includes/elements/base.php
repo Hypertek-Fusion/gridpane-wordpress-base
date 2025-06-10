@@ -717,7 +717,6 @@ abstract class Element {
 			'step'        => '.01',
 			'min'         => '0',
 			'max'         => '1',
-			'large'       => true,
 			'placeholder' => 1,
 			'css'         => [
 				[
@@ -2224,7 +2223,8 @@ abstract class Element {
 		}
 
 		if ( isset( $link_settings['rel'] ) ) {
-			$this->set_attribute( $attribute_key, 'rel', $link_settings['rel'] );
+			$rel = bricks_render_dynamic_data( $link_settings['rel'], $post_id ); // Dynamic data (@since 1.12.3)
+			$this->set_attribute( $attribute_key, 'rel', $rel );
 		}
 
 		if ( isset( $link_settings['newTab'] ) ) {
@@ -2232,11 +2232,13 @@ abstract class Element {
 		}
 
 		if ( isset( $link_settings['title'] ) ) {
-			$this->set_attribute( $attribute_key, 'title', $link_settings['title'] );
+			$title = bricks_render_dynamic_data( $link_settings['title'], $post_id ); // Dynamic data (@since 1.12.3)
+			$this->set_attribute( $attribute_key, 'title', $title );
 		}
 
 		if ( isset( $link_settings['ariaLabel'] ) ) {
-			$this->set_attribute( $attribute_key, 'aria-label', $link_settings['ariaLabel'] );
+			$aria_label = bricks_render_dynamic_data( $link_settings['ariaLabel'], $post_id ); // Dynamic data (@since 1.12.3)
+			$this->set_attribute( $attribute_key, 'aria-label', $aria_label );
 		}
 
 		// Set aria-current="page" attribute to the link if it points to the current page. (@since 1.8)
@@ -3828,8 +3830,9 @@ abstract class Element {
 			$this->set_attribute( $node_key, 'data-brx-ajax-loader', wp_json_encode( $ajax_loader_data ) );
 		}
 
-		// Element ID
-		$this->set_attribute( $node_key, 'data-query-element-id', $this->id );
+		// Set target Query ID. If it is inside a component instance (not root), combine with instanceId (@since 1.12.2)
+		$query_id = isset( $this->element['instanceId'] ) && ! empty( $this->element['instanceId'] ) ? "{$this->id}-{$this->element['instanceId']}" : $this->id;
+		$this->set_attribute( $node_key, 'data-query-element-id', $query_id );
 
 		// Component ID (@since 1.12)
 		if ( $this->cid ) {
@@ -3853,6 +3856,10 @@ abstract class Element {
 		$this->set_attribute( $node_key, 'data-page', $page );
 		$this->set_attribute( $node_key, 'data-max-pages', $query->max_num_pages );
 
+		// Query Results summary, to register in queryLoopInstances (@since 1.12.2)
+		$this->set_attribute( $node_key, 'data-start', $query->start );
+		$this->set_attribute( $node_key, 'data-end', $query->end );
+
 		// Observer margin (only px or %)
 		if ( ! empty( $settings['query']['infinite_scroll_margin'] ) ) {
 			$offset = $settings['query']['infinite_scroll_margin'];
@@ -3865,7 +3872,7 @@ abstract class Element {
 		}
 
 		// Infinite scroll delay (@since 1.12)
-		if ( ! empty( $settings['query']['infinite_scroll_delay'] ) ) {
+		if ( ! empty( $settings['query']['infinite_scroll_delay'] ) && ! empty( $settings['query']['infinite_scroll'] ) ) {
 			$this->set_attribute( $node_key, 'data-observer-delay', $settings['query']['infinite_scroll_delay'] );
 		}
 
@@ -4024,11 +4031,31 @@ abstract class Element {
 		$classes = [];
 
 		// STEP: Render SVG
-		$svg_id = ! empty( $icon['svg']['id'] ) ? $icon['svg']['id'] : false;
+		$svg_data = $icon['svg'] ?? []; // @since 1.12.2
+		$svg_id   = $svg_data['id'] ?? false;
 
 		if ( $svg_id ) {
+			// Check if SVG is from remote/different website (@since 1.12.2)
+			$remote_svg_url = $svg_data['url'] ?? '';
+			$current_host   = parse_url( home_url(), PHP_URL_HOST );
+			$remote_host    = parse_url( $remote_svg_url, PHP_URL_HOST );
+			$compare_remote = $remote_host && $remote_host !== $current_host;
+
+			// If it's SVG from remote, we need to compare the filenames with local one,
+			// to avoid fetching wrong file from local media library
 			$svg_path = get_attached_file( $svg_id );
-			$svg      = Helpers::file_get_contents( $svg_path );
+
+			if ( $compare_remote && $svg_path !== false ) {
+				$svg_filename       = $svg_data['filename'] ?? basename( $remote_svg_url );
+				$svg_filename_local = basename( $svg_path );
+
+				// Return unrendered: SVG name is different, we expect that it's a different SVG file
+				if ( $svg_filename !== $svg_filename_local ) {
+					return;
+				}
+			}
+
+			$svg = Helpers::file_get_contents( $svg_path );
 
 			if ( ! $svg ) {
 				return;

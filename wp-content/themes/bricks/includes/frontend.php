@@ -423,13 +423,8 @@ class Frontend {
 				'language'                => $current_language,
 				'wpmlUrlFormat'           => $wpml_url_format ?? '',
 				'multilangPlugin'         => $multilang_plugin,
-				'i18n'                    => [
-					'openAccordion'   => esc_html__( 'Open accordion', 'bricks' ),
-					'openMobileMenu'  => esc_html__( 'Open mobile menu', 'bricks' ),
-					'closeMobileMenu' => esc_html__( 'Close mobile menu', 'bricks' ),
-					'showPassword'    => esc_html__( 'Show password', 'bricks' ),
-					'hidePassword'    => esc_html__( 'Hide password', 'bricks' ),
-				],
+				'i18n'                    => I18n::get_frontend_i18n(),
+				'selectedFilters'         => Query_Filters::$selected_filters, // @since 1.11
 				'selectedFilters'         => Query_Filters::$selected_filters, // @since 1.11
 				'filterNiceNames'         => [], // @since 1.11
 			]
@@ -656,14 +651,8 @@ class Frontend {
 		 * If not static builder area && not frontend && not a loop ghost node (loop index: 1, 2, 3, etc.)
 		 *
 		 * @since 1.7.1
-		 * @since 1.12: Not a component instance
 		 */
-		if (
-			! isset( $element['staticArea'] ) &&
-			! $element_instance->is_frontend &&
-			! Query::get_loop_index()
-			// && ! $component_instance // NOTE: Not in use as it prevents rendering nested elements (e.g. Tabs) on canvas
-		) {
+		if ( ! isset( $element['staticArea'] ) && ! $element_instance->is_frontend && ! Query::get_loop_index() ) {
 			return '<div class="brx-nestable-children-placeholder"></div>';
 		}
 
@@ -902,7 +891,7 @@ class Frontend {
 		?>
 		<a class="skip-link" href="#brx-content"><?php esc_html_e( 'Skip to main content', 'bricks' ); ?></a>
 
-		<?php if ( ! empty( $template_footer_id ) ) { ?>
+		<?php if ( ! empty( $template_footer_id ) && ! Database::is_template_disabled( 'footer' ) ) { ?>
 			<a class="skip-link" href="#brx-footer"><?php esc_html_e( 'Skip to footer', 'bricks' ); ?></a>
 			<?php
 		}

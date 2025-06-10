@@ -333,7 +333,7 @@ class Provider_Wp extends Base {
 		}
 
 		// Echo
-		if ( Helpers::code_execution_enabled() && ( ! bricks_is_builder() || ( bricks_is_builder() && \Bricks\Capabilities::current_user_can_execute_code() ) ) ) {
+		if ( Helpers::code_execution_enabled() ) {
 			$tags['echo'] = [
 				'label' => esc_html__( 'Output PHP function', 'bricks' ),
 				'group' => 'advanced',
@@ -964,68 +964,8 @@ class Provider_Wp extends Base {
 				// is_numeric element ID might be treated as num_words, check get_filters_from_args() (@since 1.10)
 				$element_id = $filters['meta_key'] ?? $filters['num_words'] ?? false;
 
-				// Element ID provided: Get query object from query history
-				if ( ! empty( $element_id ) ) {
-					if ( bricks_is_builder() ) {
-						// $value = '[' . esc_html__( 'View on frontend', 'bricks' ) . ']';
-						break;
-					} else {
-						$query_object = Query::get_query_by_element_id( $element_id, true );
-					}
-				} else {
-					// No element ID provided, get the current query object
-					$query_object = Query::get_query_object( Query::is_any_looping() );
-				}
-
-				// No query object found. Init query (@since 1.9.1.1)
-				if ( ! $query_object ) {
-					// Set $post_id or element_data will be empty (@since 1.10.1; @see #86bzwjx3u)
-					if ( Query::is_any_looping() && isset( Database::$page_data['preview_or_post_id'] ) ) {
-						$post_id = Database::$page_data['preview_or_post_id'];
-					}
-
-					$element_data = Helpers::get_element_data( $post_id, $element_id );
-					$element_name = $element_data['element']['name'] ?? '';
-
-					if ( ! empty( $element_name ) && isset( $element_data['element']['settings'] ) ) {
-						// Populate query settings for elements that is not using standard query controls (@since 1.9.3)
-						if ( in_array( $element_name, [ 'carousel', 'related-posts' ] ) ) {
-							$query_settings = Helpers::populate_query_vars_for_element( $element_data['element'], $post_id );
-
-							/**
-							 * Override query settings.
-							 * Carousel 'posts' type should returning empty from this function as it is using standard query controls
-							 */
-							if ( ! empty( $query_settings ) ) {
-								$element_data['element']['settings']['query'] = $query_settings;
-							}
-
-							/**
-							 * If this is a carousel 'posts' type, $query_settings should be empty as the query_settings is populated from standard query controls
-							 * However, if the standard query controls is empty (user use default posts query), then we need to set 'query' key so or we are not able to init query in next step
-							 */
-							elseif ( $element_name === 'carousel' && empty( $query_settings ) ) {
-								$carousel_type = $element_data['element']['settings']['type'] ?? 'posts';
-								if ( $carousel_type === 'posts' && empty( $element_data['element']['settings']['query'] ) ) {
-									$element_data['element']['settings']['query'] = [];
-								}
-							}
-						}
-
-						// Add query setting key for Posts element when default (no settings), otherwise count always zero (@since 1.9.8)
-						if ( $element_name === 'posts' && empty( $element_data['element']['settings']['query'] ) ) {
-							$element_data['element']['settings']['query'] = [];
-						}
-
-						// Only init query if query settings is available
-						if ( isset( $element_data['element']['settings']['query'] ) ) {
-							$query_object = new Query( $element_data['element'] );
-							if ( $query_object ) {
-								$query_object->destroy();
-							}
-						}
-					}
-				}
+				// Get the query object from history or init, move logic to helper function (@since 1.12.2)
+				$query_object = Helpers::get_query_object_from_history_or_init( $element_id, $post_id );
 
 				if ( is_a( $query_object, 'Bricks\Query' ) ) {
 					$value = $query_object->count;
@@ -1133,6 +1073,9 @@ class Provider_Wp extends Base {
 		if ( strpos( $callback, '(' ) !== false ) {
 			// Pattern: matches1 captures the function name, matches2 captures everything inside the parentheses (@since 1.12)
 			$pattern = '/^([a-zA-Z0-9_]+)\((.*)\)$/';
+
+			// Trim the callback to allow dynamic tags with space like {echo: my_function} (@since 1.12.2)
+			$callback = trim( $callback );
 
 			// Retrieve the callback and arguments
 			preg_match( $pattern, $callback, $matches );
@@ -1243,6 +1186,15 @@ class Provider_Wp extends Base {
 
 		// Return: Not allowed to call this function name
 		if ( ! $is_function_allowed ) {
+			return '';
+		}
+
+		/**
+		 * Return: Don't run echo tags from unauthorized users in the builder preview to prevent them from adding new echo function calls (even if they are whitelisted)
+		 *
+		 * @since 1.12.2
+		 */
+		if ( bricks_is_builder_call() && ! \Bricks\Capabilities::current_user_can_execute_code() ) {
 			return '';
 		}
 

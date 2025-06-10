@@ -631,6 +631,18 @@ class Templates {
 	 * @since 1.0
 	 */
 	public static function get_templates( $custom_args = [] ) {
+		// Get excluded templates setting (@since 1.12.2)
+		$excluded_templates = Database::get_setting( 'excludedTemplates', [] );
+
+		// If this is a remote request, modify the query to exclude templates (@since 1.12.2)
+		if ( ! empty( $custom_args['remote_request'] ) && ! empty( $excluded_templates ) ) {
+			if ( ! isset( $custom_args['post__not_in'] ) ) {
+				$custom_args['post__not_in'] = [];
+			}
+
+			$custom_args['post__not_in'] = array_merge( $custom_args['post__not_in'], $excluded_templates );
+		}
+
 		$templates_query = self::get_templates_query( $custom_args );
 
 		$templates = [];
@@ -1333,10 +1345,36 @@ class Templates {
 			// Add back slashes to element settings (needed for '_content' HTML entities, and Custom CSS)
 			foreach ( $elements as $index => $element ) {
 				$element_settings = ! empty( $element['settings'] ) ? $element['settings'] : [];
+				$element_name     = ! empty( $element['name'] ) ? $element['name'] : '';
 
-				// STEP: Import element images & update template data with local image data (@since 1.10.2)
-				if ( count( $element_settings ) && $import_images ) {
-					self::import_images( $element_settings, $import_images );
+				// STEP: Import element images & update template data with local image data. (@since 1.10.2) Should run even if importImages is untick (@since 1.12.2)
+				if ( count( $element_settings ) ) {
+
+					// Handle image-gallery element (@since 1.12.2)
+					if ( $element_name === 'image-gallery' ) {
+						// The images are stored in the 'images' setting key
+						$images = $element_settings['items']['images'] ?? [];
+						$size   = $element_settings['items']['size'] ?? 'full';
+
+						if ( count( $images ) ) {
+							foreach ( $images as $image_index => $image ) {
+								// import_image requires size to be set
+								$image['size'] = $size;
+
+								$new_image = self::import_image( $image, $import_images );
+
+								if ( is_array( $new_image ) && ! isset( $new_image['error'] ) ) {
+									// Directly update the image in the element settings as str_replace doesn't work here
+									$elements[ $index ]['settings']['items']['images'][ $image_index ] = $new_image;
+								}
+							}
+						}
+					}
+
+					// Handle Image and SVG element (single image) (@since 1.12.2)
+					else {
+						self::import_images( $element_settings, $import_images );
+					}
 				}
 
 				foreach ( $element_settings as $setting_key => $setting_value ) {
@@ -1561,6 +1599,8 @@ class Templates {
 		}
 
 		if ( count( $global_classes_to_add ) ) {
+			// Add category metadata before adding to template data (@since 1.12.2)
+			$global_classes_to_add           = Helpers::add_category_metadata_to_classes( $global_classes_to_add );
 			$template_data['global_classes'] = $global_classes_to_add;
 		}
 
@@ -1655,12 +1695,18 @@ class Templates {
 		$is_svg = pathinfo( $image['url'], PATHINFO_EXTENSION ) === 'svg';
 
 		// STEP: No image import requested: Return placeholder image
-		if ( ! $import_images && ! $is_svg ) {
+		if ( ! $import_images ) {
 			// Add to instance property to replace templateData before returning it to Vue
 			$placeholder_image = [
-				'url'  => Builder::get_template_placeholder_image(),
-				'full' => Builder::get_template_placeholder_image(),
+				'url'           => Builder::get_template_placeholder_image( $is_svg ),
+				'full'          => Builder::get_template_placeholder_image( $is_svg ),
+				'isPlaceholder' => true,
 			];
+
+			// Add placeholder image path. For SVG elements (@since 1.12.2)
+			if ( $is_svg ) {
+				$placeholder_image['path'] = Builder::get_template_placeholder_image( $is_svg, 'path' );
+			}
 
 			self::$template_images[] = [
 				'old' => $image,
@@ -1672,12 +1718,12 @@ class Templates {
 
 		// Not allowed to upload SVG: Remove 'file' value
 		elseif ( $import_images && $is_svg && ! Capabilities::current_user_can_upload_svg() && ! empty( $image['url'] ) ) {
-			$svg_blank = $image;
-			unset( $svg_blank['url'] );
-
-			if ( isset( $svg_blank['filename'] ) ) {
-				unset( $svg_blank['filename'] );
-			}
+			// Use placeholder SVG image instead. (@since 1.12.2)
+			$svg_blank = [
+				'url'  => Builder::get_template_placeholder_image( true ),
+				'full' => Builder::get_template_placeholder_image( true ),
+				'path' => Builder::get_template_placeholder_image( true, 'path' ),
+			];
 
 			self::$template_images[] = [
 				'old' => $image,

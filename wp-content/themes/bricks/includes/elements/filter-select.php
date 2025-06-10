@@ -63,6 +63,10 @@ class Filter_Select extends Filter_Element {
 	 *
 	 * If is a sort input
 	 * - Set sorting options
+	 *
+	 * If is a per_page input
+	 * - Set per_page options
+	 *
 	 * If is a filter input
 	 * - Prepare sources
 	 * - Set data_source
@@ -104,9 +108,16 @@ class Filter_Select extends Filter_Element {
 
 			$this->set_options_with_count();
 
-		} else {
+		}
+
+		elseif ( $filter_action === 'sort' ) {
 			// User wish to use what options as sort options
 			$this->setup_sort_options();
+		}
+
+		else {
+			// User wish to use what options as per_page options
+			$this->setup_per_page_options();
 		}
 
 		// Insert filter settings as data-brx-filter attribute
@@ -220,7 +231,7 @@ class Filter_Select extends Filter_Element {
 			$option_value    = esc_attr( $option['value'] );
 			$option_text     = $this->get_option_text_with_count( $option );
 			$option_class    = ! empty( $option['class'] ) ? esc_attr( trim( $option['class'] ) ) : '';
-			$option_selected = selected( $current_value, urldecode( $option_value ), false );
+			$option_selected = selected( $current_value, rawurldecode( $option_value ), false );
 			$option_disabled = isset( $option['disabled'] ) ? 'disabled' : '';
 
 			echo '<option value="' . $option_value . '" ' .

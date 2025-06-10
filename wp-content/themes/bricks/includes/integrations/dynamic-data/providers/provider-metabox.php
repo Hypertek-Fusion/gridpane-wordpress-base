@@ -694,11 +694,6 @@ class Provider_Metabox extends Base {
 
 		// Relationship
 		if ( $field['_brx_object_type'] == 'relationship' ) {
-			$api_args = [
-				'id' => $field['id'],
-				// 'from' or 'to' to be set
-			];
-
 			$queried_object = \Bricks\Helpers::get_queried_object( $post_id );
 
 			/**
@@ -711,31 +706,53 @@ class Provider_Metabox extends Base {
 				$queried_object = get_queried_object();
 			}
 
-			// STEP: Calculate the "from" or "to" argument according to the context and the field object type
-			foreach ( [
-				'post' => 'WP_Post',
-				'term' => 'WP_Term',
-				'user' => 'WP_User'
-			] as $object_type => $object_class ) {
+			// Function to set the relationship arguments
+			$set_relationship_args = function( $current_object ) use ( $field ) {
+				$api_args = [
+					'id' => $field['id'],
+					// 'from' or 'to' to be set
+				];
 
-				foreach ( [ 'from', 'to' ] as $direction ) {
-					// Queried object type is the same as the field direction object type
-					if ( is_a( $queried_object, $object_class ) && $field[ $direction ]['object_type'] == $object_type ) {
+				foreach ( [
+					'post' => 'WP_Post',
+					'term' => 'WP_Term',
+					'user' => 'WP_User'
+				] as $object_type => $object_class ) {
 
-						if ( $object_type == 'post' && in_array( $queried_object->post_type, $field[ $direction ]['meta_box']['post_types'] ) ) {
-							$api_args[ $direction ] = $queried_object->ID;
-						} elseif ( $object_type == 'term' && in_array( $queried_object->taxonomy, $field[ $direction ]['meta_box']['taxonomies'] ) ) {
-							$api_args[ $direction ] = $queried_object->term_id;
-						} elseif ( $object_type == 'user' ) {
-							$api_args[ $direction ] = $queried_object->ID;
+					foreach ( [ 'from', 'to' ] as $direction ) {
+						// Queried object type is the same as the field direction object type
+						if ( is_a( $current_object, $object_class ) && $field[ $direction ]['object_type'] == $object_type ) {
+
+							if ( $object_type == 'post' && in_array( $current_object->post_type, $field[ $direction ]['meta_box']['post_types'] ) ) {
+								$api_args[ $direction ] = $current_object->ID;
+							} elseif ( $object_type == 'term' && in_array( $current_object->taxonomy, $field[ $direction ]['meta_box']['taxonomies'] ) ) {
+								$api_args[ $direction ] = $current_object->term_id;
+							} elseif ( $object_type == 'user' ) {
+								$api_args[ $direction ] = $current_object->ID;
+							}
+
 						}
 
-					}
-
-					if ( isset( $api_args[ $direction ] ) ) {
-						break( 2 );
+						if ( isset( $api_args[ $direction ] ) ) {
+							break( 2 );
+						}
 					}
 				}
+
+				return $api_args;
+			};
+
+			// STEP: Calculate the "from" or "to" argument according to the context and the field object type
+			$api_args = $set_relationship_args( $queried_object );
+
+			/**
+			 * In Builder, the queried_object could be wrong or retrieve incorrectly when located in nested query, especially in different context loops
+			 * Helpers::get_queried_object will use the get_post() if bricks_is_ajax()
+			 *
+			 * @since 1.12.2
+			 */
+			if ( count( $api_args ) != 2 && \Bricks\Helpers::is_bricks_preview() && $looping_query_id ) {
+				$api_args = $set_relationship_args( \Bricks\Query::get_loop_object( $looping_query_id ) );
 			}
 
 			// STEP: Query
@@ -890,6 +907,7 @@ class Provider_Metabox extends Base {
 			'image',
 			'image_upload',
 			'single_image',
+			'relationship',
 		];
 
 		$supported_tags = [];

@@ -671,6 +671,10 @@ class Filter_Range extends Filter_Element {
 		echo '<div class="slider-base"></div>';
 		echo '<div class="slider-track" style="' . $style . '"></div>';
 
+		// Generate unique IDs for labels (@since 1.12.2)
+		$min_label_id = "label-min-{$this->id}";
+		$max_label_id = "label-max-{$this->id}";
+
 		$this->set_attribute( 'min-range', 'type', 'range' );
 		$this->set_attribute( 'min-range', 'class', 'min' );
 		$this->set_attribute( 'min-range', 'name', "form-field-min-{$this->id}" );
@@ -678,6 +682,13 @@ class Filter_Range extends Filter_Element {
 		$this->set_attribute( 'min-range', 'max', $this->max_value ?? 100 );
 		$this->set_attribute( 'min-range', 'value', $this->current_min );
 		$this->set_attribute( 'min-range', 'tabindex', '0' ); // Safari needs this or focusin event won't fire (@since 1.11)
+
+		if ( ! empty( $label_min ) ) {
+			$this->set_attribute( 'min-range', 'aria-labelledby', $min_label_id );
+		} else {
+			// If no label is set, use aria-label (@since 1.12.2)
+			$this->set_attribute( 'min-range', 'aria-label', esc_html__( 'Minimum value', 'bricks' ) );
+		}
 
 		echo "<input {$this->render_attributes( 'min-range' )}>";
 
@@ -688,6 +699,13 @@ class Filter_Range extends Filter_Element {
 		$this->set_attribute( 'max-range', 'max', $this->max_value ?? 100 );
 		$this->set_attribute( 'max-range', 'value', $this->current_max );
 		$this->set_attribute( 'max-range', 'tabindex', '0' ); // Safari needs this or focusin event won't fire (@since 1.11)
+
+		if ( ! empty( $label_max ) ) {
+			$this->set_attribute( 'max-range', 'aria-labelledby', $max_label_id );
+		} else {
+			// If no label is set, use aria-label (@since 1.12.2)
+			$this->set_attribute( 'max-range', 'aria-label', esc_html__( 'Maximum value', 'bricks' ) );
+		}
 
 		echo "<input {$this->render_attributes( 'max-range' )}>";
 
@@ -705,12 +723,12 @@ class Filter_Range extends Filter_Element {
 		}
 
 		$value_wrapper_html  = '<span class="lower">';
-		$value_wrapper_html .= ! empty( $label_min ) ? '<span class="label">' . $label_min . '</span>' : '';
+		$value_wrapper_html .= ! empty( $label_min ) ? '<span id="' . esc_attr( $min_label_id ) . '" class="label">' . $label_min . '</span>' : '';
 		$value_wrapper_html .= '<span class="value">' . $min_value . '</span>';
 		$value_wrapper_html .= '</span>';
 
 		$value_wrapper_html .= '<span class="upper">';
-		$value_wrapper_html .= ! empty( $label_max ) ? '<span class="label">' . $label_max . '</span>' : '';
+		$value_wrapper_html .= ! empty( $label_max ) ? '<span id="' . esc_attr( $max_label_id ) . '" class="label">' . $label_max . '</span>' : '';
 		$value_wrapper_html .= '<span class="value">' . $max_value . '</span>';
 		$value_wrapper_html .= '</span>';
 
@@ -742,12 +760,16 @@ class Filter_Range extends Filter_Element {
 		echo '<div class="min-wrap">';
 
 		if ( ! empty( $label_min ) ) {
-			echo '<span class="label">' . $label_min . '</span>';
+			echo '<label for="form-field-min-' . esc_attr( $this->id ) . '" class="label">' . $label_min . '</label>';
+		} else {
+			// If no label is set, use aria-label (@since 1.12.2)
+			$this->set_attribute( 'min-input', 'aria-label', esc_html__( 'Minimum value', 'bricks' ) );
 		}
 
 		$this->set_attribute( 'min-input', 'type', 'number' );
 		$this->set_attribute( 'min-input', 'class', 'min' );
 		$this->set_attribute( 'min-input', 'name', "form-field-min-{$this->id}" );
+		$this->set_attribute( 'min-input', 'id', "form-field-min-{$this->id}" ); // @since 1.12.2
 		$this->set_attribute( 'min-input', 'min', $this->min_value ?? 0 );
 		$this->set_attribute( 'min-input', 'max', $this->max_value ?? 100 );
 		$this->set_attribute( 'min-input', 'step', $settings['step'] ?? 1 );
@@ -761,12 +783,16 @@ class Filter_Range extends Filter_Element {
 		echo '<div class="max-wrap">';
 
 		if ( ! empty( $label_max ) ) {
-			echo '<span class="label">' . $label_max . '</span>';
+			echo '<label for="form-field-max-' . esc_attr( $this->id ) . '" class="label">' . $label_max . '</label>';
+		} else {
+			// If no label is set, use aria-label (@since 1.12.2)
+			$this->set_attribute( 'max-input', 'aria-label', esc_html__( 'Maximum value', 'bricks' ) );
 		}
 
 		$this->set_attribute( 'max-input', 'type', 'number' );
 		$this->set_attribute( 'max-input', 'class', 'max' );
 		$this->set_attribute( 'max-input', 'name', "form-field-max-{$this->id}" );
+		$this->set_attribute( 'max-input', 'id', "form-field-max-{$this->id}" ); // @since 1.12.2
 		$this->set_attribute( 'max-input', 'min', $this->min_value ?? 0 );
 		$this->set_attribute( 'max-input', 'max', $this->max_value ?? 100 );
 		$this->set_attribute( 'max-input', 'step', $settings['step'] ?? 1 );

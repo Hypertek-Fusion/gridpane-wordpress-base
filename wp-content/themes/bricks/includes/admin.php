@@ -91,6 +91,9 @@ class Admin {
 
 		// System information test (@since 1.11)
 		add_action( 'wp_ajax_bricks_system_info_wp_remote_post_test', [ $this, 'system_info_wp_remote_post_test' ] );
+
+		// Fix filter element database (@since 1.12)
+		add_action( 'wp_ajax_bricks_fix_filter_element_db', [ $this, 'bricks_fix_filter_element_db' ] );
 	}
 
 	/**
@@ -356,15 +359,18 @@ class Admin {
 				<form id="bricks-admin-import-form" method="post" enctype="multipart/form-data">
 					<p><input type="file" name="files" id="bricks_import_files" accept=".json,application/json,.zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed" multiple required></p>
 
+					<p><input type="checkbox" name="importImages" id="bricks_import_images" value="true"> <label for="bricks_import_images"><?php esc_html_e( 'Import images', 'bricks' ); ?></label></p>
+
 					<input type="submit" class="button button-primary button-large" value="<?php echo esc_attr__( 'Import', 'bricks' ); ?>">
 					<button class="button button-large bricks-admin-import-toggle"><?php esc_html_e( 'Cancel', 'bricks' ); ?></button>
 
 					<input type="hidden" name="action" value="bricks_import_template">
-
 				<?php wp_nonce_field( 'bricks-nonce-admin', 'nonce' ); ?>
 				</form>
 
 				<i class="close bricks-admin-import-toggle dashicons dashicons-no-alt"></i>
+
+				<div class="import-progress"><span class="spinner is-active"></span></div>
 			</div>
 		</div>
 			<?php
@@ -1104,32 +1110,29 @@ class Admin {
 
 	public function gutenberg_scripts() {
 		if ( Helpers::is_post_type_supported() && Capabilities::current_user_can_use_builder() ) {
-			wp_enqueue_script( 'bricks-gutenberg', BRICKS_URL_ASSETS . 'js/gutenberg.min.js', [ 'jquery' ], filemtime( BRICKS_PATH_ASSETS . 'js/gutenberg.min.js' ), true );
 			wp_enqueue_style( 'bricks-admin', BRICKS_URL_ASSETS . 'css/admin.min.css', [], filemtime( BRICKS_PATH_ASSETS . 'css/admin.min.css' ) );
+			wp_enqueue_script( 'bricks-gutenberg', BRICKS_URL_ASSETS . 'js/gutenberg.min.js', [ 'jquery' ], filemtime( BRICKS_PATH_ASSETS . 'js/gutenberg.min.js' ), true );
 		}
 
-		// Check: Is post edit screen: Show "Edit with Bricks" appender block (@since 1.12)
-		$screen             = get_current_screen();
-		$post_id            = get_the_ID();
-		$render_with_bricks = false;
+		/**
+		 * Check if the post/page is built with Bricks (must have Bricks data)
+		 *
+		 * @since 1.12.2
+		 */
+		$screen                 = get_current_screen();
+		$post_id                = get_the_ID();
+		$show_built_with_bricks = false;
 
 		if ( $screen && $screen->base === 'post' && $post_id ) {
 			$post = get_post( $post_id );
-			// Check: No Gutenberg data > Render with Bricks
-			$render_with_bricks = empty( $post->post_content ) && use_block_editor_for_post( $post );
-			if ( $render_with_bricks ) {
-				// Check: No Bricks data
-				if ( ! Helpers::get_bricks_data( $post_id, 'content' ) ) {
-					$render_with_bricks = false;
+			// Check: No Bricks data
+			if ( Helpers::get_bricks_data( $post_id, 'content', true ) ) {
+				$show_built_with_bricks = true;
+			}
 
-					// Set active templates to check if any template renders this post
-					Database::set_active_templates();
-
-					// Current page is rendered through Bricks template
-					if ( Database::$active_templates['content'] != 0 && Database::$active_templates['content'] != $post_id ) {
-						$render_with_bricks = true;
-					}
-				}
+			// Check: Gutenberg data > Don't show "Built with Bricks"
+			if ( ! empty( $post->post_content ) && use_block_editor_for_post( $post ) ) {
+				$show_built_with_bricks = false;
 			}
 		}
 
@@ -1137,13 +1140,9 @@ class Admin {
 			'bricks-gutenberg',
 			'bricksData',
 			[
-				'builderEditLink'  => Helpers::get_builder_edit_link(),
-				'renderWithBricks' => $render_with_bricks,
-				'i18n'             => [
-					'editWithBricks'      => esc_html__( 'Edit with Bricks', 'bricks' ),
-					'useDefaultEditor'    => esc_html__( 'Use block editor', 'bricks' ),
-					'bricksActiveMessage' => esc_html__( 'This page is built with Bricks.', 'bricks' ),
-				],
+				'builderEditLink'     => Helpers::get_builder_edit_link(),
+				'i18n'                => I18n::get_admin_i18n(),
+				'showBuiltWithBricks' => $show_built_with_bricks,
 			]
 		);
 	}
@@ -1162,11 +1161,11 @@ class Admin {
 
 		wp_enqueue_script( 'bricks-admin', BRICKS_URL_ASSETS . 'js/admin.min.js', [ 'jquery' ], filemtime( BRICKS_PATH_ASSETS . 'js/admin.min.js' ), true );
 
-		// Check: Is post edit screen: Show "Edit with Bricks" appender block (@since 1.12)
-		$screen             = get_current_screen();
-		$post_id            = get_the_ID();
-		$render_with_bricks = false;
+		$screen  = get_current_screen();
+		$post_id = get_the_ID();
 
+		// Check if the post/page is rendered with Bricks (directly on the page, or through a Bricks template) (@since 1.12)
+		$render_with_bricks = false;
 		if ( $screen && $screen->base === 'post' && $post_id ) {
 			$post = get_post( $post_id );
 			// Check: No Gutenberg data > Render with Bricks
@@ -1191,30 +1190,12 @@ class Admin {
 			'bricks-admin',
 			'bricksData',
 			[
-				'title'                             => BRICKS_NAME,
-				'ajaxUrl'                           => admin_url( 'admin-ajax.php' ),
-				'postId'                            => get_the_ID(),
-				'nonce'                             => wp_create_nonce( 'bricks-nonce-admin' ),
-				'currentScreen'                     => get_current_screen(),
-				'cofirmResetSettings'               => esc_html__( 'You are about to reset all Bricks global settings. Do you wish to proceed?', 'bricks' ),
-				'confirmDropFormSubmissionsTable'   => esc_html__( 'You are about to delete all form submissions (including the database table). Do you wish to proceed?', 'bricks' ),
-				'confirmResetFormSubmissionsTable'  => esc_html__( 'You are about to delete all form submissions. Do you wish to proceed?', 'bricks' ),
-				'confirmResetFormSubmissionsFormId' => sprintf( esc_html__( 'You are about to delete all form submissions of form ID %s. Do you wish to proceed?', 'bricks' ), '[form_id]' ),
-				'confirmDeleteTemplateScreenshots'  => esc_html__( 'You are about to delete all template screenshots. Not your featured images, though. Do you wish to proceed?', 'bricks' ),
-				'confirmReindexFilters'             => esc_html__( 'You are about to regenerate indexes for all query filters. Do you wish to proceed?', 'bricks' ),
-				'confirmRegenerateCodeSignatures'   => esc_html__( 'You are about to regenerate code signatures for all executable code on your website. Please make sure you\'ve created a full-site backup before you proceed. Do you wish to proceed?', 'bricks' ),
-				'confirmRemoveAllIndexJobs'         => esc_html__( 'You are about to remove all index jobs. Do you wish to proceed?', 'bricks' ),
-				'removingIndexJobsInfo'             => esc_html__( 'Do not close this window, the process is running in the background.', 'bricks' ),
-				'confirmTriggerIndexJob'            => esc_html__( 'You are about to trigger Index Job. Do you wish to proceed?', 'bricks' ),
-				'formSubmissionsSearchPlaceholder'  => esc_html__( 'Form data', 'bricks' ),
-				'deleteBricksDataUrl'               => Helpers::delete_bricks_data_by_post_id(),
-				'builderEditLink'                   => Helpers::get_builder_edit_link(),
-				'renderWithBricks'                  => $render_with_bricks,
-				'i18n'                              => [
-					'editWithBricks'      => esc_html__( 'Edit with Bricks', 'bricks' ),
-					'useDefaultEditor'    => esc_html__( 'Use block editor', 'bricks' ),
-					'bricksActiveMessage' => esc_html__( 'This page is built with Bricks', 'bricks' ),
-				],
+				'title'            => BRICKS_NAME,
+				'ajaxUrl'          => admin_url( 'admin-ajax.php' ),
+				'postId'           => get_the_ID(),
+				'nonce'            => wp_create_nonce( 'bricks-nonce-admin' ),
+				'i18n'             => I18n::get_admin_i18n(),
+				'renderWithBricks' => $render_with_bricks,
 			]
 		);
 	}
@@ -2484,5 +2465,30 @@ class Admin {
 		wp_send_json_success( [ 'message' => 'ok' ] );
 
 		wp_die();
+	}
+
+	/**
+	 * Fix filter element database
+	 *
+	 * @since 1.12.2
+	 */
+	public function bricks_fix_filter_element_db() {
+		Ajax::verify_nonce( 'bricks-nonce-admin' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Not allowed', 'bricks' ) ] );
+		}
+
+		if ( ! Helpers::enabled_query_filters() ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Query filters are disabled', 'bricks' ) ] );
+		}
+
+		$fixed = Query_Filters::get_instance()->fix_filter_element_db();
+
+		if ( $fixed ) {
+			wp_send_json_success( [ 'message' => esc_html__( 'Corrupted filter element db fixed', 'bricks' ) ] );
+		}
+
+		wp_send_json_error( [ 'message' => esc_html__( 'Unable to fix corrupted filter element db', 'bricks' ) ] );
 	}
 }

@@ -459,8 +459,21 @@ class Providers {
 		}
 
 		// Set the correct post when previewing (@since 1.12; #86bw6re4w)
-		if ( \Bricks\Helpers::is_bricks_preview() && ! \Bricks\Query::is_looping() && isset( \Bricks\Database::$page_data['preview_or_post_id'] ) ) {
-			$post = get_post( \Bricks\Database::$page_data['preview_or_post_id'] );
+		if ( \Bricks\Helpers::is_bricks_preview() ) {
+
+			if ( ! \Bricks\Query::is_looping() && isset( \Bricks\Database::$page_data['preview_or_post_id'] ) ) {
+				$post = get_post( \Bricks\Database::$page_data['preview_or_post_id'] );
+			}
+
+			// Rendering dynamic data in a nested query in the builder (Before Query run) (@since 1.12.2)
+			if ( ! \Bricks\Query::is_looping() && \Bricks\Query::is_any_looping() ) {
+				$loop_object_type = \Bricks\Query::get_loop_object_type( \Bricks\Query::is_any_looping() );
+				$loop_object      = \Bricks\Query::get_loop_object( \Bricks\Query::is_any_looping() );
+
+				if ( $loop_object_type === 'post' ) {
+					$post = $loop_object;
+				}
+			}
 		}
 
 		return apply_filters( 'bricks/dynamic_data/render_content', $content, $post, $context );

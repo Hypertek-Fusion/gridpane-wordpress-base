@@ -19,7 +19,7 @@ class Interactions {
 		// Add popup interactions (template settings) to popup root
 		add_filter( 'bricks/popup/attributes', [ $this, 'add_to_template_root' ], 10, 2 );
 
-		$this->set_controls();
+		add_action( 'init', [ $this, 'set_controls' ], 10 );
 
 		self::get_global_class_interactions();
 	}
@@ -496,6 +496,24 @@ class Interactions {
 					}
 
 					$interactions[ $index ]['target'] = 'offcanvas';
+				}
+
+				// Interaction data modification for loadMore (@since 1.12.2)
+				if ( isset( $element_interactions['action'] ) && $element_interactions['action'] === 'loadMore' ) {
+					$load_more_query_id = isset( $element_interactions['loadMoreQuery'] ) ? $element_interactions['loadMoreQuery'] : 'main';
+
+					// Retrieve main_query_id from Database class (@since 1.12.2)
+					$main_query_id = (string) Database::$main_query_id;
+
+					// Only replace the actual query id if main_query_id is set and loadMoreQuery is 'main'
+					if ( $main_query_id !== '' && $load_more_query_id === 'main' ) {
+						$interactions[ $index ]['loadMoreQuery'] = $main_query_id;
+					}
+
+					// Support Load More inside component
+					if ( $load_more_query_id !== 'main' && isset( $element->element['instanceId'] ) && ! empty( $element->element['instanceId'] ) ) {
+						$interactions[ $index ]['loadMoreQuery'] = $load_more_query_id . '-' . $element->element['instanceId'];
+					}
 				}
 
 				// Early exit if action is not startAnimation

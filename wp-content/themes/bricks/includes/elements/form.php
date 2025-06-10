@@ -290,7 +290,10 @@ class Element_Form extends Element {
 					'label'    => esc_html__( 'Value', 'bricks' ),
 					'type'     => 'text',
 					'info'     => esc_html__( 'Set the default field value/content.', 'bricks' ),
-					'required' => [ 'type', '!=', [ 'file', 'html' ] ],
+					'required' => [
+						[ 'type', '!=', [ 'file', 'html' ] ],
+						[ 'isHoneypot', '!=', true ], // Honeypot fields value should be empty by default (@since 1.12.2)
+					],
 				],
 
 				'maxLength'                  => [
@@ -313,7 +316,10 @@ class Element_Form extends Element {
 				'datepickerInfo'             => [
 					'content'  => esc_html__( 'Use the date format as set under Settings > General > Date format', 'bricks' ) . " ($date_format)",
 					'type'     => 'info',
-					'required' => [ 'type', '=', 'datepicker' ],
+					'required' => [
+						[ 'type', '=', 'datepicker' ],
+						[ 'isHoneypot', '!=', true ], // For Honeypot we don't show value, so we also don't show the alert message (@since 1.12.2)
+					]
 				],
 
 				'name'                       => [
@@ -328,7 +334,10 @@ class Element_Form extends Element {
 					'label'    => esc_html__( 'Attribute', 'bricks' ) . ': ' . esc_html__( 'Autocomplete', 'bricks' ),
 					'type'     => 'text',
 					'info'     => 'on/off',
-					'required' => [ 'type', '=', [ 'text', 'textarea', 'email', 'number', 'password', 'tel', 'url' ] ],
+					'required' => [
+						[ 'type', '=', [ 'text', 'textarea', 'email', 'number', 'password', 'tel', 'url' ] ],
+						[ 'isHoneypot', '!=', true ] // Honeypot fields will have autocomplete set to "nope" (@since 1.12.2)
+					],
 				],
 
 				// @since 1.9.9
@@ -532,11 +541,26 @@ class Element_Form extends Element {
 					'required'    => [ 'time', '!=', '' ],
 				],
 
+				// Honeypot (@since 1.12.2)
+				'isHoneypot'                 => [
+					'label'       => esc_html__( 'Honeypot', 'bricks' ),
+					'type'        => 'checkbox',
+					'required'    => [
+						'type',
+						'=',
+						[ 'email', 'text', 'textarea', 'tel', 'number', 'url', 'checkbox',  'select', 'radio', 'datepicker', 'password' ]
+					],
+					'description' => esc_html__( 'When enabled, this field acts as a spam trap. It will not be visible to users, but will capture any bots that fill it out.', 'bricks' ),
+				],
+
 				'required'                   => [
 					'label'    => esc_html__( 'Required', 'bricks' ),
 					'type'     => 'checkbox',
 					'inline'   => true,
-					'required' => [ 'type', '!=', [ 'hidden', 'html' ] ],
+					'required' => [
+						[ 'type', '!=', [ 'hidden', 'html' ] ],
+						[ 'isHoneypot', '!=', true ], // Honeypot fields can not be required (@since 1.12.2)
+					],
 				],
 
 				'options'                    => [
@@ -1567,6 +1591,18 @@ class Element_Form extends Element {
 			'description' => esc_html__( 'Log in user after successful registration. Tip: Set action "Redirect" to redirect user to the account/admin area.', 'bricks' ),
 		];
 
+		// Send WordPress notification (@since 1.12.2)
+		$this->controls['registrationWPNotification'] = [
+			'tab'         => 'content',
+			'group'       => 'registration',
+			'label'       => esc_html__( 'Send WordPress notification', 'bricks' ),
+			'type'        => 'checkbox',
+			'description' => sprintf(
+				esc_html__( 'Trigger "register_new_user" action to send WordPress notification. %s', 'bricks' ),
+				Helpers::article_link( 'form-element/#login-registration', esc_html__( 'Learn more', 'bricks' ) )
+			),
+		];
+
 		// Group: Lost password
 
 		$this->controls['lostPasswordEmailUsername'] = [
@@ -1715,6 +1751,13 @@ class Element_Form extends Element {
 			],
 			'placeholder' => esc_html__( 'Light', 'bricks' ),
 			'required'    => [ 'enableHCaptcha', '=', 'visible' ],
+		];
+
+		$this->controls['honeypotInfo'] = [
+			'tab'     => 'content',
+			'group'   => 'spam',
+			'content' => esc_html__( 'Honeypot: Create form field(s) and enable the "Honeypot" checkbox. Those honeypot fields aren\'t visible to users, but add an extra layer of protection against spam submissions.', 'bricks' ),
+			'type'    => 'info',
 		];
 
 		// Upload Button (remove "Text" control group)
@@ -1962,16 +2005,55 @@ class Element_Form extends Element {
 		// Append suffix for unique label HTML attributes inside a loop (@since 1.8)
 		$field_suffix = Query::is_any_looping() ? '-' . Query::is_any_looping() . '-' . Query::get_loop_index() : '';
 
+		// Generate unique ID for each field (@since 1.12.2)
+		// We need to generate them before main loop below, so we can use it for Honeypot style generation
+		$fields = array_map(
+			function( $field ) use ( $field_suffix ) {
+				$field['unique_id'] = Helpers::generate_random_id( false ) . $field_suffix;
+				return $field;
+			},
+			$fields
+		);
+
+		// Output inline honeypot styles above the form (@since 1.12.2)
+		$honeypot_css = $this->generate_honeypot_field_styles( $fields );
+		if ( ! empty( $honeypot_css ) ) {
+			echo '<style>' . $honeypot_css . '</style>';
+		}
+
 		foreach ( $fields as $index => $field ) {
 			// Field ID generated when rendering form repeater in builder panel
 			$field_id = isset( $field['id'] ) ? $field['id'] : '';
 
 			// Get a unique field ID to avoid conflicts when the form is inside a query loop or it was duplicated
-			$input_unique_id = Helpers::generate_random_id( false ) . $field_suffix;
+			// Generating outside this loop (@since 1.12.2)
+			$input_unique_id = $field['unique_id'];
 
 			// Field wrapper
 			if ( $field['type'] !== 'hidden' ) {
 				$this->set_attribute( "field-wrapper-$index", 'class', [ 'form-group', $field['type'] === 'file' ? 'file' : '' ] );
+			}
+
+			// Honeypot field: Set attributes (@since 1.12.2)
+			if ( isset( $field['isHoneypot'] ) ) {
+
+				// Set autocomplete attribute to "nope" ("off" may not work in some browsers)
+				$field['autocomplete'] = 'nope';
+
+				// If the field is "select", we need to add "autocomplete" attribute even here
+				if ( $field['type'] === 'select' ) {
+					$this->set_attribute( "field-$index", 'autocomplete', $field['autocomplete'] );
+				}
+
+				// Set value to empty
+				$field['value'] = '';
+
+				// Remove "required" attribute
+				unset( $field['required'] );
+
+				// Set "tabindex" to -1 to prevent focus
+				$this->set_attribute( "field-$index", 'tabindex', '-1' );
+
 			}
 
 			// Field label
@@ -2214,8 +2296,8 @@ class Element_Form extends Element {
 			foreach ( $fields as $index => $field ) {
 				$field_value = isset( $field['value'] ) ? $this->render_dynamic_data( $field['value'] ) : ''; // @since 1.9.3
 
-				// Generate new unique ID for each field. Used for checkbox and radio fields (@since 1.12)
-				$checkbox_radio_unique_id = Helpers::generate_random_id( false ) . $field_suffix;
+				// Using field's unique_id (@since 1.12.2)
+				$checkbox_radio_unique_id = $field['unique_id'];
 
 				// Set the role and aria-labelledby attributes for the options wrapper (@since 1.9.6)
 				$this->set_attribute( "field-wrapper-$index", 'role', $field['type'] === 'radio' ? 'radiogroup' : 'group' );
@@ -2227,7 +2309,7 @@ class Element_Form extends Element {
 				 * @since 1.9.9: Only needed for checkbox and radio as the label is a <div> element.
 				 * @since 1.12: Changed label to unique ID
 				 */
-				if ( $field['type'] === 'checkbox' || $field['type'] === 'radio' ) {
+				if ( ( $field['type'] === 'checkbox' || $field['type'] === 'radio' ) && ! empty( $field['label'] ) ) {
 					$this->set_attribute( "field-wrapper-$index", 'aria-labelledby', "label-{$checkbox_radio_unique_id}" );
 				}
 				?>
@@ -2391,6 +2473,11 @@ class Element_Form extends Element {
 							<?php
 							if ( isset( $field['required'] ) ) {
 								echo esc_attr( 'required ' );
+							}
+
+							// Is "Honeypot" field: Add "tabindex" to -1 to prevent focus (@since 1.12.2)
+							if ( isset( $field['isHoneypot'] ) ) {
+								echo 'tabindex="-1"';
 							}
 
 							if ( $field['type'] === 'checkbox' && is_array( $checked_values ) && in_array( $field_key, $checked_values, true ) ) {
@@ -2620,5 +2707,72 @@ class Element_Form extends Element {
 		$this->set_attribute( 'turnstile', 'data-sitekey', Database::$global_settings['apiKeyTurnstile'] );
 
 		return "<div {$this->render_attributes( 'turnstile' )}></div>";
+	}
+
+	/**
+	 * Generate CSS styles for honeypot fields
+	 *
+	 * @param array $fields The form fields
+	 *
+	 * @since 1.12.2
+	 */
+	public function generate_honeypot_field_styles( $fields ) {
+		$honeypot_selectors = [];
+		$css                = '';
+
+		foreach ( $fields as $index => $field ) {
+			// Target only honeypot fields
+			if ( ! isset( $field['isHoneypot'] ) ) {
+				continue;
+			}
+
+			// If type is "select", we need to target the select element
+			if ( $field['type'] === 'select' ) {
+				$honeypot_selectors[] = "select#form-field-{$field['unique_id']}";
+			}
+
+			// If type is "textarea", we need to target the textarea element
+			elseif ( $field['type'] === 'textarea' ) {
+				$honeypot_selectors[] = "textarea#form-field-{$field['unique_id']}";
+			}
+
+			// If type is "checkbox" or "radio" we need to check if ID *starts* with the unique ID
+			elseif ( $field['type'] === 'checkbox' || $field['type'] === 'radio' ) {
+				$honeypot_selectors[] = "input[id^='form-field-{$field['unique_id']}']";
+			}
+
+			// Default: Target input fields
+			else {
+				$honeypot_selectors[] = "input#form-field-{$field['unique_id']}";
+			}
+		}
+
+		// If we have honeypot fields, generate CSS
+		if ( ! empty( $honeypot_selectors ) ) {
+			$css = 'div.form-group:has(' . implode( ',', $honeypot_selectors ) . ')';
+
+			// Set defined CSS rules
+			$css_properties = [
+				'opacity'  => '0 !important',
+				'position' => 'absolute !important',
+				'top'      => '-9999px !important',
+				'left'     => '-9999px !important',
+				'height'   => '0 !important',
+				'width'    => '0 !important',
+				'z-index'  => '-1 !important',
+				'padding'  => '0 !important',
+			];
+
+			$css .= '{' . implode(
+				';',
+				array_map(
+					fn( $key, $value) => "$key: $value",
+					array_keys( $css_properties ),
+					$css_properties
+				)
+			) . '}';
+		}
+
+		return $css;
 	}
 }

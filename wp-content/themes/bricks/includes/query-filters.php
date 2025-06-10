@@ -59,7 +59,10 @@ class Query_Filters {
 			 *
 			 * @since 1.9.8
 			 */
-			add_action( 'update_post_metadata', [ $this, 'maybe_update_element' ], 11, 5 );
+			add_action( 'update_post_metadata', [ $this, 'qf_update_post_metadata' ], 11, 5 );
+
+			// Polylang use add_metadata to when copying post, use this to capture filter elements (@since 1.12.2)
+			add_action( 'added_post_meta', [ $this, 'qf_added_post_meta' ], 10, 4 );
 
 			// Hooks to listen so we can add new index record. Use largest priority
 			add_action( 'save_post', [ $this, 'save_post' ], PHP_INT_MAX - 10, 2 );
@@ -573,6 +576,124 @@ class Query_Filters {
 	}
 
 	/**
+	 * Rebuild the filter element DB
+	 * - Get all posts with filter elements
+	 * - Loop through all posts and update the element table
+	 * - Might be slow on large websites
+	 * - Allow multilanguage logic to handle the meta_value separately (avoid duplicated element ID)
+	 *
+	 * @since 1.12.2
+	 */
+	public function fix_filter_element_db() {
+		// truncate filter element DB
+		global $wpdb;
+		$element_table = self::get_table_name( 'element' );
+		$index_table   = self::get_table_name();
+
+		// Check if table exists
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $element_table ) ) !== $element_table ) {
+			return false;
+		}
+
+		// Check if index table exists
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $index_table ) ) !== $index_table ) {
+			return false;
+		}
+
+		// Clear all elements
+		$wpdb->query( "TRUNCATE TABLE $element_table" );
+
+		// Clear all index
+		$wpdb->query( "TRUNCATE TABLE $index_table" );
+
+		// STEP: Retrieve all posts with filter elements from the entire website
+		$meta_query = [
+			'relation' => 'OR',
+		];
+
+		$filter_instance = [
+			'filter-checkbox'       => 's:15:"filter-checkbox"',
+			'filter-datepicker'     => 's:16:"filter-datepicker"',
+			'filter-radio'          => 's:12:"filter-radio"',
+			'filter-range'          => 's:12:"filter-range"',
+			'filter-search'         => 's:13:"filter-search"',
+			'filter-select'         => 's:13:"filter-select"',
+			'filter-submit'         => 's:13:"filter-submit"',
+			'filter-active-filters' => 's:21:"filter-active-filters"',
+		];
+
+		$merge_query_function = function( $filter, $key ) {
+			return [
+				[
+					'key'     => BRICKS_DB_PAGE_HEADER,
+					'value'   => $key,
+					'compare' => 'LIKE',
+				],
+				[
+					'key'     => BRICKS_DB_PAGE_CONTENT,
+					'value'   => $key,
+					'compare' => 'LIKE',
+				],
+				[
+					'key'     => BRICKS_DB_PAGE_FOOTER,
+					'value'   => $key,
+					'compare' => 'LIKE',
+				],
+			];
+		};
+
+		foreach ( $filter_instance as $type => $key ) {
+			$meta_query = array_merge( $meta_query, $merge_query_function( $type, $key ) );
+		}
+
+		$post_types = array_diff(
+			get_post_types(),
+			[ 'revision', 'custom_css', 'customize_changeset', 'oembed_cache', 'user_request' ], // Not necessary to index these post types as nobody will use filters on these (@since 1.12.2)
+		);
+
+		$args = [
+			'post_type'              => $post_types,
+			'post_status'            => [ 'publish', 'draft', 'pending', 'future', 'private' ],
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'orderby'                => 'ID',
+			'cache_results'          => false,
+			'update_post_term_cache' => false,
+			'no_found_rows'          => true,
+			'suppress_filters'       => true, // WPML (also to prevent any posts_where filters from modifying the query)
+			'lang'                   => '', // Polylang
+			'meta_query'             => $meta_query,
+		];
+
+		$posts_with_filters = new \WP_Query( $args );
+
+		$post_ids = $posts_with_filters->posts ?? [];
+
+		foreach ( $post_ids as $post_id ) {
+			$template_type = 'content';
+
+			// Set the template type (header, footer, content)
+			if ( get_post_type( $post_id ) === 'bricks_template' ) {
+				$template_type = Templates::get_template_type( $post_id );
+			}
+
+			// Allow Polylang / WPML handle separately
+			$handled = apply_filters( 'bricks/fix_filter_element_db', false, $post_id, $template_type );
+
+			if ( $handled ) {
+				continue;
+			}
+
+			// Get bricks data
+			$bricks_data = Database::get_data( $post_id, $template_type );
+
+			$this->maybe_update_element( $post_id, $bricks_data );
+		}
+
+		return true;
+	}
+
+	/**
 	 * Return array of element names that have filter settings.
 	 *
 	 * Pagination is one of them but it's filter setting handled in /includes/elements/pagination.php set_ajax_attributes()
@@ -846,41 +967,73 @@ class Query_Filters {
 			// Ensure the ID is a string as it could be 6 digit number (@since 1.12)
 			$query_id = (string) $query_id;
 
-			// STEP: Determine if a search filter is active
-			$has_search_filter = false;
-			foreach ( $active_filters as $active_filter ) {
-				if ( $active_filter['instance_name'] === 'filter-search' ) {
-					$has_search_filter = true;
-					break;
-				}
-			}
-
 			foreach ( $object_types as $object_type ) {
 				// STEP: Set flag for query_vars (@since 1.12)
 				self::set_generating_type( $object_type );
 
 				// STEP: generate query vars from active filters
-				$query_vars = self::generate_query_vars_from_active_filters( $query_id );
+				$filter_query_vars = self::generate_query_vars_from_active_filters( $query_id );
 
+				// STEP: Set the paged & number - This is needed for term query (@since 1.12.2)
+				if ( $object_type === 'term' ) {
+					if (
+						( isset( $filter_query_vars['paged'] ) && $filter_query_vars['paged'] > 1 ) ||
+						( isset( $filter_query_vars['number'] ) && $filter_query_vars['number'] > 0 )
+					) {
+						add_filter(
+							'bricks/query/prepare_query_vars_from_settings',
+							function( $settings, $element_id ) use ( $filter_query_vars, $query_id, $object_type ) {
+								if ( $element_id !== $query_id || $object_type !== 'term' ) {
+									return $settings;
+								}
+
+								// Set paged value
+								if ( isset( $filter_query_vars['paged'] ) ) {
+									$settings['query']['paged'] = $filter_query_vars['paged'];
+								}
+
+								// Set number value
+								if ( isset( $filter_query_vars['number'] ) ) {
+									// Backup the user original number value
+									if ( isset( $settings['query']['number'] ) ) {
+										$settings['query']['brx_user_number'] = $settings['query']['number'];
+									}
+									// Set the new number value
+									$settings['query']['number'] = $filter_query_vars['number'];
+								}
+
+								return $settings;
+							},
+							999,
+							2
+						);
+					}
+				}
+
+				// STEP: Add filter_vars to query_vars
 				add_filter(
 					"bricks/{$object_type}s/query_vars",
-					function( $vars, $settings, $element_id ) use ( $query_vars, $query_id, $has_search_filter ) {
+					function( $vars, $settings, $element_id ) use ( $filter_query_vars, $query_id, $object_type ) {
 						if ( $element_id !== $query_id ) {
 							return $vars;
-						}
-
-						// STEP: set 'brx_is_search' to true if a search filter is active (to support "Query Bricks data in search results" Bricks setting)
-						if ( $has_search_filter ) {
-							$vars['brx_is_search'] = true;
 						}
 
 						// STEP: save the query vars before merge only once (@since 1.11.1)
 						if ( ! isset( Query_Filters::$query_vars_before_merge[ $query_id ] ) ) {
 							Query_Filters::$query_vars_before_merge[ $query_id ] = $vars;
+
+							// For term and user query, must save the user original number value or it will be overwritten by url parameter value after page reload
+							if ( in_array( $object_type, [ 'term', 'user' ], true ) && isset( $vars['brx_user_number'] ) ) {
+								Query_Filters::$query_vars_before_merge[ $query_id ]['number'] = $vars['brx_user_number'];
+
+								// Cleanup
+								unset( $vars['brx_user_number'] );
+								unset( Query_Filters::$query_vars_before_merge[ $query_id ]['brx_user_number'] );
+							}
 						}
 
 						// STEP: merge the query vars, indicate third parameter to force meta_query logic merge as well(@since 1.11.1)
-						$merged = Query::merge_query_vars( $vars, $query_vars, true );
+						$merged = Query::merge_query_vars( $vars, $filter_query_vars, true );
 
 						return $merged;
 					},
@@ -892,6 +1045,7 @@ class Query_Filters {
 				self::reset_generating_type();
 			}
 
+			// STEP: Do not suppress render content for the target query. Otherwise Live Search query results will not be displayed.
 			add_filter(
 				'bricks/query/supress_render_content',
 				function( $supress, $query_instance ) use ( $query_id ) {
@@ -934,7 +1088,7 @@ class Query_Filters {
 	/**
 	 * Hook into update_post_metadata, if filter element found, update the index table
 	 */
-	public function maybe_update_element( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+	public function qf_update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
 		// Exclude revisions
 		if ( wp_is_post_revision( $object_id ) ) {
 			return $check;
@@ -945,6 +1099,37 @@ class Query_Filters {
 			return $check;
 		}
 
+		$this->maybe_update_element( $object_id, $meta_value );
+
+		return $check;
+	}
+
+	/**
+	 * Hook into added_post_meta, if filter element found, update the index table
+	 *
+	 * @since 1.12.2
+	 */
+	public function qf_added_post_meta( $meta_id, $object_id, $meta_key, $meta_value ) {
+		// Exclude revisions
+		if ( wp_is_post_revision( $object_id ) ) {
+			return;
+		}
+
+		// Only listen to header, content, footer
+		if ( ! in_array( $meta_key, [ BRICKS_DB_PAGE_HEADER, BRICKS_DB_PAGE_CONTENT, BRICKS_DB_PAGE_FOOTER ], true ) ) {
+			return;
+		}
+
+		$this->maybe_update_element( $object_id, $meta_value );
+	}
+
+	/**
+	 * Logic to update element table if filter element found
+	 * Automatically update the index table
+	 *
+	 * @since 1.12.2
+	 */
+	private function maybe_update_element( $object_id, $meta_value ) {
 		$filter_elements = [];
 		// Get all filter elements from meta_value
 		foreach ( $meta_value as $element ) {
@@ -970,8 +1155,6 @@ class Query_Filters {
 			// Now we need to update the index table by using the updated_data
 			$this->update_index_table( $updated_data );
 		}
-
-		return $check;
 	}
 
 	/**
@@ -1032,7 +1215,8 @@ class Query_Filters {
 				'nice_name'     => $nice_name,
 			];
 
-			$element_data = apply_filters( 'bricks/query_filters/element_data', $element_data, $element );
+			// Allow modifying element data before saving to the element table (@since 1.12.2)
+			$element_data = apply_filters( 'bricks/query_filters/element_data', $element_data, $element, $post_id );
 
 			// If this element is not in the db elements, create it
 			if ( ! in_array( $element_id, $all_db_elements_ids, true ) ) {
@@ -1318,6 +1502,11 @@ class Query_Filters {
 			return false;
 		}
 
+		// Do not use element_data['post_id'], always use db_data['post_id'] (@since 1.12.2)
+		if ( isset( $db_data['post_id'] ) ) {
+			$element_data['post_id'] = $db_data['post_id'];
+		}
+
 		$needs_update = false;
 
 		// Check if the new data is different from the current data
@@ -1514,6 +1703,11 @@ class Query_Filters {
 		if ( $post_field === 'post_author' ) {
 			$author        = get_user_by( 'id', $value );
 			$display_value = $author->display_name ?? 'None';
+		}
+
+		// If post field is ID, get the post title as display value (@since 1.12.2)
+		if ( $post_field === 'ID' ) {
+			$display_value = $post->post_title ?? $display_value;
 		}
 
 		$rows[] = [
@@ -1730,12 +1924,12 @@ class Query_Filters {
 				break;
 		}
 
-		// Sanitize filter value
+		// Sanitize filter value (use rawurldecode to preserve + sign @since 1.12.2)
 		if ( is_array( $filter_value ) ) {
-			$filter_value = array_map( 'urldecode', $filter_value );
+			$filter_value = array_map( 'rawurldecode', $filter_value );
 			$filter_value = array_map( 'sanitize_text_field', $filter_value );
 		} else {
-			$filter_value = urldecode( $filter_value );
+			$filter_value = rawurldecode( $filter_value );
 			$filter_value = sanitize_text_field( $filter_value );
 		}
 
@@ -1805,6 +1999,18 @@ class Query_Filters {
 
 				// Build sort query vars
 				$query_vars = self::build_sort_query_vars( $query_vars, $filter, $query_id, $index );
+				continue;
+			}
+
+			// PerPage
+			if ( $filter_action === 'per_page' ) {
+				// Only for filter-select and filter-radio
+				if ( ! in_array( $instance_name, [ 'filter-select', 'filter-radio' ], true ) ) {
+					continue;
+				}
+
+				// Build perPage query vars
+				$query_vars = self::build_per_page_query_vars( $query_vars, $filter, $query_id, $index );
 				continue;
 			}
 
@@ -2037,6 +2243,54 @@ class Query_Filters {
 			self::$active_filters[ $query_id ][ $filter_index ]['sort_option_info'] = $selected_option;
 			self::$active_filters[ $query_id ][ $filter_index ]['query_vars']       = $sort_query;
 			self::$active_filters[ $query_id ][ $filter_index ]['query_type']       = 'sort';
+		}
+
+		return $query_vars;
+	}
+
+	/**
+	 * Populate query vars for perPage type filter
+	 *
+	 * @since 1.12.2
+	 */
+	private static function build_per_page_query_vars( $query_vars, $filter, $query_id, $filter_index ) {
+		$settings     = $filter['settings'];
+		$filter_value = (int) $filter['value'];
+		// Get per page options array via settings
+		$per_page_array = \Bricks\Filter_Element::get_per_page_options_array( $settings );
+
+		if ( ! in_array( $filter_value, $per_page_array ) ) {
+			return $query_vars;
+		}
+
+		$query_object_type = self::get_generating_type();
+		$per_page_query    = [];
+
+		switch ( $query_object_type ) {
+			case 'post':
+				$per_page_query               = [ 'posts_per_page' => $filter_value ];
+				$query_vars['posts_per_page'] = $filter_value;
+				break;
+
+			case 'term':
+				$per_page_query       = [ 'number' => $filter_value ];
+				$query_vars['number'] = $filter_value;
+				break;
+
+			case 'user':
+				$per_page_query       = [ 'number' => $filter_value ];
+				$query_vars['number'] = $filter_value;
+				break;
+
+			default:
+				break;
+		}
+
+		// Update $active_filters with the selected option, will be used in other area
+		if ( isset( self::$active_filters[ $query_id ][ $filter_index ] ) ) {
+			self::$active_filters[ $query_id ][ $filter_index ]['query_vars']       = $per_page_query;
+			self::$active_filters[ $query_id ][ $filter_index ]['query_type']       = 'per_page';
+			self::$active_filters[ $query_id ][ $filter_index ]['per_page_options'] = $per_page_array;
 		}
 
 		return $query_vars;
@@ -2294,26 +2548,29 @@ class Query_Filters {
 		switch ( $query_object_type ) {
 			case 'post':
 				// Hardcoded search key until filter-search element supports custom key
-				$search_query    = [
+				$search_query                = [
 					's' => $filter_value,
 				];
-				$query_vars['s'] = $filter_value;
+				$query_vars['s']             = $filter_value;
+				$query_vars['brx_is_search'] = true;
 				break;
 
 			// Support term query (@since 1.12)
 			case 'term':
-				$search_query         = [
+				$search_query                = [
 					'search' => $filter_value,
 				];
-				$query_vars['search'] = $filter_value;
+				$query_vars['search']        = $filter_value;
+				$query_vars['brx_is_search'] = true;
 				break;
 
 			// Support user query (@since 1.12)
 			case 'user':
-				$search_query         = [
+				$search_query                = [
 					'search' => '*' . $filter_value . '*',
 				];
-				$query_vars['search'] = '*' . $filter_value . '*';
+				$query_vars['search']        = '*' . $filter_value . '*';
+				$query_vars['brx_is_search'] = true;
 				break;
 
 			default:
@@ -3578,5 +3835,22 @@ class Query_Filters {
 
 	public static function get_generating_type() {
 		return self::$generating_object_type;
+	}
+
+	/**
+	 * Return true if detected corrupted data for query filters
+	 *
+	 * @since 1.12.2
+	 */
+	public static function has_corrupted_db() {
+		global $wpdb;
+
+		// Check if any duplicated rows exist in the filter element table. (filter_id)
+		$element_table = self::get_table_name( 'element' );
+		$element_query = "SELECT filter_id, COUNT(filter_id) as count FROM {$element_table} GROUP BY filter_id HAVING count > 1";
+
+		$element_duplicates = $wpdb->get_results( $element_query, ARRAY_A );
+
+		return ! empty( $element_duplicates );
 	}
 }

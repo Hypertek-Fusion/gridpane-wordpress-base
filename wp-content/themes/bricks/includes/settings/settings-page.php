@@ -157,7 +157,7 @@ class Settings_Page extends Settings_Base {
 
 		$this->controls['scrollSnapSelector'] = [
 			'group'       => 'scroll-snap',
-			'label'       => esc_html__( 'Selector', 'bricks' ),
+			'label'       => esc_html__( 'Snapping elements selector', 'bricks' ),
 			'type'        => 'text',
 			'inline'      => true,
 			'dd'          => false,
@@ -190,7 +190,6 @@ class Settings_Page extends Settings_Base {
 			'tooltip' => 'scroll-snap-margin',
 			'type'    => 'number',
 			'units'   => true,
-			'large'   => true,
 			'css'     => [
 				[
 					'selector' => '.brxe-section',
@@ -205,7 +204,6 @@ class Settings_Page extends Settings_Base {
 			'tooltip' => 'scroll-snap-padding',
 			'type'    => 'number',
 			'units'   => true,
-			'large'   => true,
 			'css'     => [
 				[
 					'selector' => 'html',

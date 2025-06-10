@@ -518,7 +518,9 @@ class Helpers {
 		}
 
 		// It is an ajax call but it is not inside a template
-		elseif ( bricks_is_ajax_call() && isset( $_POST['action'] ) && strpos( $_POST['action'], 'bricks_' ) === 0 ) {
+		// elseif ( bricks_is_ajax_call() && isset( $_POST['action'] ) && strpos( $_POST['action'], 'bricks_' ) === 0 ) {
+		// Use is_bricks_preview() to apply for Api::render_element() too (@since 1.12.2)
+		elseif ( self::is_bricks_preview() ) {
 			$queried_object = get_post( $post_id );
 		}
 
@@ -748,10 +750,19 @@ class Helpers {
 			}
 		}
 
+		// Add support for custom class (@since 1.12.2)
+		$classes = [ 'bricks-element-placeholder' ];
+
+		if ( ! empty( $data['class'] ) ) {
+			$classes[] = esc_attr( $data['class'] );
+		}
+
+		$classes = implode( ' ', $classes );
+
 		if ( $style ) {
-			$output = '<div class="bricks-element-placeholder" data-type="' . esc_attr( $type ) . '" style="' . esc_attr( $style ) . '">';
+			$output = '<div class="' . $classes . '" data-type="' . esc_attr( $type ) . '" style="' . esc_attr( $style ) . '">';
 		} else {
-			$output = '<div class="bricks-element-placeholder" data-type="' . esc_attr( $type ) . '">';
+			$output = '<div class="' . $classes . '" data-type="' . esc_attr( $type ) . '">';
 		}
 
 		if ( ! empty( $data['icon-class'] ) ) {
@@ -964,6 +975,13 @@ class Helpers {
 
 		if ( $component_instance_settings ) {
 			return $component_instance_settings;
+		}
+
+		// Get global element settings (@since 1.12.2)
+		$global_settings = self::get_global_element( $element, 'settings' );
+
+		if ( is_array( $global_settings ) ) {
+			return $global_settings;
 		}
 
 		// Return: element settings
@@ -1304,14 +1322,15 @@ class Helpers {
 	/**
 	 * Get Bricks data for requested page
 	 *
-	 * @param int    $post_id The post ID.
-	 * @param string $type header, content, footer.
+	 * @param int     $post_id The post ID.
+	 * @param string  $type header, content, footer.
+	 * @param boolean $force_post_data Force checking only the specific post data without considering templates.
 	 *
 	 * @since 1.3.4
 	 *
 	 * @return boolean|array
 	 */
-	public static function get_bricks_data( $post_id = 0, $type = 'content' ) {
+	public static function get_bricks_data( $post_id = 0, $type = 'content', $force_post_data = false ) {
 		if ( ! $post_id ) {
 			$post_id = get_the_ID();
 		}
@@ -1321,7 +1340,7 @@ class Helpers {
 			return false;
 		}
 
-		$bricks_data = Database::get_template_data( $type );
+		$bricks_data = Database::get_template_data( $type, $force_post_data );
 
 		if ( ! is_array( $bricks_data ) ) {
 			return false;
@@ -1399,8 +1418,11 @@ class Helpers {
 	 * Generate new & unique IDs for Bricks elements
 	 *
 	 * @since 1.9.8
+	 *
+	 * @param array $elements
+	 * @param array $element_names_only - For WPML to only regenerate for filter elements (@since 1.12.2)
 	 */
-	public static function generate_new_element_ids( $elements = [] ) {
+	public static function generate_new_element_ids( $elements = [], $element_names_only = [] ) {
 		if ( empty( $elements ) ) {
 			return $elements;
 		}
@@ -1412,6 +1434,11 @@ class Helpers {
 
 		// STEP: Loop over all elements to store old and new element ID in $ids_lookup array
 		foreach ( $elements as $element ) {
+			// Skip elements that are not in the $element_names array
+			if ( is_array( $element_names_only ) && ! empty( $element_names_only ) && ! in_array( $element['name'], $element_names_only, true ) ) {
+				continue;
+			}
+
 			$old_id = $element['id'] ?? '';
 			$new_id = self::generate_random_id( false );
 
@@ -2130,6 +2157,9 @@ class Helpers {
 
 		// Reindex array
 		$new_elements = array_values( $new_elements );
+
+		// Apply filter to new elements (@since 1.12.3)
+		$new_elements = apply_filters( 'bricks/security_check_before_save/new_elements', $new_elements, $old_elements_indexed );
 
 		return $new_elements;
 	}
@@ -3342,5 +3372,135 @@ class Helpers {
 		}
 
 		return $taxonomy_label;
+	}
+
+	/**
+	 * Add category metadata to classes for transfer operations
+	 *
+	 * @param array $classes Array of classes to process
+	 * @return array Classes with category metadata
+	 *
+	 * @since 1.12.2
+	 */
+	public static function add_category_metadata_to_classes( $classes ) {
+		if ( empty( $classes ) || ! is_array( $classes ) ) {
+			return $classes;
+		}
+
+		// Get categories from database
+		$categories = get_option( BRICKS_DB_GLOBAL_CLASSES_CATEGORIES, [] );
+
+		if ( empty( $categories ) ) {
+			return $classes;
+		}
+
+		// Add category data for each class that has a category
+		foreach ( $classes as &$class ) {
+			if ( ! empty( $class['category'] ) ) {
+				// Find category data
+				foreach ( $categories as $category ) {
+					if ( $category['id'] === $class['category'] ) {
+						$class['_categoryData'] = [
+							'id'   => $category['id'],
+							'name' => $category['name']
+						];
+						break;
+					}
+				}
+			}
+		}
+
+		return $classes;
+	}
+
+	/**
+	 * Get query object for dynamic tags {query_results_count} and Query Results Summary element
+	 * If unable to get query object from history, init query object based on element settings
+	 *
+	 * Originally located in provider-wp.php
+	 *
+	 * @since 1.12.2
+	 */
+	public static function get_query_object_from_history_or_init( $element_id, $post_id ) {
+		$query_object = false;
+
+		// Element ID provided: Get query object from query history
+		if ( ! empty( $element_id ) ) {
+			$query_object = Query::get_query_by_element_id( $element_id, true );
+		} else {
+			// No element ID provided, get the current query object
+			$query_object = Query::get_query_object( Query::is_any_looping() );
+		}
+
+		// No query object found. Init query (@since 1.9.1.1)
+		if ( ! $query_object ) {
+			// Set $post_id or element_data will be empty (@since 1.10.1; @see #86bzwjx3u)
+			if ( Query::is_any_looping() && isset( Database::$page_data['preview_or_post_id'] ) ) {
+				$post_id = Database::$page_data['preview_or_post_id'];
+			}
+
+			$element_data = self::get_element_data( $post_id, $element_id );
+			$element_name = $element_data['element']['name'] ?? '';
+
+			// Support query element is a component (root) (@since 1.12.2)
+			if ( ! empty( $element_data['element']['cid'] ) ) {
+				$component_settings                  = self::get_component_instance( $element_data['element'], 'settings' );
+				$element_data['element']['settings'] = $component_settings;
+			}
+
+			if ( ! empty( $element_name ) && isset( $element_data['element']['settings'] ) ) {
+				// Populate query settings for elements that is not using standard query controls (@since 1.9.3)
+				if ( in_array( $element_name, [ 'carousel', 'related-posts' ] ) ) {
+					$query_settings = self::populate_query_vars_for_element( $element_data['element'], $post_id );
+
+					/**
+					 * Override query settings.
+					 * Carousel 'posts' type should returning empty from this function as it is using standard query controls
+					 */
+					if ( ! empty( $query_settings ) ) {
+						$element_data['element']['settings']['query'] = $query_settings;
+					}
+
+					/**
+					 * If this is a carousel 'posts' type, $query_settings should be empty as the query_settings is populated from standard query controls
+					 * However, if the standard query controls is empty (user use default posts query), then we need to set 'query' key so or we are not able to init query in next step
+					 */
+					elseif ( $element_name === 'carousel' && empty( $query_settings ) ) {
+						$carousel_type = $element_data['element']['settings']['type'] ?? 'posts';
+						if ( $carousel_type === 'posts' && empty( $element_data['element']['settings']['query'] ) ) {
+							$element_data['element']['settings']['query'] = [];
+						}
+					}
+				}
+
+				// Add query setting key for Posts element when default (no settings), otherwise count always zero (@since 1.9.8)
+				if ( $element_name === 'posts' && empty( $element_data['element']['settings']['query'] ) ) {
+					$element_data['element']['settings']['query'] = [];
+				}
+
+				// Only init query if query settings is available
+				if ( isset( $element_data['element']['settings']['query'] ) ) {
+					$query_object = new Query( $element_data['element'] );
+					if ( $query_object ) {
+						$query_object->destroy();
+					}
+				}
+			}
+		}
+
+		return $query_object;
+	}
+
+	/**
+	 * Determine whether to run additional logic to enqueue no results children script
+	 *
+	 * @since 1.12.2
+	 *
+	 * @return bool
+	 */
+	public static function handle_no_results_children_elements() {
+		$run = self::enabled_query_filters();
+
+		return apply_filters( 'bricks/handle_no_results_children_elements', $run );
 	}
 }

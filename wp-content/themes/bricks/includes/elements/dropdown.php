@@ -98,7 +98,6 @@ class Element_Dropdown extends Element {
 			'label' => esc_html__( 'Gap', 'bricks' ),
 			'type'  => 'number',
 			'units' => true,
-			'large' => true,
 			'css'   => [
 				[
 					'property' => 'gap',
@@ -281,7 +280,6 @@ class Element_Dropdown extends Element {
 			'label'    => esc_html__( 'Min. width', 'bricks' ),
 			'type'     => 'number',
 			'units'    => true,
-			'large'    => true,
 			'css'      => [
 				[
 					'property' => 'min-width',

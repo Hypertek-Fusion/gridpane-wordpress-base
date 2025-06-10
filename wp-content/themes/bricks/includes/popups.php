@@ -23,7 +23,7 @@ class Popups {
 			add_action( 'wp_footer', [ $this, 'render_popups' ], 10 );
 		}
 
-		self::set_controls();
+		add_action( 'init', [ $this, 'set_controls' ], 10 );
 	}
 
 	public static function get_controls() {
@@ -107,7 +107,6 @@ class Popups {
 			'group'       => 'popup',
 			'label'       => 'Z-index',
 			'type'        => 'number',
-			'large'       => true,
 			'css'         => [
 				[
 					'property' => 'z-index',

@@ -152,7 +152,7 @@ class Filter_Checkbox extends Filter_Element {
 			$option_text     = $this->get_option_text_with_count( $option );
 			$option_value    = esc_attr( $option['value'] );
 			$option_class    = esc_attr( $option['class'] );
-			$option_selected = in_array( urldecode( $option_value ), $current_value );
+			$option_selected = in_array( rawurldecode( $option_value ), $current_value );
 			$option_disabled = isset( $option['disabled'] ) && ! $option_selected;
 
 			$li_key    = 'li_' . $index;

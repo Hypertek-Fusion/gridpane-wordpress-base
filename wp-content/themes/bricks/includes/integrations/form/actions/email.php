@@ -203,6 +203,11 @@ class Email extends Base {
 				continue;
 			}
 
+			// Skip: Fields that are defined as honeypot (@since 1.12.2)
+			if ( isset( $field['isHoneypot'] ) ) {
+				continue;
+			}
+
 			if ( $field_label ) {
 				$message .= "$field_label: ";
 			}

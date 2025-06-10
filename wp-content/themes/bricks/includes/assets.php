@@ -76,6 +76,11 @@ class Assets {
 
 		// add_action( 'wp', [ $this,'schedule_global_classes_trash_cleanup' ] );
 		// add_action( 'bricks_global_classes_trash_cleanup', [ $this, 'cleanup_global_classes_trash' ] );
+
+		// Check if cascade layer is enabled to wrap block styles
+		if ( Database::get_setting( 'bricksCascadeLayer' ) ) {
+			add_filter( 'style_loader_tag', [ $this, 'wrap_block_styles_in_cascade_layer' ], 10, 2 );
+		}
 	}
 
 	public function schedule_global_classes_trash_cleanup() {
@@ -2530,12 +2535,48 @@ class Assets {
 		$element_id                       = $element['id'] ?? '';
 		self::$current_generating_element = $element;
 
-		// Update scroll snap selector in page settings (@since 1.10)
-		if ( $css_type === 'page' && isset( $settings['scrollSnapSelector'] ) && isset( $controls['scrollSnapType']['css'] ) ) {
-			foreach ( $controls['scrollSnapType']['css'] as &$css_rule ) {
-				if ( isset( $css_rule['property'] ) && $css_rule['property'] === 'scroll-snap-align' ) {
-					$css_rule['selector'] = $settings['scrollSnapSelector'];
+		// Update scroll snap selector in page settings
+		if ( $css_type === 'page' && isset( $controls['scrollSnapType']['css'] ) ) {
+			// Controls that apply CSS to the snapping elements (default: .brxe-section)
+			// These control the behavior of individual elements that snap into view
+			$snapping_element_controls = [ 'scrollSnapAlign', 'scrollMargin', 'scrollSnapStop' ];
+
+			if ( isset( $settings['scrollSnapSelector'] ) ) {
+				// Replace default .brxe-section selector with user's custom selector for snapping elements (@since 1.12.2)
+				foreach ( $snapping_element_controls as $control_key ) {
+					if ( isset( $controls[ $control_key ]['css'] ) ) {
+						foreach ( $controls[ $control_key ]['css'] as &$css_rule ) {
+							if ( isset( $css_rule['selector'] ) && $css_rule['selector'] === '.brxe-section' ) {
+								$css_rule['selector'] = $settings['scrollSnapSelector'];
+							}
+						}
+					}
 				}
+
+				if ( isset( $settings['scrollSnapAlign'] ) ) {
+					// Remove the default scroll-snap-align rule from scrollSnapType when custom selector is defined (@since 1.10)
+					$controls['scrollSnapType']['css'] = array_filter(
+						$controls['scrollSnapType']['css'],
+						function( $css_rule ) {
+							return ! ( isset( $css_rule['selector'] ) && $css_rule['selector'] === '.brxe-section' );
+						}
+					);
+				} else {
+					// Just update the selector if scrollSnapAlign is not set (@since 1.12.2)
+					foreach ( $controls['scrollSnapType']['css'] as &$css_rule ) {
+						if ( isset( $css_rule['selector'] ) && $css_rule['selector'] === '.brxe-section' ) {
+							$css_rule['selector'] = $settings['scrollSnapSelector'];
+						}
+					}
+				}
+			} elseif ( isset( $settings['scrollSnapAlign'] ) ) {
+				// Remove the default scroll-snap-align rule from scrollSnapType (@since 1.12.2)
+				$controls['scrollSnapType']['css'] = array_filter(
+					$controls['scrollSnapType']['css'],
+					function( $css_rule ) {
+						return ! ( isset( $css_rule['selector'] ) && $css_rule['selector'] === '.brxe-section' );
+					}
+				);
 			}
 		}
 
@@ -3207,5 +3248,23 @@ class Assets {
 			10,
 			3
 		);
+	}
+
+	/**
+	 * Wrap WordPress block styles in cascade layer when enabled
+	 *
+	 * @since 1.12.2
+	 */
+	public function wrap_block_styles_in_cascade_layer( $tag, $handle ) {
+		if ( $handle === 'wp-block-library' || $handle === 'global-styles' ) {
+			// Extract the CSS file URL from the tag
+			preg_match( '/href=(["\'])([^\1]+)\1.*?media=\'([^\']+)\'/', $tag, $matches );
+			$css_url = $matches[2];
+			$media   = $matches[3]; // media='(.*?)'
+
+			// Create a new style tag that wraps the content in a cascade layer
+			$tag = "<style>@import url('$css_url') layer(bricks.gutenberg);</style>";
+		}
+		return $tag;
 	}
 }

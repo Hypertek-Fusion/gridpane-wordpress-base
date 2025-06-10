@@ -305,6 +305,10 @@ class Setup {
 		// Enable support for post thumbnails and declare custom sizes
 		add_theme_support( 'post-thumbnails' );
 
+		// Enable opt-in Block Editor (Gutenberg) settings (@since 1.12.2)
+		add_theme_support( 'custom-spacing' );
+		add_theme_support( 'border' );
+
 		// Enable custom page excerpt
 		add_post_type_support( 'page', 'excerpt' );
 
@@ -447,7 +451,11 @@ class Setup {
 		wp_register_style( 'bricks-photoswipe', BRICKS_URL_ASSETS . 'css/libs/photoswipe.min.css', [ 'bricks-frontend' ], filemtime( BRICKS_PATH_ASSETS . 'css/libs/photoswipe.min.css' ) );
 		wp_register_style( 'bricks-prettify', BRICKS_URL_ASSETS . 'css/libs/prettify.min.css', [ 'bricks-frontend' ], filemtime( BRICKS_PATH_ASSETS . 'css/libs/prettify.min.css' ) );
 		wp_register_style( 'bricks-swiper', BRICKS_URL_ASSETS . 'css/libs/swiper.min.css', [ 'bricks-frontend' ], filemtime( BRICKS_PATH_ASSETS . 'css/libs/swiper.min.css' ) );
-		wp_register_style( 'bricks-splide', BRICKS_URL_ASSETS . 'css/libs/splide.min.css', [ 'bricks-frontend' ], filemtime( BRICKS_PATH_ASSETS . 'css/libs/splide.min.css' ) );
+		if ( Database::get_setting( 'bricksCascadeLayer' ) ) { // @since 1.12
+			wp_register_style( 'bricks-splide', BRICKS_URL_ASSETS . 'css/libs/splide-layer.min.css', [ 'bricks-frontend' ], filemtime( BRICKS_PATH_ASSETS . 'css/libs/splide-layer.min.css' ) );
+		} else {
+			wp_register_style( 'bricks-splide', BRICKS_URL_ASSETS . 'css/libs/splide.min.css', [ 'bricks-frontend' ], filemtime( BRICKS_PATH_ASSETS . 'css/libs/splide.min.css' ) );
+		}
 		wp_register_style( 'bricks-tooltips', BRICKS_URL_ASSETS . 'css/libs/tooltips.min.css', [ 'bricks-frontend' ], filemtime( BRICKS_PATH_ASSETS . 'css/libs/tooltips.min.css' ) );
 		wp_register_style( 'bricks-ajax-loader', BRICKS_URL_ASSETS . 'css/libs/loading-animation.min.css', [ 'bricks-frontend' ], filemtime( BRICKS_PATH_ASSETS . 'css/libs/loading-animation.min.css' ) );
 

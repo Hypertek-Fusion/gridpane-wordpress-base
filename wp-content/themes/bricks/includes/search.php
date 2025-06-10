@@ -26,7 +26,7 @@ class Search {
 
 		/**
 		 * @since 1.10: Bricks: Infinite scroll & Query filter search results
-		 * @since 1.11: 'brx_is_search' is set if there is a filter-search query applied (@see QueryFilters->add_active_filters_query_vars())
+		 * @since 1.11: 'brx_is_search' is set if there is a filter-search query applied (@see QueryFilters->build_search_query_vars())
 		 */
 		$is_bricks_search = Api::is_current_endpoint( 'load_query_page' ) || Api::is_current_endpoint( 'query_result' ) || $query->get( 'brx_is_search' ) === true;
 

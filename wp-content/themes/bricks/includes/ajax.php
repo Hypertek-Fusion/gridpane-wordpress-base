@@ -16,6 +16,7 @@ class Ajax {
 		add_filter( 'sanitize_post_meta_' . BRICKS_DB_PAGE_SETTINGS, [ $this, 'sanitize_bricks_postmeta_page_settings' ], 10, 3 );
 		add_action( 'update_post_metadata', [ $this, 'update_bricks_postmeta' ], 10, 5 );
 
+		add_action( 'wp_ajax_bricks_import_images', [ $this, 'import_images' ] );
 		add_action( 'wp_ajax_bricks_download_image', [ $this, 'download_image' ] );
 		add_action( 'wp_ajax_bricks_get_image_metadata', [ $this, 'get_image_metadata' ] );
 		add_action( 'wp_ajax_bricks_get_image_from_custom_field', [ $this, 'get_image_from_custom_field' ] );
@@ -418,6 +419,7 @@ class Ajax {
 		$loop_element = $data['loopElement'] ?? false;
 		$element      = $data['element'] ?? false;
 		$element_name = $element['name'] ?? false;
+		$parent_loops = $data['parentLoops'] ?? [];
 
 		// AJAX call
 		if ( $is_ajax ) {
@@ -449,14 +451,16 @@ class Ajax {
 				$loop_element = $component;
 			}
 
-			$query = new Query( $loop_element );
-
-			if ( ! empty( $query->count ) ) {
-				$query->is_looping = true;
-
-				// NOTE: Use array_shift because not all the results are sequential arrays (e.g. JetEngine)
-				$query->loop_object = $query->object_type == 'post' ? $query->query_result->posts[0] : array_shift( $query->query_result );
+			// Run parent queries (@since 1.12.2)
+			if ( ! empty( $parent_loops ) ) {
+				foreach ( $parent_loops as $parent_loop ) {
+					// Run each parent query
+					self::simulate_bricks_query( $parent_loop );
+				}
 			}
+
+			// Run the current query
+			self::simulate_bricks_query( $loop_element );
 		}
 
 		// Init element class (i.e. new Bricks\Element_Alert( $element ))
@@ -837,6 +841,15 @@ class Ajax {
 		// Use loop element ID as loop_name if possible
 		if ( isset( $elements[0]['id'] ) ) {
 			$loop_name = "loop_{$elements[0]['id']}";
+		}
+
+		// Run parent queries (@since 1.12.2)
+		$parent_loops = ! empty( $_POST['parentLoops'] ) ? self::decode( $_POST['parentLoops'], false ) : [];
+		if ( ! empty( $parent_loops ) ) {
+			foreach ( $parent_loops as $parent_loop ) {
+				// Run each parent query
+				self::simulate_bricks_query( $parent_loop );
+			}
 		}
 
 		// Generate Assets before Frontend render to add 'data-query-loop-index' attribute successfully in builder
@@ -2098,6 +2111,85 @@ class Ajax {
 	}
 
 	/**
+	 * Import paste element images (cross-site)
+	 *
+	 * @since 1.12.2
+	 */
+	public function import_images() {
+		self::verify_request( 'bricks-nonce-builder' );
+
+		$target_images  = $_POST['images'] ?? [];
+		$handled_images = [];
+
+		foreach ( $target_images as $target_image ) {
+			$element_id   = $target_image['elementId'] ?? false; // Will replace the new image settings to this element
+			$element_name = $target_image['elementName'] ?? false;
+			$setting_key  = $target_image['settingKey'] ?? false; // Will replace the new image settings to this setting key
+			$settings     = $target_image['settings'] ?? []; // Copied image settings
+
+			// STEP: Resue the logic in Templates::import_images()
+			if ( count( $settings ) ) {
+				// Handle image-gallery element
+				if ( $element_name === 'image-gallery' ) {
+					// The images are stored in the 'images' setting key
+					$images = $settings['images'] ?? [];
+					$size   = $settings['size'] ?? 'full';
+
+					if ( ! count( $images ) ) {
+						continue;
+					}
+
+					$new_images = [];
+
+					foreach ( $images as $image ) {
+						// import_image requires size to be set
+						$image['size'] = $size;
+						$new_image     = Templates::import_image( $image, true );
+
+						if ( ! $new_image || ( is_array( $new_image ) && isset( $new_image['error'] ) ) ) {
+							continue;
+						}
+
+						// Remove the 'size', 'filename' key (Not needed)
+						unset( $new_image['size'] );
+						unset( $new_image['filename'] );
+						$new_images[] = $new_image;
+					}
+
+					$handled_images[] = [
+						'elementId'   => $element_id,
+						'elementName' => $element_name,
+						'settingKey'  => $setting_key,
+						'settings'    => [
+							'images' => $new_images, // follow image-gallery format
+							'size'   => $size, // follow image-gallery format
+						]
+					];
+				}
+
+				// Handle Image and SVG element (single image)
+				else {
+					$new_image = Templates::import_image( $settings, true );
+
+					if ( ! $new_image || ( is_array( $new_image ) && isset( $new_image['error'] ) ) ) {
+						continue;
+					}
+
+					$handled_images[] = [
+						'elementId'   => $element_id,
+						'elementName' => $element_name,
+						'settingKey'  => $setting_key,
+						'settings'    => $new_image,
+					];
+				}
+
+			}
+		}
+
+		wp_send_json_success( $handled_images );
+	}
+
+	/**
 	 * Parse content through dynamic data logic
 	 *
 	 * @since 1.5.1
@@ -2146,7 +2238,17 @@ class Ajax {
 
 		wp_reset_postdata();
 
-		if ( 'link' === $context ) {
+		// If controlName is for video background, we handle it differently based on full url or video ID (@since 1.12.3)
+		$control_name = ! empty( $_POST['controlName'] ) ? sanitize_text_field( $_POST['controlName'] ) : false;
+		if ( $control_name === 'backgroundVideoUrl' ) {
+
+			// Only escape URL if it's valid one. If we have a video ID, we don't escape it (so that we don't add http:// as prefix to video ID).
+			if ( filter_var( trim( $content ), FILTER_VALIDATE_URL ) ) {
+				$content = esc_url( $content );
+			}
+		}
+
+		elseif ( 'link' === $context ) {
 			$content = esc_url( $content );
 		}
 
@@ -2379,6 +2481,34 @@ class Ajax {
 			);
 		} else {
 			wp_send_json_error( [ 'message' => esc_html__( 'Failed to delete classes', 'bricks' ) ] );
+		}
+	}
+
+	/**
+	 * Used in the builder only
+	 *
+	 * - Force Query is_looping to true
+	 * - Force Query loop_object
+	 * - If the loop_object is WP_Post, setup the post data and save in global $post (Mimic the loop)
+	 * - Caution: Never restore global $post in this function. Don't use this if unsure.
+	 *
+	 * @since 1.12.2
+	 */
+	public static function simulate_bricks_query( $loop_settings ) {
+		$query = new Query( $loop_settings );
+
+		if ( ! empty( $query->count ) ) {
+			$query->is_looping = true;
+
+			// NOTE: Use array_shift because not all the results are sequential arrays (e.g. JetEngine)
+			$query->loop_object = $query->object_type == 'post' ? $query->query_result->posts[0] : array_shift( $query->query_result );
+
+			// Set global $post for the loop object
+			if ( is_a( $query->loop_object, 'WP_Post' ) ) {
+				global $post;
+				$post = $query->loop_object;
+				setup_postdata( $post );
+			}
 		}
 	}
 }

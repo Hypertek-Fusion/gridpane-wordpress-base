@@ -657,6 +657,27 @@ class Element_Container extends Element {
 	}
 
 	/**
+	 * Parses video URL or ID
+	 *
+	 * Input: Video ID: Return ID as is
+	 * Input: Video URL: Return escaped URL
+	 *
+	 * @since 1.12.2
+	 */
+	private function parse_video_url_or_id( $input ) {
+		// Remove whitespace
+		$input = trim( $input );
+
+		// Return video URL
+		if ( filter_var( $input, FILTER_VALIDATE_URL ) ) {
+			return esc_url( $input );
+		}
+
+		// Return video ID
+		return esc_attr( $input );
+	}
+
+	/**
 	 * Return background video HTML
 	 */
 	public function get_background_video_html( $settings ) {
@@ -672,8 +693,11 @@ class Element_Container extends Element {
 			}
 
 			if ( $video_url ) {
+
+				$video_url = $this->parse_video_url_or_id( $video_url );
+
 				$attributes[] = 'class="bricks-background-video-wrapper bricks-lazy-video"';
-				$attributes[] = 'data-background-video-url="' . esc_url( $video_url ) . '"';
+				$attributes[] = 'data-background-video-url="' . $video_url . '"';
 
 				if ( ! empty( $background['videoScale'] ) ) {
 					$attributes[] = 'data-background-video-scale="' . $background['videoScale'] . '"';
@@ -759,7 +783,7 @@ class Element_Container extends Element {
 
 			// Is component: Generate random ID for component instance (@since 1.12)
 			if ( ! empty( $element['instanceId'] ) && ! empty( $element['parentComponent'] ) ) {
-				$element['id'] .= ':' . $element['instanceId'];
+				$element['id'] .= '-' . $element['instanceId']; // Use dash instead of colon (@since 1.12.2)
 			}
 
 			$query = new \Bricks\Query( $element );
@@ -769,6 +793,9 @@ class Element_Container extends Element {
 			// Prevent endless loop
 			unset( $element['settings']['hasLoop'] );
 
+			// Prevent condition execution when looping (@since 1.12.2)
+			unset( $element['settings']['_conditions'] );
+
 			// Prevent endless loop for component (@since 1.12)
 			if ( $original_component ) {
 				// Find all component element and unset 'hasLoop'
@@ -776,7 +803,10 @@ class Element_Container extends Element {
 					function( $component ) use ( $element ) {
 						if ( ! empty( $element['cid'] ) && $element['cid'] === $component['id'] ) {
 							foreach ( $component['elements'] as $index => $component_element ) {
-								if ( isset( $component['elements'][ $index ]['settings']['hasLoop'] ) ) {
+								if (
+									isset( $component['elements'][ $index ]['settings']['hasLoop'] ) &&
+									$component['elements'][ $index ]['id'] === $element['cid'] // Only unset 'hasLoop' for current element (component root is query) (@since 1.12.2)
+								) {
 									unset( $component['elements'][ $index ]['settings']['hasLoop'] );
 								}
 							}
@@ -793,7 +823,7 @@ class Element_Container extends Element {
 				Database::$global_data['elements'] = array_map(
 					function( $global_element ) use ( $element ) {
 						if ( ! empty( $element['global'] ) && $element['global'] === $global_element['global'] ) {
-							  unset( $global_element['settings']['hasLoop'] );
+							unset( $global_element['settings']['hasLoop'] );
 						}
 						return $global_element;
 					},
@@ -812,7 +842,7 @@ class Element_Container extends Element {
 				Database::$global_data['components'] = array_map(
 					function( $component ) use ( $element, $original_component ) {
 						if ( ! empty( $element['cid'] ) && $element['cid'] === $component['id'] ) {
-							  $component = $original_component;
+							$component = $original_component;
 						}
 						return $component;
 					},
@@ -826,7 +856,7 @@ class Element_Container extends Element {
 				Database::$global_data['elements'] = array_map(
 					function( $global_element ) use ( $element ) {
 						if ( ! empty( $element['global'] ) && $element['global'] === $global_element['global'] ) {
-							  $global_element['settings']['hasLoop'] = true;
+							$global_element['settings']['hasLoop'] = true;
 						}
 						return $global_element;
 					},

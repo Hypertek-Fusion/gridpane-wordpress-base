@@ -4,7 +4,7 @@ namespace Bricks;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class Pagination extends Element {
-	public $category = 'wordpress';
+	public $category = 'query';
 	public $name     = 'pagination';
 	public $icon     = 'ti-angle-double-right';
 
@@ -194,7 +194,7 @@ class Pagination extends Element {
 			'tab'         => 'content',
 			'label'       => esc_html__( 'Mid Size', 'bricks' ),
 			'type'        => 'number',
-			'min'         => 1,
+			'min'         => 0,
 			'placeholder' => 2,
 			'description' => esc_html__( 'How many numbers on either side of the current page.', 'bricks' ),
 		];
@@ -204,13 +204,12 @@ class Pagination extends Element {
 			'label'       => esc_html__( 'Enable AJAX', 'bricks' ),
 			'type'        => 'checkbox',
 			'description' => esc_html__( 'Navigate through the different query pages without reloading the page.', 'bricks' ),
-			'required'    => [ 'queryId', '!=', [ '', 'main' ] ],
 		];
 	}
 
 	public function render() {
 		$settings         = $this->settings;
-		$query_id         = $settings['queryId'] ?? '';
+		$query_id         = $settings['queryId'] ?? 'main'; // Default: Main query (@since 1.12.2)
 		$element_id       = $query_id;
 		$element_settings = [];
 		$query_element_id = $query_id;
@@ -235,7 +234,7 @@ class Pagination extends Element {
 
 				// Prepend local element id to query element id prevent getting other instance of query (see: $query_instance in Query.php l64)
 				if ( ! empty( $local_element['element']['id'] ) ) {
-					$query_element_id = $query_id . ':' . $local_element['element']['id'];
+					$query_element_id = $query_id . '-' . $local_element['element']['id']; // Use dash instead of colon, easier for frontend when using querySelector (@since 1.12.2)
 				}
 
 				// Get query element settings from component element
@@ -260,6 +259,9 @@ class Pagination extends Element {
 					]
 				);
 			}
+
+			// STEP: Ensure query_id is updated after the component logic, will be using in set_ajax_attributes() (@since 1.12.2)
+			$query_id = $query_element_id;
 
 			$query_obj = new Query(
 				[
@@ -344,8 +346,11 @@ class Pagination extends Element {
 			$args['end_size'] = $settings['endSize'];
 		}
 
-		if ( ! empty( $settings['midSize'] ) ) {
-			$args['mid_size'] = $settings['midSize'];
+		// midSize could be 0 (@since 1.12.2)
+		if ( isset( $settings['midSize'] ) ) {
+			$mid_size         = (int) $settings['midSize'];
+			$mid_size         = $mid_size < 0 ? 0 : $mid_size;
+			$args['mid_size'] = $mid_size;
 		}
 
 		return $args;
@@ -357,13 +362,27 @@ class Pagination extends Element {
 	private function set_ajax_attributes( $query_id ) {
 		$settings = $this->settings;
 
-		if ( ! isset( $settings['ajax'] ) || empty( $query_id ) || $query_id === 'main' ) {
+		if ( ! isset( $settings['ajax'] ) || empty( $query_id ) ) {
+			return;
+		}
+
+		// Retrieve main_query_id from Database class (@since 1.12.2)
+		$main_query_id = (string) Database::$main_query_id;
+
+		// Only replace the actual query id if main_query_id is set and loadMoreQuery is 'main'
+		if ( $main_query_id !== '' && $query_id === 'main' ) {
+			$query_id = $main_query_id;
+		}
+
+		// Do not set AJAX attributes if main query is set but it's not a bricks query
+		if ( $query_id === 'main' ) {
 			return;
 		}
 
 		// For AJAX pagination (@since 1.10)
 		$this->set_attribute( '_root', 'data-query-element-id', $query_id );
 		$this->set_attribute( '_root', 'class', 'brx-ajax-pagination' );
+		$this->set_attribute( '_root', 'data-pagination-id', Query::is_any_looping() ? Helpers::generate_random_id( false ) : $this->id );
 
 		if ( Helpers::enabled_query_filters() ) {
 			// Filter type AJAX pagination (No need to enqueue 'bricks-filters' as pagination element will only use the filter logic when used together with a filter element)

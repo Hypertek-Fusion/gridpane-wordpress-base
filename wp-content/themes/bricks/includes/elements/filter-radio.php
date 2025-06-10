@@ -63,6 +63,9 @@ class Filter_Radio extends Filter_Element {
 	 * If is a sort input
 	 * - Set sorting options
 	 *
+	 * If is a per_page input
+	 * - Set per_page options
+	 *
 	 * If is a filter input
 	 * - Prepare sources
 	 * - Set data_source
@@ -105,9 +108,14 @@ class Filter_Radio extends Filter_Element {
 			$this->set_options_with_count();
 		}
 
-		// Sort
-		else {
+		elseif ( $filter_action === 'sort' ) {
+			// User wish to use what options as sort options
 			$this->setup_sort_options();
+		}
+
+		else {
+			// User wish to use what options as per_page options
+			$this->setup_per_page_options();
 		}
 
 		// Insert filter settings as data-brx-filter attribute
@@ -186,7 +194,7 @@ class Filter_Radio extends Filter_Element {
 			$option_value    = esc_attr( $option['value'] );
 			$option_text     = $this->get_option_text_with_count( $option );
 			$option_class    = esc_attr( $option['class'] );
-			$option_checked  = self::is_option_value_matched( urldecode( $option_value ), $current_value );
+			$option_checked  = self::is_option_value_matched( rawurldecode( $option_value ), $current_value );
 			$option_disabled = isset( $option['disabled'] );
 
 			$li_key    = 'li_' . $index;

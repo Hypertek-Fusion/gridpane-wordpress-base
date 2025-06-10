@@ -494,7 +494,12 @@ class Element_Image_Gallery extends Element {
 			// STEP: Render image
 			$image_atts = [ 'class' => implode( ' ', $image_classes ) ];
 
-			echo wp_get_attachment_image( $image_id, $size, false, $image_atts );
+			if ( $image_id ) {
+				echo wp_get_attachment_image( $image_id, $size, false, $image_atts );
+			} elseif ( ! empty( $item['url'] ) && isset( $item['isPlaceholder'] ) && $item['isPlaceholder'] ) {
+				// Maybe is a temporary placeholder image in Bricks (@since 1.12.2)
+				echo '<img src="' . esc_url( $item['url'] ) . '" alt="" width="800" height="600" />';
+			}
 
 			if ( $close_a_tag ) {
 				echo '</a>';

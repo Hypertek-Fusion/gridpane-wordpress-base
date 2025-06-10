@@ -180,6 +180,11 @@ class Filter_Element extends Element {
 		// Term order by
 		if ( isset( $settings['filterTaxonomyOrderBy'] ) ) {
 			$args['orderby'] = sanitize_text_field( $settings['filterTaxonomyOrderBy'] );
+
+			// Set order 'meta_key' If orderby is 'meta_value' or 'meta_value_num' (@since 1.12.2)
+			if ( in_array( $args['orderby'], [ 'meta_value', 'meta_value_num' ], true ) ) {
+				$args['meta_key'] = isset( $settings['filterTaxonomyOrderMetaKey'] ) ? sanitize_text_field( $settings['filterTaxonomyOrderMetaKey'] ) : '';
+			}
 		}
 
 		// Top level only
@@ -516,7 +521,7 @@ class Filter_Element extends Element {
 			$filters_affecting_count = array_filter(
 				$active_filters,
 				function( $filter ) {
-					return isset( $filter['query_type'] ) && $filter['query_type'] !== 'sort' && $filter['query_type'] !== 'pagination';
+					return isset( $filter['query_type'] ) && $filter['query_type'] !== 'sort' && $filter['query_type'] !== 'pagination' && $filter['query_type'] !== 'per_page';
 				}
 			);
 
@@ -742,15 +747,18 @@ class Filter_Element extends Element {
 		$no_bracket = isset( $settings['filterCountNoBracket'] );
 
 		// Return text only
-		if ( $hide_count || $is_all || $is_placeholder || $filter_action === 'sort' ) {
+		if ( $hide_count || $is_all || $is_placeholder || $filter_action === 'sort' || $filter_action === 'per_page' ) {
 			return $text;
 		}
 
 		$count = $no_bracket ? $count : "($count)";
 
-		// Wrap the count with span for filter-radio and filter-checkbox
 		if ( in_array( $this->name, [ 'filter-radio', 'filter-checkbox' ], true ) ) {
+			// Wrap the count with span for filter-radio and filter-checkbox
 			$count = '<span class="brx-option-count">' . $count . '</span>';
+		} else {
+			// For filter-select, add a space before the count (not controlled by CSS) (@since 1.12.3)
+			$count = ' ' . $count;
 		}
 
 		return $text . $count;
@@ -815,6 +823,57 @@ class Filter_Element extends Element {
 		}
 
 		$this->populated_options = $options;
+	}
+
+	/**
+	 * For filter-select, filter-radio
+	 * Note: Not retrieving the per_page options from the query history for now
+	 *
+	 * @since 1.12.2
+	 */
+	public function setup_per_page_options() {
+		if ( ! in_array( $this->name, [ 'filter-select', 'filter-radio' ], true ) ) {
+			return;
+		}
+
+		$settings = $this->settings;
+
+		$options = [];
+
+		if ( $this->name === 'filter-select' ) {
+			// Add placeholder option
+			$options[] = [
+				'value'          => '',
+				'text'           => esc_html__( 'Results per page', 'bricks' ),
+				'class'          => 'placeholder',
+				'is_placeholder' => true,
+			];
+		}
+
+		// Get per page options array via settings
+		$per_page_array = self::get_per_page_options_array( $settings );
+
+		foreach ( $per_page_array as $per_page ) {
+			$options[] = [
+				'value' => $per_page,
+				'text'  => $per_page,
+				'class' => '',
+			];
+		}
+
+		$this->populated_options = $options;
+	}
+
+	public static function get_per_page_options_array( $settings = [] ) {
+		$per_page_string = $settings['perPageOptions'] ?? '10, 20, 50, 100';
+
+		// STEP: Convert string to array
+		$per_page_array = explode( ',', (string) $per_page_string );
+		$per_page_array = array_map( 'trim', $per_page_array );
+		// STEP: Ensure no empty value, and all unique values
+		$per_page_array = array_unique( array_filter( $per_page_array ) );
+
+		return $per_page_array;
 	}
 
 	/**
@@ -910,10 +969,11 @@ class Filter_Element extends Element {
 		$controls = [];
 
 		$controls['filterQueryId'] = [
-			'type'        => 'query-list',
-			'label'       => esc_html__( 'Target query', 'bricks' ),
-			'placeholder' => esc_html__( 'Select', 'bricks' ),
-			'desc'        => esc_html__( 'Select the query this filter should target.', 'bricks' ) . ' ' . esc_html__( 'Only post queries are supported in this version.', 'bricks' ),
+			'type'             => 'query-list',
+			'label'            => esc_html__( 'Target query', 'bricks' ),
+			'placeholder'      => esc_html__( 'Select', 'bricks' ),
+			'excludeMainQuery' => true, // (@since 1.12.2)
+			'desc'             => esc_html__( 'Select the query this filter should target.', 'bricks' ) . ' ' . esc_html__( 'Only post queries are supported in this version.', 'bricks' ),
 		];
 
 		$controls['filterQueryIdInfo'] = [
@@ -970,8 +1030,9 @@ class Filter_Element extends Element {
 				'type'        => 'select',
 				'label'       => esc_html__( 'Action', 'bricks' ),
 				'options'     => [
-					'filter' => esc_html__( 'Filter', 'bricks' ),
-					'sort'   => esc_html__( 'Sort', 'bricks' ),
+					'filter'   => esc_html__( 'Filter', 'bricks' ),
+					'sort'     => esc_html__( 'Sort', 'bricks' ),
+					'per_page' => esc_html__( 'Results per page', 'bricks' ), // (@since 1.12.2)
 				],
 				'inline'      => true,
 				'placeholder' => esc_html__( 'Filter', 'bricks' ),
@@ -993,7 +1054,7 @@ class Filter_Element extends Element {
 				'placeholder' => esc_html__( 'Select', 'bricks' ),
 				'required'    => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 				],
 			];
 
@@ -1010,7 +1071,7 @@ class Filter_Element extends Element {
 				'placeholder' => esc_html__( 'Post', 'bricks' ),
 				'required'    => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', [ 'wpField', 'customField' ] ],
 				],
 			];
@@ -1021,7 +1082,7 @@ class Filter_Element extends Element {
 				'label'       => esc_html__( 'Field', 'bricks' ),
 				'inline'      => true,
 				'options'     => [
-					'post_id'     => esc_html__( 'Post ID', 'bricks' ),
+					'post_id'     => esc_html__( 'Post title', 'bricks' ) . ' (ID)', // Change to title which makes more sense (@since 1.12.2)
 					'post_type'   => esc_html__( 'Post type', 'bricks' ),
 					'post_status' => esc_html__( 'Post status', 'bricks' ),
 					'post_author' => esc_html__( 'Post author', 'bricks' ),
@@ -1029,7 +1090,7 @@ class Filter_Element extends Element {
 				'placeholder' => esc_html__( 'Select', 'bricks' ),
 				'required'    => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', 'wpField' ],
 					[ 'sourceFieldType', '=', [ '', 'post' ] ],
 				],
@@ -1047,7 +1108,7 @@ class Filter_Element extends Element {
 				'required'    => [
 					[ 'filterSource', '=', 'wpField' ],
 					[ 'sourceFieldType', '=', 'user' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 				]
 			];
 
@@ -1078,7 +1139,7 @@ class Filter_Element extends Element {
 				'placeholder'   => esc_html__( 'Select', 'bricks' ),
 				'required'      => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', 'taxonomy' ],
 				],
 				'clearOnChange' => [  // @since 1.11
@@ -1096,8 +1157,23 @@ class Filter_Element extends Element {
 				'placeholder' => esc_html__( 'Name', 'bricks' ),
 				'required'    => [
 					[ 'filterQueryId', '!=', '' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
+					[ 'filterSource', '=', 'taxonomy' ],
+				],
+			];
+
+			// @since 1.12.2
+			$controls['filterTaxonomyOrderMetaKey'] = [
+				'type'           => 'text',
+				'label'          => esc_html__( 'Order meta key', 'bricks' ),
+				'inline'         => true,
+				'hasDynamicData' => false,
+				'placeholder'    => esc_html__( 'Meta key', 'bricks' ),
+				'required'       => [
+					[ 'filterQueryId', '!=', '' ],
 					[ 'filterAction', '!=', 'sort' ],
 					[ 'filterSource', '=', 'taxonomy' ],
+					[ 'filterTaxonomyOrderBy', '=', [ 'meta_value', 'meta_value_num' ] ],
 				],
 			];
 
@@ -1110,7 +1186,7 @@ class Filter_Element extends Element {
 				'placeholder' => esc_html__( 'ASC', 'bricks' ),
 				'required'    => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', 'taxonomy' ],
 				],
 			];
@@ -1129,7 +1205,7 @@ class Filter_Element extends Element {
 				'inline'      => true,
 				'required'    => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', 'taxonomy' ],
 					[ 'filterTaxonomy', '!=', '' ],
 				],
@@ -1150,7 +1226,7 @@ class Filter_Element extends Element {
 				'inline'      => true,
 				'required'    => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', 'taxonomy' ],
 					[ 'filterTaxonomy', '!=', '' ],
 				],
@@ -1163,7 +1239,7 @@ class Filter_Element extends Element {
 				'label'    => esc_html__( 'Top level terms only', 'bricks' ),
 				'required' => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', 'taxonomy' ],
 					[ 'filterTaxonomy', '!=', '' ],
 				],
@@ -1174,7 +1250,7 @@ class Filter_Element extends Element {
 				'label'    => esc_html__( 'Hide count', 'bricks' ),
 				'required' => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '!=', '' ],
 				],
 			];
@@ -1184,7 +1260,7 @@ class Filter_Element extends Element {
 				'label'    => esc_html__( 'Hide empty', 'bricks' ),
 				'required' => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '!=', '' ],
 				],
 			];
@@ -1197,7 +1273,7 @@ class Filter_Element extends Element {
 					'info'     => sprintf( esc_html( 'Style count via %s', 'bricks' ), '.brx-option-count' ),
 					'required' => [
 						[ 'filterQueryId', '!=', '' ],
-						[ 'filterAction', '!=', 'sort' ],
+						[ 'filterAction', '=', [ '', 'filter' ] ],
 						[ 'filterSource', '!=', '' ],
 					],
 				];
@@ -1208,7 +1284,7 @@ class Filter_Element extends Element {
 				'label'    => esc_html__( 'Hierarchical', 'bricks' ),
 				'required' => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', 'taxonomy' ],
 				],
 			];
@@ -1220,7 +1296,7 @@ class Filter_Element extends Element {
 					'label'    => esc_html__( 'Auto toggle child terms', 'bricks' ),
 					'required' => [
 						[ 'filterQueryId', '!=', '' ],
-						[ 'filterAction', '!=', 'sort' ],
+						[ 'filterAction', '=', [ '', 'filter' ] ],
 						[ 'filterSource', '=', 'taxonomy' ],
 						[ 'filterHierarchical', '=', true ],
 					],
@@ -1237,7 +1313,7 @@ class Filter_Element extends Element {
 					'placeholder' => '—',
 					'required'    => [
 						[ 'filterQueryId', '!=', '' ],
-						[ 'filterAction', '!=', 'sort' ],
+						[ 'filterAction', '=', [ '', 'filter' ] ],
 						[ 'filterSource', '=', 'taxonomy' ],
 						[ 'filterHierarchical', '=', true ],
 						[ 'displayMode', '!=', 'button' ],
@@ -1254,7 +1330,7 @@ class Filter_Element extends Element {
 					'label'    => esc_html__( 'Indent', 'bricks' ) . ': ' . esc_html__( 'Gap', 'bricks' ),
 					'required' => [
 						[ 'filterQueryId', '!=', '' ],
-						[ 'filterAction', '!=', 'sort' ],
+						[ 'filterAction', '=', [ '', 'filter' ] ],
 						[ 'filterSource', '=', 'taxonomy' ],
 						[ 'filterHierarchical', '=', true ],
 						[ 'displayMode', '!=', 'button' ],
@@ -1321,7 +1397,7 @@ class Filter_Element extends Element {
 				'placeholder'    => 'IN',
 				'required'       => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', 'customField' ],
 				],
 			];
@@ -1339,7 +1415,7 @@ class Filter_Element extends Element {
 					'placeholder' => 'OR',
 					'required'    => [
 						[ 'filterQueryId', '!=', '' ],
-						[ 'filterAction', '!=', 'sort' ],
+						[ 'filterAction', '=', [ '', 'filter' ] ],
 					],
 				];
 			}
@@ -1351,7 +1427,7 @@ class Filter_Element extends Element {
 					'label'    => esc_html__( 'Hide "All" option', 'bricks' ),
 					'required' => [
 						[ 'filterQueryId', '!=', '' ],
-						[ 'filterAction', '!=', 'sort' ],
+						[ 'filterAction', '=', [ '', 'filter' ] ],
 						[ 'filterSource', '!=', '' ],
 					],
 				];
@@ -1366,7 +1442,7 @@ class Filter_Element extends Element {
 					'label'    => esc_html__( 'Label', 'bricks' ) . ': ' . esc_html__( 'All', 'bricks' ),
 					'required' => [
 						[ 'filterQueryId', '!=', '' ],
-						[ 'filterAction', '!=', 'sort' ],
+						[ 'filterAction', '=', [ '', 'filter' ] ],
 						[ 'filterSource', '!=', '' ],
 						[ 'filterHideAllOption', '!=', true ], // Hide All option for radio (@since 1.11)
 					],
@@ -1384,7 +1460,7 @@ class Filter_Element extends Element {
 				'placeholder' => esc_html__( 'Value', 'bricks' ),
 				'required'    => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', [ 'customField', 'wpField' ] ],
 				],
 			];
@@ -1411,7 +1487,7 @@ class Filter_Element extends Element {
 				],
 				'required'      => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 					[ 'filterSource', '=', [ 'customField', 'wpField' ] ],
 					[ 'labelMapping', '=', 'custom' ],
 				],
@@ -1425,7 +1501,7 @@ class Filter_Element extends Element {
 				'desc'     => esc_html__( 'Click to apply the latest filter settings. This ensures all filter options are up-to-date.', 'bricks' ),
 				'required' => [
 					[ 'filterQueryId', '!=', '' ],
-					[ 'filterAction', '!=', 'sort' ],
+					[ 'filterAction', '=', [ '', 'filter' ] ],
 				],
 			];
 		}
@@ -1457,7 +1533,6 @@ class Filter_Element extends Element {
 			}
 
 			// Each of the options add . (Post) / .term (Term) / .user (User) prefix
-
 			$controls['sortOptions'] = [
 				'type'          => 'repeater',
 				'label'         => esc_html__( 'Sort options', 'bricks' ),
@@ -1497,6 +1572,19 @@ class Filter_Element extends Element {
 					[ 'filterQueryId', '!=', '' ],
 					[ 'filterAction', '=', 'sort' ],
 				],
+			];
+
+			// per_page options (@since 1.12.2)
+			$controls['perPageOptions'] = [
+				'type'           => 'text',
+				'label'          => esc_html__( 'Options', 'bricks' ) . ': ' . esc_html__( 'Results per page', 'bricks' ),
+				'hasDynamicData' => false,
+				'placeholder'    => '10, 20, 50, 100',
+				'required'       => [
+					[ 'filterQueryId', '!=', '' ],
+					[ 'filterAction', '=', 'per_page' ],
+				],
+				'description'    => esc_html__( 'Comma-separated list of results per page options.', 'bricks' ),
 			];
 		}
 

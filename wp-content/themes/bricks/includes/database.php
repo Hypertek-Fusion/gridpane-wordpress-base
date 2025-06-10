@@ -43,6 +43,7 @@ class Database {
 	public static $global_settings = [];
 	public static $page_settings   = [];
 	public static $adobe_fonts     = [];
+	public static $main_query_id   = ''; // Holds the element ID of the main query element set in set_main_archive_query() @since 1.12.2
 
 	public function __construct() {
 		// Initialize active templates through helper function (@since 1.12)
@@ -266,6 +267,9 @@ class Database {
 						// Unique flag to identify main archive query (@since 1.10.2)
 						$query->set( 'brx_main_query', true );
 
+						// Set element ID to identify main query element (@since 1.12.2)
+						self::$main_query_id = $element_id;
+
 						// Use the prepared query vars instead of raw element settings (@since 1.8)
 						$query_vars = Query::prepare_query_vars_from_settings( $element['settings'], $element_id, $element['name'] );
 
@@ -484,7 +488,7 @@ class Database {
 			$template_id = self::find_template_id( $template_ids, $template_part, $content_type, $preview_id, $preview_type );
 
 			// Check if this is a password protection template (@since 1.11.1)
-			if ( Templates::get_template_type( $template_id ) === 'password_protection' ) {
+			if ( Templates::get_template_type( $template_id ) === 'password_protection' && $template_part === 'content' ) {
 				// Allow Password_Protection class to decide if the template should be rendered
 				if ( Password_Protection::is_active( $template_id ) ) {
 					$password_protection_template_id               = $template_id;
@@ -581,7 +585,7 @@ class Database {
 				}
 
 				// Check if this is a password protection template
-				if ( Templates::get_template_type( $template_id ) === 'password_protection' ) {
+				if ( $template_part === 'content' && Templates::get_template_type( $template_id ) === 'password_protection' ) {
 					$template_conditions = Helpers::get_template_setting( 'templateConditions', $template_id );
 
 					// Return immediately if conditions match
@@ -683,11 +687,9 @@ class Database {
 	public static function get_all_templates_by_type() {
 		// Last changed timestamp is set on Templates::flush_templates_cache()
 		$last_changed = wp_cache_get_last_changed( 'bricks_' . BRICKS_DB_TEMPLATE_SLUG );
-
-		// @since 1.7.1 - Prefix cache key with get_locale() to ensure correct templates are loaded for different languages (@see #862jdhqgr)
-		$cache_key = get_locale() . '_all_templates_' . $last_changed;
-
-		$output = wp_cache_get( $cache_key, 'bricks' );
+		// Undocumented
+		$cache_key = apply_filters( 'bricks/database/get_all_templates_cache_key', 'all_templates_' . $last_changed );
+		$output    = wp_cache_get( $cache_key, 'bricks' );
 
 		if ( $output === false ) {
 			$args = [
@@ -1079,8 +1081,11 @@ class Database {
 	 * Get template elements
 	 *
 	 * @since 1.0
+	 *
+	 * @param string  $content_type Type of content (header, content, footer).
+	 * @param boolean $force_post_data Force checking only the specific post data without considering templates.
 	 */
-	public static function get_template_data( $content_type ) {
+	public static function get_template_data( $content_type, $force_post_data = false ) {
 		switch ( $content_type ) {
 			case 'header':
 				if ( self::is_template_disabled( 'header' ) ) {
@@ -1104,6 +1109,11 @@ class Database {
 		}
 
 		$template_id = self::$active_templates[ $content_type ] ?? false;
+
+		// Only check active templates if force_post_data is false (@since 1.12.2)
+		if ( $force_post_data ) {
+			$template_id = false;
+		}
 
 		// No template found: Return Bricks content data
 		if (

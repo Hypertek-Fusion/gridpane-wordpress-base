@@ -505,6 +505,7 @@ if ( $code_review ) {
 							$index_btn_class    = 'ajax button button-secondary';
 							$index_btn_disabled = '';
 							$db_updated         = Query_Filters::all_db_updated();
+							$db_fix_needed      = Query_Filters::has_corrupted_db() || isset( $_GET['fix-db'] ); // &fix-db to force show the fix button when debugging (@since 1.12.2)
 
 							if ( $running ) {
 								$index_btn_class   .= ' wait';
@@ -531,6 +532,13 @@ if ( $code_review ) {
 							<p class="description"><?php echo esc_html__( 'Click "Regenerate filter index" to regenerate the query filter index for your entire website.', 'bricks' ) . ' ' . esc_html__( 'Click "Continue filter index" to immediately run any remaining/queued filter index jobs instead of waiting for the next WP cronjob.', 'bricks' ); ?></p><br>
 
 							<div class="setting-wrapper gap">
+								<?php if ( $db_fix_needed ) { ?>
+								<button type="button" id="bricks-fix-filter-element-db" class="ajax button button-secondary">
+									<span class="text"><?php esc_html_e( 'Fix corrupted database', 'bricks' ); ?></span>
+									<span class="spinner is-active"></span>
+									<i class="dashicons dashicons-yes hide"></i>
+								</button>
+								<?php } ?>
 								<button type="button" id="bricks-reindex-filters" class="ajax button button-secondary">
 									<span class="text"><?php esc_html_e( 'Regenerate filter index', 'bricks' ); ?></span>
 									<span class="spinner is-active"></span>
@@ -857,20 +865,6 @@ if ( $code_review ) {
 						?>
 					</td>
 				</tr>
-
-				<tr>
-					<th>
-						<label><?php esc_html_e( 'Code execution', 'bricks' ); ?></label>
-					</th>
-					<td>
-						<p class="message info">
-							<?php
-							// translators: %s = #custom-code tab
-							printf( esc_html__( 'Code execution settings have moved to the %s tab.', 'bricks' ), '"' . esc_html__( 'Custom code', 'bricks' ) . '"' );
-							?>
-						</p>
-					</td>
-				</tr>
 			</tbody>
 		</table>
 		<table id="tab-templates">
@@ -942,9 +936,35 @@ if ( $code_review ) {
 
 						<div class="separator"></div>
 
-						<label for="myTemplatesPassword" class="sub"><?php esc_html_e( 'Password Protection', 'bricks' ); ?></label>
+						<label for="myTemplatesPassword" class="sub"><?php esc_html_e( 'Password protection', 'bricks' ); ?></label>
 						<input type="text" name="myTemplatesPassword" id="myTemplatesPassword" value="<?php echo isset( $settings['myTemplatesPassword'] ) ? $settings['myTemplatesPassword'] : ''; ?>" spellcheck="false">
 						<p class="description"><?php esc_html_e( 'Password protect your templates.', 'bricks' ); ?></p>
+
+						<div class="separator"></div>
+
+						<label for="excludedTemplates" class="sub"><?php esc_html_e( 'Exclude templates', 'bricks' ); ?></label>
+						<select name="excludedTemplates[]" id="excludedTemplates" multiple="multiple" class="regular-text">
+							<?php
+							$templates = get_posts(
+								[
+									'post_type'      => BRICKS_DB_TEMPLATE_SLUG,
+									'posts_per_page' => -1,
+									'orderby'        => 'title',
+									'order'          => 'ASC',
+								]
+							);
+
+							$excluded_templates = Database::get_setting( 'excludedTemplates', [] );
+
+							foreach ( $templates as $template ) {
+								$value    = esc_attr( $template->ID );
+								$selected = in_array( $template->ID, $excluded_templates ) ? 'selected' : '';
+								$title    = esc_html( $template->post_title );
+								echo "<option value=\"$value\" $selected>$title</option>";
+							}
+							?>
+						</select>
+						<p class="description"><?php esc_html_e( 'Select templates to exclude from remote template access.', 'bricks' ); ?></p>
 					</td>
 				</tr>
 
@@ -1160,6 +1180,7 @@ if ( $code_review ) {
 				$builder_insert_element      = ! empty( $settings['builderInsertElement'] ) ? $settings['builderInsertElement'] : '';
 				$builder_insert_layout       = ! empty( $settings['builderInsertLayout'] ) ? $settings['builderInsertLayout'] : '';
 				$canvas_scroll_into_view     = ! empty( $settings['canvasScrollIntoView'] ) ? $settings['canvasScrollIntoView'] : '';
+				$import_image_on_paste       = ! empty( $settings['importImageOnPaste'] ) ? $settings['importImageOnPaste'] : '';
 				?>
 				<tr>
 					<th><label><?php esc_html_e( 'Toolbar logo link', 'bricks' ); ?></label></th>
@@ -1328,6 +1349,13 @@ if ( $code_review ) {
 						</select>
 
 						<div class="description"><?php esc_html_e( 'Available via "Layout" action icon.', 'bricks' ); ?></div>
+
+						<div class="separator"></div>
+
+						<input type="checkbox" name="importImageOnPaste" id="importImageOnPaste" <?php checked( $import_image_on_paste ); ?>>
+						<label for="importImageOnPaste"><?php esc_html_e( 'Import pasted images/SVGs', 'bricks' ); ?></label>
+
+						<div class="description"><?php esc_html_e( 'When pasting elements from another site that contain image or SVG files, placeholders are used by default. Enable to download the image from the source site. If the current user lacks SVG upload permissions, a placeholder SVG is used.', 'bricks' ); ?></div>
 					</td>
 				</tr>
 
