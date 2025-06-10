@@ -24,6 +24,8 @@ const getAllReviews = async () => {
 
             if(data['total_pages'] === data['page']) {
                 moreReviews = false;
+            } else {
+                params = '?page=' + data['page'] + 1
             }
 
         } while(moreReviews)
