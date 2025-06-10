@@ -162,7 +162,7 @@ class HyperSiteReviews
 
     public static function main_page()
     {
-        echo '<div class="wrap"><h1>HyperSite Reviews</h1></div>';
+        include HSREV_PATH . 'includes/admin/templates/main-page.php';
     }
 
     public static function setup_page()

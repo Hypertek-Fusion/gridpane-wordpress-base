@@ -592,6 +592,26 @@ class GoogleDataHandler
         return $wpdb->get_row("SELECT * FROM {$wpdb->prefix}locations WHERE is_selected = TRUE", ARRAY_A);
     }
 
+    /**
+     * Get the selected locations reviews.
+     *
+     * @return array|null The selected location data or null if no location is selected.
+     */
+    public static function get_selected_location_reviews($location_id, $page, $per_page)
+    {
+        global $wpdb;
+
+        $offset = ($page - 1) * $per_page;
+
+        // Update the SQL query to include the is_selected condition
+        return $wpdb->get_results($wpdb->prepare(
+            "SELECT reviewer_display_name, reviewer_profile_photo_url, comment, create_time FROM {$wpdb->prefix}reviews WHERE location_id = %s AND is_selected = TRUE LIMIT %d OFFSET %d",
+            $location_id,
+            $per_page,
+            $offset
+        ), ARRAY_A);
+    }
+
             /**
      * Get the selected location ID.
      *
