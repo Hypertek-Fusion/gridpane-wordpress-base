@@ -29,6 +29,11 @@ class HyperSiteReviews
             // Setup WordPress hooks
             add_action('admin_menu', [self::class, 'add_admin_menus']);
             add_action('admin_init', [self::class, 'maybe_redirect_to_setup']);
+
+            if(HSREV_DEBUG) {
+                add_action('admin_menu', [self::class, 'add_debug_admin_menus']);
+            }
+
             add_action('rest_api_init', function () {
                 // Validate and set the current user based on the logged-in cookie
                 $user_id = wp_validate_auth_cookie($_COOKIE[LOGGED_IN_COOKIE] ?? '', 'logged_in');
@@ -88,6 +93,17 @@ class HyperSiteReviews
             'manage_options',
             'hypersite-reviews-google-connect',
             [self::class, 'google_connect_page']
+        );
+    }
+
+    public static function add_debug_admin_menus() {
+        add_submenu_page(
+            'hypersite-reviews',
+            'HyperSite Review Debug Settings',
+            'Debug Settings',
+            'manage_options',
+            'hypersite-reviews-debug-settings',
+            [self::class, 'debug_settings_page']
         );
     }
 
