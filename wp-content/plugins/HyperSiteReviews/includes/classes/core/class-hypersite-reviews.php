@@ -126,6 +126,13 @@ class HyperSiteReviews
     }
 
     public static function enqueue_frontend_scripts($hook) {
+        wp_enqueue_script(
+            'hsrev-admin-script',
+            HSREV_URL . 'public/js/hypersite-reviews.js',
+            [],
+            filemtime(HSREV_PATH . 'public/js/hypersite-reviews.js'),
+            true
+        );
         // Localize frontend scripts
         if( ! is_admin() ) {
             wp_localize_script('hsrev-frontend', 'HyperSiteReviews', [
