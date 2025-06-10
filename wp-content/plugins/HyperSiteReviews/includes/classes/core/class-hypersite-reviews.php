@@ -25,6 +25,7 @@ class HyperSiteReviews
                 HyperSiteReviews::register_api_routes();
             });
             add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
+            add_action('wp_enqueue_scripts', [self::class, 'enqueue_frontend_scripts']);
 
             if (get_option('hsrev_setup_complete')) {
                 add_action('init', [self::class, 'register_post_type']);
@@ -122,10 +123,12 @@ class HyperSiteReviews
                 'nonce' => wp_create_nonce('wp_rest'),
             ]);
         }
+    }
 
+    public static function enqueue_frontend_scripts() {
         // Localize frontend scripts
         if( ! is_admin() ) {
-            wp_localize_script('hsrev-admin-script', 'HyperSiteReviews', [
+            wp_localize_script('hsrev-frontend', 'HyperSiteReviews', [
                 'urls' => [
                     'reviews' => rest_url('hsrev/v1/public/reviews'),
                 ],
