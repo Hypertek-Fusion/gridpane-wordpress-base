@@ -560,11 +560,9 @@ class HyperSiteReviews
     }
 
     public static function api_get_location_selected_reviews($request) {
-        $location_id = $request['location_id'];
-        $location_key = 'locations/' . $location_id;
 
         // Debugging ONLY
-        $location_key = 'locations/16358334009052137920';
+        $location_key = GoogleDataHandler::get_selected_location_id();
         try {
             $page = $request->get_param('page');
             $per_page = $request->get_param('per_page');
