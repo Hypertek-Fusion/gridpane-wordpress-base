@@ -555,6 +555,18 @@ class GoogleDataHandler
         return $wpdb->get_row("SELECT * FROM {$wpdb->prefix}locations WHERE is_selected = TRUE", ARRAY_A);
     }
 
+            /**
+     * Get the selected location ID.
+     *
+     * @return array|null The selected location data or null if no location is selected.
+     */
+    public static function get_selected_location_id()
+    {
+        global $wpdb;
+
+        return $wpdb->get_var("SELECT location_id FROM {$wpdb->prefix}locations WHERE is_selected = TRUE");
+    }
+
     public static function get_selected_reviews($location_id, $page, $per_page)
     {
         global $wpdb;
