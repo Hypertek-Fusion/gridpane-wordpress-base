@@ -446,6 +446,18 @@ class GoogleDataHandler
         return $count == 0;
     }
 
+    public static function is_location_reviews__empty($loc)
+    {
+        global $wpdb;
+
+        $count = $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(*) FROM {$wpdb->prefix}reviews WHERE location_id = %s",
+                $loc
+        ));
+
+        return $count == 0;
+    }
+
     /**
      * Check if an account exists in the database.
      *
