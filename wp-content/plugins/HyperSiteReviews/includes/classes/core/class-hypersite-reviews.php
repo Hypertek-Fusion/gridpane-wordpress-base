@@ -182,6 +182,9 @@ class HyperSiteReviews
                     array('is_selected' => TRUE),
                     array('account_id' => $selected_account)
                 );
+                if ($wpdb->last_error) {
+                    error_log("MySQL Error: " . $wpdb->last_error);
+                }
             }
 
             // Set the selected location to selected
@@ -192,6 +195,9 @@ class HyperSiteReviews
                     array('is_selected' => TRUE),
                     array('location_id' => $selected_location)
                 );
+                if ($wpdb->last_error) {
+                    error_log("MySQL Error: " . $wpdb->last_error);
+               }
             }
 
             error_log(print_r($_POST, true));
