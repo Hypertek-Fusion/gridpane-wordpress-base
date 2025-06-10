@@ -20,7 +20,7 @@ $selected_location_reviews = GoogleDataHandler::get_selected_location_reviews($s
             </div>
             <?php foreach($selected_location_reviews as $review): ?>
             <div class="row-item">
-                <input type="checkbox" name="selected-review-<?php echo $review['review_id']; ?>" value="<?php echo $review['review_id']; ?>" ${isChecked ? 'checked' : ''}>
+                <input type="checkbox" <?php echo $review['is_selected'] ? 'checked' : '' ;?> name="selected-review-<?php echo $review['review_id']; ?>" value="<?php echo $review['review_id']; ?>" ${isChecked ? 'checked' : ''}>
                 <div class="row-item__cell" data-type="reviewer"><?php echo $review['reviewer_display_name']; ?></div>
                 <div class="row-item__cell" data-type="rating"><?php echo $review['star_rating']; ?></div>
                 <div class="row-item__cell" data-type="comment"><?php echo $review['comment']; ?></div>
