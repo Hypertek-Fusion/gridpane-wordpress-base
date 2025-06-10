@@ -126,16 +126,16 @@ class HyperSiteReviews
     }
 
     public static function enqueue_frontend_scripts($hook) {
-        wp_enqueue_script(
-            'hsrev-frontend',
-            HSREV_URL . 'public/js/hypersite-reviews.js',
-            [],
-            '1.0',
-            true
-        );
-        // Localize frontend scripts
-        if( ! is_admin() ) {
-            wp_localize_script('hsrev-frontend', 'HyperSiteReviews', [
+        if (!wp_script_is('hypersite-reviews', 'enqueued')) {
+            wp_enqueue_script(
+                'hypersite-reviews',
+                HSREV_URL . 'public/js/hypersite-reviews.js',
+                [],
+                '1.0',
+                true
+            );
+            // Localize frontend scripts
+            wp_localize_script('hypersite-reviews', 'HyperSiteReviews', [
                 'urls' => [
                     'reviews' => rest_url('hsrev/v1/public/reviews'),
                 ],
