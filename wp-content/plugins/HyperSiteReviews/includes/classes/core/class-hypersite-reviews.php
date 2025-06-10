@@ -49,7 +49,7 @@ class HyperSiteReviews
 
         // Submenu pages
         add_submenu_page(
-            null,
+            '',
             'HyperSite Setup',
             'Setup',
             'manage_options',
@@ -67,7 +67,7 @@ class HyperSiteReviews
         );
 
         add_submenu_page(
-            null,
+            '',
             'Google Connect',
             'Google Connect',
             'manage_options',
