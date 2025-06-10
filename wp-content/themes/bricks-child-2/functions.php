@@ -59,13 +59,15 @@ add_action('rest_api_init', function () {
 
 function get_geojson_data() {
     $geojson = get_field('geojson_data', 'options');
+
+    if($geojson) {
+        $geojson_data = json_decode($geojson, true);
     
-    $geojson_data = json_decode($geojson, true);
-    
-    if(json_last_error() !== JSON_ERROR_NONE) {
-        return new WP_REST_Response(['error' => 'Invalid GeoJSON data'], 400);
+        if(json_last_error() !== JSON_ERROR_NONE) {
+            return new WP_REST_Response(['error' => 'Invalid GeoJSON data'], 400);
+        }
+        return new WP_REST_Response($geojson_data, 200);
     }
-    return new WP_REST_Response($geojson_data, 200);
 }
 
 function get_product_category_slug(){
