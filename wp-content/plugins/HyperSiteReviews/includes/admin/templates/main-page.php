@@ -11,7 +11,7 @@ $selected_location_reviews = GoogleDataHandler::get_selected_location_reviews($s
 <div id="main-page-table">
     <form>
         <div id="reviews-table">
-            <div class="table-header">
+            <div class="select-table__heading-row">
                 <div class="review-select-table__heading"><input id="select-all-reviews" type="checkbox" name="select-all-reviews"></div>
                 <div class="review-select-table__heading"><p>Reviewer</p></div>
                 <div class="review-select-table__heading"><p>Rating</p></div>
