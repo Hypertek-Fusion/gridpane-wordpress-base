@@ -513,6 +513,31 @@ class HyperSiteReviews
         }
     }
 
+    public static function api_get_selected_account_locations($request)
+    {
+        $account_key = GoogleDataHandler::get_selected_account_id();
+        try {
+            $page = $request->get_param('page');
+            $per_page = $request->get_param('per_page');
+
+            // Fetch paginated locations
+            $locations = GoogleDataHandler::get_locations_by_account($account_key, $page, $per_page);
+
+            // Get total number of locations for pagination
+            $total_locations = GoogleDataHandler::get_total_locations_count($account_key);
+
+            return rest_ensure_response([
+                'locations' => $locations,
+                'total' => $total_locations,
+                'page' => $page,
+                'per_page' => $per_page,
+                'total_pages' => ceil($total_locations / $per_page),
+            ]);
+        } catch (Exception $e) {
+            return new WP_Error('location_fetch_failed', $e->getMessage(), ['status' => 500]);
+        }
+    }
+
     public static function api_get_all_locations($request)
     {
         try {

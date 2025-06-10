@@ -12,6 +12,10 @@
 
         <form method="post">
             <?php wp_nonce_field('hsrev_google_disconnect'); ?>
+            <div id="account-settings">
+            <h3>General Settings</h3>
+            <input type="submit" name="change-account" value="Change Account" class="button button-primary">
+            </div>
             <input type="submit" name="disconnect" value="Disconnect Google Account" class="button button-secondary">
         </form>
 

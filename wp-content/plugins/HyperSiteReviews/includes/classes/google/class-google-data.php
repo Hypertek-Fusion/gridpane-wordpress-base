@@ -543,6 +543,43 @@ class GoogleDataHandler
         return $wpdb->get_row("SELECT * FROM {$wpdb->prefix}accounts WHERE is_selected = TRUE", ARRAY_A);
     }
 
+                /**
+     * Get the selected account ID.
+     *
+     * @return array|null The selected account data or null if no account is selected.
+     */
+    public static function get_selected_account_id()
+    {
+        global $wpdb;
+
+        return $wpdb->get_var("SELECT account_id FROM {$wpdb->prefix}accounts WHERE is_selected = TRUE");
+    }
+
+    /**
+     * Get the selected account.
+     *
+     * @return array|null The selected account data or null if no account is selected.
+     */
+    public static function get_selected_account_locations($account_id, $page, $per_page)
+    {
+        global $wpdb;
+
+        $client = GoogleOAuthClient::get_client();
+
+        if (self::account_exists($account_id)) {
+            // Calculate offset
+            $offset = ($page - 1) * $per_page;
+
+            // Update the SQL query to include the is_selected condition
+            return $wpdb->get_results($wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}locations WHERE location_id = %s AND is_selected = TRUE LIMIT %d OFFSET %d",
+                $account_id,
+                $per_page,
+                $offset
+            ), ARRAY_A);
+        }
+    }
+
         /**
      * Get the selected location.
      *
