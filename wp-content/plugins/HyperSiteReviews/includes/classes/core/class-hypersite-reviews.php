@@ -174,6 +174,9 @@ class HyperSiteReviews
 
             error_log(print_r($_POST, true));
 
+            // Unselect all accounts
+            $wpdb->query("UPDATE {$wpdb->prefix}accounts SET is_selected = FALSE");
+
             // Set the selected account to selected
             if (!empty($_POST['selected-account'])) {
                 $selected_account = $_POST['selected-account'];
@@ -182,10 +185,10 @@ class HyperSiteReviews
                     array('is_selected' => TRUE),
                     array('account_id' => $selected_account)
                 );
-                if ($wpdb->last_error) {
-                    error_log("MySQL Error: " . $wpdb->last_error);
-                }
             }
+
+            // Unselect all locations
+            $wpdb->query("UPDATE {$wpdb->prefix}locations SET is_selected = FALSE");
 
             // Set the selected location to selected
             if (!empty($_POST['selected-location'])) {
@@ -195,9 +198,6 @@ class HyperSiteReviews
                     array('is_selected' => TRUE),
                     array('location_id' => $selected_location)
                 );
-                if ($wpdb->last_error) {
-                    error_log("MySQL Error: " . $wpdb->last_error);
-               }
             }
 
             error_log(print_r($_POST, true));
