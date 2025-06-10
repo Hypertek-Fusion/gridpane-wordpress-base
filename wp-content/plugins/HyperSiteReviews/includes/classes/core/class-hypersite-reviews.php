@@ -311,6 +311,18 @@ class HyperSiteReviews
         ]);
     }
 
+    public static function debug_settings_page() {
+        if(HSREV_DEBUG) {
+            if($_SERVER['REQUEST_METHOD'] === 'POST' && check_admin_referer('hsrev_debug_setting_set')) {
+                $is_setup = isset($_POST['is-setup']) ? true : false;
+                update_option('hsrev_setup_complete', $is_setup);
+                $bypass_setup = isset($_POST['bypass-setup-page']) ? true : false;
+                update_option('hsrev_bypass_setup_page', $bypass_setup);
+            }
+            include HSREV_PATH . 'includes/admin/templates/debug-settings-page.php';
+        }
+    }
+
     public static function register_api_routes()
     {
         // Register REST API routes
