@@ -2,6 +2,15 @@
 
 if (!defined('ABSPATH')) exit; 
 
+/*
+
+ <input type="checkbox" <?php echo $review['is_selected'] ? 'checked' : '' ;?> name="selected-review-<?php echo $review['review_id']; ?>" value="<?php echo $review['review_id']; ?>" ${isChecked ? 'checked' : ''}>
+                <div class="row-item__cell" data-type="reviewer"><?php echo $review['reviewer_display_name']; ?></div>
+                <div class="row-item__cell" data-type="rating"><?php echo $review['star_rating']; ?></div>
+                <div class="row-item__cell" data-type="comment"><?php echo $review['comment']; ?></div>
+                <div class="row-item__cell" data-type="date"><?php echo date('m/d/Y', strtotime($review['create_time'])); ?></div>
+
+*/
 ?>
 
 <div id="main-wrapper">
@@ -16,15 +25,8 @@ if (!defined('ABSPATH')) exit;
                 <div class="review-select-table__heading"><p>Comment</p></div>
                 <div class="review-select-table__heading"><p>Date</p></div>
             </div>
-            <?php foreach($selected_location_reviews as $review): ?>
             <div id="review-rows" class="row-item">
-                <input type="checkbox" <?php echo $review['is_selected'] ? 'checked' : '' ;?> name="selected-review-<?php echo $review['review_id']; ?>" value="<?php echo $review['review_id']; ?>" ${isChecked ? 'checked' : ''}>
-                <div class="row-item__cell" data-type="reviewer"><?php echo $review['reviewer_display_name']; ?></div>
-                <div class="row-item__cell" data-type="rating"><?php echo $review['star_rating']; ?></div>
-                <div class="row-item__cell" data-type="comment"><?php echo $review['comment']; ?></div>
-                <div class="row-item__cell" data-type="date"><?php echo date('m/d/Y', strtotime($review['create_time'])); ?></div>
-            </div>
-            <?php endforeach ?>
+            </div>>
             <div class="pagination-controls">
                 <label for="reviews-per-page">Reviews per page:</label>
                 <select id="reviews-per-page">
