@@ -1,5 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     if (window.HSRevData.functions.prefetchReviews) {
-        window.HSRevData.functions.prefetchReviews();
+        await window.HSRevData.functions.prefetchReviews();
     }
 })
