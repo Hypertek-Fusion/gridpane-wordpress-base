@@ -125,6 +125,11 @@ class HyperSiteReviews
                 filemtime(HSREV_PATH . 'admin/js/admin-scripts.js'),
                 true
             );
+
+
+            // TODO
+            // Finish adding selectedLocation endpoint
+
             wp_localize_script('hsrev-admin-script', 'HSRevApi', [
                 'urls' => [
                     'accounts' => rest_url('hsrev/v1/accounts'),
@@ -133,6 +138,7 @@ class HyperSiteReviews
                     'totalAccountLocations' => rest_url('hsrev/v1/accounts/%s/total-locations'),
                     'totalLocationReviews' => rest_url('hsrev/v1/accounts/%s/locations/%s/total-reviews'),
                     'locationReviewsBase' => rest_url('hsrev/v1/locations/%s/reviews'),
+                    'selectedLocation' => rest_url('hsrev/v1/selected/location')
                 ],
                 'nonce' => wp_create_nonce('wp_rest'),
             ]);
