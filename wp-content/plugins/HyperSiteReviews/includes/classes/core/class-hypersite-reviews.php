@@ -624,7 +624,7 @@ class HyperSiteReviews
             $per_page = $request->get_param('per_page');
 
             // Fetch paginated reviews
-            $reviews = GoogleDataHandler::get_selected_reviews($location_key, $page, $per_page);
+            $reviews = GoogleDataHandler::get_selected_location_reviews($location_key, $page, $per_page);
             $total_reviews = GoogleDataHandler::get_total_selected_reviews($location_key);
 
             return rest_ensure_response([
