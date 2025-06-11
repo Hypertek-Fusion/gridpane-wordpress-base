@@ -2,8 +2,6 @@
 
 if (!defined('ABSPATH')) exit; 
 
-$selected_location = GoogleDataHandler::get_selected_location_id();
-$selected_location_reviews = GoogleDataHandler::get_selected_location_reviews($selected_location, 1, 10);
 ?>
 
 <div id="main-wrapper">
@@ -19,7 +17,7 @@ $selected_location_reviews = GoogleDataHandler::get_selected_location_reviews($s
                 <div class="review-select-table__heading"><p>Date</p></div>
             </div>
             <?php foreach($selected_location_reviews as $review): ?>
-            <div class="row-item">
+            <div id="review-rows" class="row-item">
                 <input type="checkbox" <?php echo $review['is_selected'] ? 'checked' : '' ;?> name="selected-review-<?php echo $review['review_id']; ?>" value="<?php echo $review['review_id']; ?>" ${isChecked ? 'checked' : ''}>
                 <div class="row-item__cell" data-type="reviewer"><?php echo $review['reviewer_display_name']; ?></div>
                 <div class="row-item__cell" data-type="rating"><?php echo $review['star_rating']; ?></div>
@@ -27,6 +25,16 @@ $selected_location_reviews = GoogleDataHandler::get_selected_location_reviews($s
                 <div class="row-item__cell" data-type="date"><?php echo date('m/d/Y', strtotime($review['create_time'])); ?></div>
             </div>
             <?php endforeach ?>
+            <div class="pagination-controls">
+                <label for="reviews-per-page">Reviews per page:</label>
+                <select id="reviews-per-page">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                </select>
+                <button id="reviews-prev" disabled>Previous</button>
+                <button id="reviews-next" disabled>Next</button>
+            </div>
         </div>
     </form>
 </div>
