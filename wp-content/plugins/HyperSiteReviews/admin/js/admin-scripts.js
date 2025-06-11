@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    getUsers();
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if(urlParams.get('page') && urlParams.get('page') === 'hypersite-reviews-setup') getUsers();
 });
 
 function getAccountLocationsUrl(accountId) {
