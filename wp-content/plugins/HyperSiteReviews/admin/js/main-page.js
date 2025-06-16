@@ -20,8 +20,8 @@ const getSelectedLocation = () => {
 
 const getSelectedLocationReviews = (locationId) => {
     return new Promise(async (resolve, reject) => {
-        const url = window.HSRevApi.urls.locationReviewsBase.replace('%s', locationId)
-        const response = await fetch(url, {
+        locationId = locationId.replace('locations/', '')
+        const response = await fetch(window.HSRevApi.urls.locationReviewsBase, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
