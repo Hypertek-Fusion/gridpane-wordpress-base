@@ -20,12 +20,35 @@ const getSelectedLocation = () => {
 
 const getSelectedLocationReviews = (locationId) => {
     return new Promise(async (resolve, reject) => {
-        resolve(locationId)
+        const url = window.HSRevApi.urls.locationReviewsBase.replace('%s', locationId)
+        const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WP-Nonce': HSRevApi.nonce
+                }
+            });
+
+            if (!response.ok) {
+                reject('Network response was not ok ' + response.statusText);
+            }
+
+            const reviews = await response.json();
+
+            resolve(reviews);
     })
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    if (window.HyperSiteReviews) {
-        await window.HSRevData.functions.prefetchReviews();
+    if (window.HSRevApi) {
+        getSelectedLocation()
+        .then(data => { 
+            const locID = data['location_id'];
+            return getSelectedLocationReviews(locID)
+        })
+        .then(reviews => console.log(reviews))
+        .catch(e => {
+            console.error('Error with promise: ', e)
+        })
     }
 })

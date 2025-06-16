@@ -609,8 +609,8 @@ class HyperSiteReviews
         $location_id = $request['location_id'];
         $location_key = 'locations/' . $location_id;
         try {
-            $page = $request->get_param('page');
-            $per_page = $request->get_param('per_page');
+            $page = $request->get_param('page') ?? 1;
+            $per_page = $request->get_param('per_page') ?? 10;
 
             if(GoogleDataHandler::is_reviews_table_empty()) {
                 GoogleDataHandler::get_initial_location_reviews($location_key);
