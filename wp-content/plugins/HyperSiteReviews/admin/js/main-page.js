@@ -1,24 +1,27 @@
-const getSelectedLocation = async () => {
-    try {
+const getSelectedLocation = () => {
+    return new Promise(async (resolve, reject) => {
         const response = await fetch(window.HSRevApi.urls.selectedLocation, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-WP-Nonce': HSRevApi.nonce
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WP-Nonce': HSRevApi.nonce
+                }
+            });
+
+            if (!response.ok) {
+                reject('Network response was not ok ' + response.statusText);
             }
-        });
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
+            const locationsData = await response.json();
 
-        const locationsData = await response.json();
+            resolve(locationsData);
+        })
+}
 
-        return locationsData;
-    } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-        locationRowsContainer.innerHTML = '<div style="text-align: center;" class="row-item">Error fetching locations. Please try again later.</div>';
-    }
+const getSelectedLocationReviews = (locationId) => {
+    return new Promise(async (resolve, reject) => {
+        resolve(locationId)
+    })
 }
 
 document.addEventListener('DOMContentLoaded', async () => {

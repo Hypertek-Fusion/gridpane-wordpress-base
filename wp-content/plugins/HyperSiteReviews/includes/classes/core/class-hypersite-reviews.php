@@ -635,9 +635,8 @@ class HyperSiteReviews
 
     public static function api_get_selected_location($request) {
         try {
-            return rest_ensure_response([
-                GoogleDataHandler::get_selected_location()
-            ]);
+            return rest_ensure_response(
+                GoogleDataHandler::get_selected_location());
         } catch (Exception $e) {
             return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
         }
