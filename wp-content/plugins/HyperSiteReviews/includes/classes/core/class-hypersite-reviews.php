@@ -145,7 +145,7 @@ class HyperSiteReviews
                     'totalAccountLocations' => rest_url('hsrev/v1/accounts/%s/total-locations'),
                     'totalLocationReviews' => rest_url('hsrev/v1/accounts/%s/locations/%s/total-reviews'),
                     'locationReviewsBase' => rest_url('hsrev/v1/locations/%s/reviews'),
-                    'selectedLocation' => rest_url('hsrev/v1/selected/location')
+                    'selectedLocation' => rest_url('hsrev/v1/public/location')
                 ],
                 'nonce' => wp_create_nonce('wp_rest'),
             ]);
@@ -497,6 +497,11 @@ class HyperSiteReviews
             ],
             'permission_callback' => '__return_true',
         ]);
+        register_rest_route('hsrev/v1', 'public/location', [
+            'methods' => 'GET',
+            'callback' => [self::class, 'api_get_selected_location'],
+            'permission_callback' => '__return_true',
+        ]);
     }
 
     public static function api_get_accounts($request)
@@ -622,6 +627,16 @@ class HyperSiteReviews
                 'page' => $page,
                 'per_page' => $per_page,
                 'total_pages' => ceil($total_reviews / $per_page),
+            ]);
+        } catch (Exception $e) {
+            return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
+        }
+    }
+
+    public static function api_get_selected_location($request) {
+        try {
+            return rest_ensure_response([
+                GoogleDataHandler::get_selected_location();
             ]);
         } catch (Exception $e) {
             return new WP_Error('reviews_fetch_failed', $e->getMessage(), ['status' => 500]);
