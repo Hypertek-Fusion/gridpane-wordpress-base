@@ -20,7 +20,9 @@ const getSelectedLocation = () => {
 
 const getSelectedLocationReviews = (locationId) => {
     return new Promise(async (resolve, reject) => {
-        const response = await fetch(window.HSRevApi.urls.locationReviewsBase.replace('locations/%s', locationId), {
+        const response = await fetch(window.HSRevApi.urls.locationReviewsBase.replace('locations/%s', locationId) + new URLSearchParams({
+            'per_page': 100,
+        }), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
