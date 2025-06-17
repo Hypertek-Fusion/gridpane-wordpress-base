@@ -122,6 +122,7 @@ const getSelectedLocationReviews = (locationId, page = 1) => {
             // Setup pagination after populating reviews
             updatePaginationControls(reviews.length, 1, rpp);
             showPageReviews(1);
+            updateButtonState();
 
         })
         .catch(e => {

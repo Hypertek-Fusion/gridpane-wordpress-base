@@ -203,4 +203,4 @@ const isAnyCheckboxCheckedOnCurrentPage = () => {
     return Array.from(currentCheckboxes).some(cb => cb.checked);
 };
 
-export { updatePaginationControls, changePage, showPageReviews, selectAllReviews };
+export { updatePaginationControls, changePage, showPageReviews, selectAllReviews, updateButtonState };
