@@ -1,3 +1,5 @@
+import {updatePaginationControls} from './forms.js'
+
 document.addEventListener('DOMContentLoaded', async () => {
     const getSelectedLocation = () => {
     return new Promise(async (resolve, reject) => {

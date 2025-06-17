@@ -151,11 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Pagination Functions
     const reviewsPerPageSelect = document.getElementById('reviews-per-page');
-    const updatePaginationControls = (totalItems, currentPage, itemsPerPage) => {
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        document.getElementById('page-prev').disabled = currentPage <= 1;
-        document.getElementById('page-next').disabled = currentPage >= totalPages;
-    };
+
 
     const changePage = (newPage) => {
         const totalPages = Math.ceil(getTotalItems() / reviewsPerPage);
@@ -188,6 +184,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showPageReviews(currentPage);
 });
+
+const updatePaginationControls = (totalItems, currentPage, itemsPerPage) => {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    document.getElementById('page-prev').disabled = currentPage <= 1;
+    document.getElementById('page-next').disabled = currentPage >= totalPages;
+};
 
 
 export { updatePaginationControls, changePage, showPageReviews, selectAllReviews };
