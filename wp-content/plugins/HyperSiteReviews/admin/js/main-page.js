@@ -44,7 +44,7 @@ const getSelectedLocationReviews = (locationId, page = 1) => {
 
             totalPages = reviews['total_pages'];
 
-            reviews['reviews'].array.forEach(r => {
+            reviews['reviews'].forEach(r => {
                 reviewsBatch.push(r)
             });
 
