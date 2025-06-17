@@ -39,6 +39,7 @@ if (!defined('ABSPATH')) exit;
                 </select>
                 <button id="page-prev" class="page-prev" type="button" disabled>Previous</button>
                 <button id="page-next" class="page-next" type="button" disabled>Next</button>
+                <input type="submit" value="Save Changes">
             </div>
     </form>
 </div>
