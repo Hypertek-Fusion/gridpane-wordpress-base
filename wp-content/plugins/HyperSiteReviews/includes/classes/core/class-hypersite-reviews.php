@@ -265,7 +265,6 @@ class HyperSiteReviews
                 );
             }
 
-            error_log(print_r($_POST, true));
             $selected_reviews = explode(',', $_POST['selected_reviews']);
 
             $placeholders = implode(', ', array_fill(0, count($selected_reviews), '%s'));

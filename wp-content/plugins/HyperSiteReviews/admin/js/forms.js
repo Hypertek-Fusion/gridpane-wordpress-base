@@ -19,16 +19,6 @@ function initializeForm() {
     window.HSRevData.data = window.HSRevData.data || {};
     window.HSRevData.data.selectedItems = new Set();
 
-    // Prevent default form submission if needed
-    const form = document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Add logic here only if you want to handle form submission differently
-            console.log("Form submitted"); // Placeholder for form submission logic
-        });
-    }
-
     // Attach event listeners
     attachEventListeners();
 
