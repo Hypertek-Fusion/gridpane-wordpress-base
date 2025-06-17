@@ -192,6 +192,7 @@ const updateButtonState = () => {
 };
 
 const isAnyCheckboxCheckedOnCurrentPage = () => {
+    console.log('Pages: ',pages)
     const currentCheckboxes = pages[currentPage].querySelectorAll('input:not([name="select-all-reviews"])[type="checkbox"]');
     return Array.from(currentCheckboxes).some(cb => cb.checked);
 };
