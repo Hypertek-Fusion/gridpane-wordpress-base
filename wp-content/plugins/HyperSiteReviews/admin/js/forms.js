@@ -1,10 +1,11 @@
+let pages = null; 
 let currentPage = 0;
 let reviewsPerPage = 10; // Default reviews per page
 let prevButton = null;
 let nextButton = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    const pages = document.querySelectorAll('.setup-page') || document.querySelectorAll('.reviews-page');
+    pages = document.querySelectorAll('.setup-page') || document.querySelectorAll('.reviews-page');
     console.log(pages);
     prevButton = document.querySelector('.page-prev');
     nextButton = document.querySelector('.page-next');
