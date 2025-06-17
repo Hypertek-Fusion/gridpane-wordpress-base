@@ -153,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const reviewsPerPageSelect = document.getElementById('reviews-per-page');
     const updatePaginationControls = (totalItems, currentPage, itemsPerPage) => {
         const totalPages = Math.ceil(totalItems / itemsPerPage);
-        document.getElementById('reviews-prev').disabled = currentPage <= 1;
-        document.getElementById('reviews-next').disabled = currentPage >= totalPages;
+        document.getElementById('page-prev').disabled = currentPage <= 1;
+        document.getElementById('page-next').disabled = currentPage >= totalPages;
     };
 
     const changePage = (newPage) => {
