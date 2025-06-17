@@ -3,3 +3,5 @@ config.cfg
 
 # Ignore Bash script for local use
 push.sh
+
+node_modules/
