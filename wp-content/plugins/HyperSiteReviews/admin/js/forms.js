@@ -4,9 +4,15 @@ let reviewsPerPage = 10; // Default reviews per page
 let prevButton = null;
 let nextButton = null;
 
-document.addEventListener('reviewsInitialized', () => {
-    pages = document.querySelectorAll('.setup-page') || document.querySelectorAll('.reviews-page');
-    console.log(pages);
+document.addEventListener('DOMContentLoaded', () => {
+    let params = new URLSearchParams(document.location.search);
+    const pagePath = params.get('page');
+
+    if(pagePath === 'hypersite-reviews-setup') {
+        pages = document.querySelectorAll('.setup-page')
+    } else {
+        pages = document.querySelectorAll('.reviews-page')
+    }
     prevButton = document.querySelector('.page-prev');
     nextButton = document.querySelector('.page-next');
 
@@ -192,7 +198,6 @@ const updateButtonState = () => {
 };
 
 const isAnyCheckboxCheckedOnCurrentPage = () => {
-    console.log('Pages: ',pages)
     const currentCheckboxes = pages[currentPage].querySelectorAll('input:not([name="select-all-reviews"])[type="checkbox"]');
     return Array.from(currentCheckboxes).some(cb => cb.checked);
 };
