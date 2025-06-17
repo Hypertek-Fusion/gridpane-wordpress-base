@@ -4,11 +4,13 @@ let reviewsPerPage = 10; // Default reviews per page
 let prevButton = null;
 let nextButton = null;
 
-document.addEventListener('reviewsInitialized', () => {
-    let params = new URLSearchParams(document.location.search);
-    const pagePath = params.get('page');
+const isSetupPage = () => {
+    return new URLSearchParams(document.location.search).get('page') === 'hypersite-reviews-setup'
+}
 
-    if(pagePath === 'hypersite-reviews-setup') {
+document.addEventListener('reviewsInitialized', () => {
+    
+    if(isSetupPage()) {
         pages = document.querySelectorAll('.setup-page')
     } else {
         pages = document.querySelectorAll('.reviews-page')
@@ -81,35 +83,41 @@ document.addEventListener('reviewsInitialized', () => {
     });
 
     nextButton.addEventListener('click', () => {
-        if (currentPage < pages.length - 1 && isAnyCheckboxCheckedOnCurrentPage()) {
-            if (currentPage === 0) {
-                const accountId = getCheckedAccountId();
-                if (accountId && window.HSRevData.functions.getLocations) {
-                    if (window.HSRevData.data.accountId !== accountId) {
-                        console.log('Account changed, clearing location cache');
-                        window.HSRevData.data.locationsCache = {};
+        if(isSetupPage()) {
+            if (currentPage < pages.length - 1 && isAnyCheckboxCheckedOnCurrentPage()) {
+                if (currentPage === 0) {
+                    const accountId = getCheckedAccountId();
+                    if (accountId && window.HSRevData.functions.getLocations) {
+                        if (window.HSRevData.data.accountId !== accountId) {
+                            console.log('Account changed, clearing location cache');
+                            window.HSRevData.data.locationsCache = {};
+                        }
+                        window.HSRevData.functions.getLocations(accountId);
+                        window.HSRevData.data.accountId = accountId;
+                        console.log(`Account ID set: ${accountId}`);
                     }
-                    window.HSRevData.functions.getLocations(accountId);
-                    window.HSRevData.data.accountId = accountId;
-                    console.log(`Account ID set: ${accountId}`);
-                }
-            } else if (currentPage === 1) {
-                const locationId = getCheckedLocationId();
-                if (locationId && window.HSRevData.functions.prefetchReviews) {
-                    if (window.HSRevData.data.locationId !== locationId) {
-                        console.log('Location changed, clearing review cache');
-                        window.HSRevData.data.reviewsCache = {};
+                } else if (currentPage === 1) {
+                    const locationId = getCheckedLocationId();
+                    if (locationId && window.HSRevData.functions.prefetchReviews) {
+                        if (window.HSRevData.data.locationId !== locationId) {
+                            console.log('Location changed, clearing review cache');
+                            window.HSRevData.data.reviewsCache = {};
+                        }
+                        window.HSRevData.functions.prefetchReviews(locationId);
+                        window.HSRevData.data.locationId = locationId;
+                        console.log(`Location ID set: ${locationId}`);
                     }
-                    window.HSRevData.functions.prefetchReviews(locationId);
-                    window.HSRevData.data.locationId = locationId;
-                    console.log(`Location ID set: ${locationId}`);
                 }
+                currentPage++;
+                showPage(currentPage);
+            } else if (currentPage === 2 && isAnyCheckboxCheckedOnCurrentPage()) {
+                form.submit(); // Only submit the form when on the last page
             }
+        } else {
             currentPage++;
             showPage(currentPage);
-        } else if (currentPage === 2 && isAnyCheckboxCheckedOnCurrentPage()) {
-            form.submit(); // Only submit the form when on the last page
         }
+
     });
 
     if (window.HSRevData && window.HSRevData.functions) {
@@ -189,12 +197,17 @@ const updateHiddenInput = () => {
 };
 
 const updateButtonState = () => {
-    if (currentPage !== 2) {
-        nextButton.innerText = 'Next Page';
+    if(isSetupPage) {
+        if (currentPage !== 2) {
+            nextButton.innerText = 'Next Page';
+        } else {
+            nextButton.innerText = 'Submit';
+        }
+        nextButton.disabled = !isAnyCheckboxCheckedOnCurrentPage();
     } else {
-        nextButton.innerText = 'Submit';
+        nextButton.disabled = currentPage === pages.length - 1
     }
-    nextButton.disabled = !isAnyCheckboxCheckedOnCurrentPage();
+
 };
 
 const isAnyCheckboxCheckedOnCurrentPage = () => {
