@@ -19,36 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         submitForm(); // Handle form submission
     });
 
-    const isAnyCheckboxCheckedOnCurrentPage = () => {
-        const currentCheckboxes = pages[currentPage].querySelectorAll('input:not([name="select-all-reviews"])[type="checkbox"]');
-        return Array.from(currentCheckboxes).some(cb => cb.checked);
-    };
-
-    const selectAllReviews = (element) => {
-        const reviewCheckboxes = pages[currentPage].querySelectorAll('input[name*="selected-review-"][type="checkbox"]');
-        const locationId = window.HSRevData.data.locationId;
-        const reviews = window.HSRevData.data.reviewsCache[locationId] || [];
-
-        Array.from(reviewCheckboxes).forEach(cb => {
-            const reviewId = cb.value;
-            cb.checked = element.checked;
-            if (element.checked) {
-                window.HSRevData.data.selectedReviews.add(reviewId);
-            } else {
-                window.HSRevData.data.selectedReviews.delete(reviewId);
-            }
-        });
-
-        updateHiddenInput();
-        updateButtonState();
-    };
-
-    const updateHiddenInput = () => {
-        const hiddenInput = document.getElementById('selected_reviews');
-        const filteredReviewIds = Array.from(window.HSRevData.data.selectedReviews).filter(id => id.startsWith('AbFvOq'));
-        hiddenInput.value = filteredReviewIds.join(',');
-    };
-
     const getCheckedAccountId = () => {
         const selectedCheckbox = pages[0].querySelector('input[type="checkbox"]:checked');
         if (selectedCheckbox) {
@@ -63,15 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return selectedCheckbox.closest('.row-item').dataset.locationId;
         }
         return null;
-    };
-
-    const updateButtonState = () => {
-        if (currentPage !== 2) {
-            nextButton.innerText = 'Next Page';
-        } else {
-            nextButton.innerText = 'Submit';
-        }
-        nextButton.disabled = !isAnyCheckboxCheckedOnCurrentPage();
     };
 
     const attachCheckboxListeners = (container) => {
@@ -162,10 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const getTotalItems = () => {
-        return document.querySelectorAll('.review-row').length;
-    };
-
     document.getElementById('page-prev').addEventListener('click', () => changePage(currentPage - 1));
     document.getElementById('page-next').addEventListener('click', () => changePage(currentPage + 1));
     reviewsPerPageSelect.addEventListener('change', function () {
@@ -192,5 +149,47 @@ const showPageReviews = (page) => {
     updatePaginationControls(getTotalItems(), currentPage, reviewsPerPage);
 };
 
+const getTotalItems = () => {
+    return document.querySelectorAll('.review-row').length;
+};
+
+const selectAllReviews = (element) => {
+    const reviewCheckboxes = pages[currentPage].querySelectorAll('input[name*="selected-review-"][type="checkbox"]');
+    const locationId = window.HSRevData.data.locationId;
+    const reviews = window.HSRevData.data.reviewsCache[locationId] || [];
+
+    Array.from(reviewCheckboxes).forEach(cb => {
+        const reviewId = cb.value;
+        cb.checked = element.checked;
+        if (element.checked) {
+            window.HSRevData.data.selectedReviews.add(reviewId);
+        } else {
+            window.HSRevData.data.selectedReviews.delete(reviewId);
+        }
+    });
+
+    updateHiddenInput();
+    updateButtonState();
+};
+
+const updateHiddenInput = () => {
+    const hiddenInput = document.getElementById('selected_reviews');
+    const filteredReviewIds = Array.from(window.HSRevData.data.selectedReviews).filter(id => id.startsWith('AbFvOq'));
+    hiddenInput.value = filteredReviewIds.join(',');
+};
+
+const updateButtonState = () => {
+    if (currentPage !== 2) {
+        nextButton.innerText = 'Next Page';
+    } else {
+        nextButton.innerText = 'Submit';
+    }
+    nextButton.disabled = !isAnyCheckboxCheckedOnCurrentPage();
+};
+
+const isAnyCheckboxCheckedOnCurrentPage = () => {
+    const currentCheckboxes = pages[currentPage].querySelectorAll('input:not([name="select-all-reviews"])[type="checkbox"]');
+    return Array.from(currentCheckboxes).some(cb => cb.checked);
+};
 
 export { updatePaginationControls, changePage, showPageReviews, selectAllReviews };
