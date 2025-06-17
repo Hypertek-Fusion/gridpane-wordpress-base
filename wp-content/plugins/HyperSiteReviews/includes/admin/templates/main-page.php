@@ -25,8 +25,8 @@ if (!defined('ABSPATH')) exit;
                 <div class="review-select-table__heading"><p>Comment</p></div>
                 <div class="review-select-table__heading"><p>Date</p></div>
             </div>
-            <div id="review-rows" class="row-item">
-            </div>>
+            <div id="initial-reviews" class="reviews-page"></div>
+            </div>
             <div class="pagination-controls">
                 <label for="reviews-per-page">Reviews per page:</label>
                 <select id="reviews-per-page">

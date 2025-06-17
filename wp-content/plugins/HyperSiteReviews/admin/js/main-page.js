@@ -1,3 +1,7 @@
+const firstReviewPage = document.getElementById('initial-reviews');
+const reviewsTable = document.getElementById('reviews-table')
+const reviewsPerPageSelect = document.getElementById('reviews-per-page');
+
 const getSelectedLocation = () => {
     return new Promise(async (resolve, reject) => {
         const response = await fetch(window.HSRevApi.urls.selectedLocation, {
@@ -60,7 +64,55 @@ document.addEventListener('DOMContentLoaded', async () => {
             const locID = data['location_id'];
             return getSelectedLocationReviews(locID)
         })
-        .then(reviews => console.log(reviews))
+        .then(reviews => {
+
+            // Reviews per page
+            const rpp = parseInt(reviewsPerPageSelect.selectedOptions[0].value);
+            console.log(reviews)
+
+            // Clear the first review page
+            firstReviewPage.innerHTML = '';
+
+            // Total number of pages to generate
+            const numPages = Math.ceil(reviews.length / rpp);
+
+            for(const i = 0; i < numPages; i++) {
+                const isFirstPage = i === 0;
+
+                // Our temporary page, either the firstReviewPage, or creating a new div element
+                const page = isFirstPage ? firstReviewPage : document.createElement('div');
+
+                // Setting the data-page attribute and reviews-page class if not already set
+                page.setAttribute('data-page', i + 1);
+                page.classList.add('reviews-page');
+
+                // For every nth review, where n = reviews per page (rpp), append a row
+                for(const j = 0; j < rpp; j++) {
+                    const review = reviews[(i * 10) + j];
+                    // Create new row item
+                    const row = document.createElement('div');
+                    row.classList.add('rows');
+                    row.innerHTML = `
+                        <div class="row-item">
+                            <input type="checkbox" name="selected-review-${review.review_id}" value="${review.review_id}" ${isChecked ? 'checked' : ''}>
+                            <div class="row-item__cell" data-type="reviewer">${review.reviewer_display_name}</div>
+                            <div class="row-item__cell" data-type="rating">${review.star_rating}</div>
+                            <div class="row-item__cell" data-type="comment">${review.comment}</div>
+                            <div class="row-item__cell" data-type="date">${new Date(review.create_time).toLocaleDateString()}</div>
+                        </div>
+                    `;
+
+                    page.appendChild(row);
+                }
+
+                // If this is not the firstReview page, insert it after the initial firstReviewPage
+                if( !isFirstPage ) {
+                    reviewsTable.appendChild(page)
+                } else {
+                    continue;
+                }
+            }
+        })
         .catch(e => {
             console.error('Error with promise: ', e)
         })
