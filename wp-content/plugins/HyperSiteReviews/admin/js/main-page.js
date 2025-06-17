@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 }
 
 const getSelectedLocationReviews = (locationId, page = 1) => {
-
     return new Promise(async (resolve, reject) => {
         let reviewsBatch = []
         let totalPages = 1
@@ -64,7 +63,7 @@ const getSelectedLocationReviews = (locationId, page = 1) => {
             return getSelectedLocationReviews(locID)
         })
         .then(reviews => {
-
+            const reviewsTable = document.getElementById('reviews-table')
             // Reviews per page
             const rpp = parseInt(reviewsPerPageSelect.selectedOptions[0].value);
             console.log(reviews)
