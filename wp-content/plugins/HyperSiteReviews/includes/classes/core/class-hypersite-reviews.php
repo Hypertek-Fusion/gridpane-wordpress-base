@@ -95,13 +95,13 @@ class HyperSiteReviews
                 'hsrev-setup-style',
                 HSREV_URL . 'admin/css/setup-page.css',
                 [],
-                filemtime(HSREV_PATH . 'admin/css/setup-page.css')
+                null,
             );
             wp_enqueue_script(
                 'hsrev-setup-script',
                 HSREV_URL . 'admin/js/setup-page.js',
                 [],
-                filemtime(HSREV_PATH . 'admin/js/setup-page.js'),
+                null,
                 true
             );
         }
@@ -109,34 +109,34 @@ class HyperSiteReviews
                 'hsrev-setup-style',
                 HSREV_URL . 'admin/css/main.css',
                 [],
-                filemtime(HSREV_PATH . 'admin/css/main.css')
+                null,
             );
             wp_enqueue_script(
                 'hsrev-setup-script',
                 HSREV_URL . 'admin/js/setup-page.js',
                 [],
-                filemtime(HSREV_PATH . 'admin/js/setup-page.js'),
+                null,
                 true
             );
             wp_enqueue_script(
                 'hsrev-admin-script',
                 HSREV_URL . 'admin/js/admin-scripts.js',
                 [],
-                filemtime(HSREV_PATH . 'admin/js/admin-scripts.js'),
+                null,
                 true
             );
              wp_enqueue_script(
                 'hsrev-main-page-script',
                 HSREV_URL . 'admin/js/main-page.js',
                 [],
-                filemtime(HSREV_PATH . 'admin/js/main-page.js'),
+                null,
                 true
             );
             wp_enqueue_script(
                 'hsrev-form-script',
                 HSREV_URL . 'admin/js/forms.js',
                 [],
-                filemtime(HSREV_PATH . 'admin/js/forms.js'),
+                null,
                 true
             );
 
