@@ -1,4 +1,4 @@
-import {updatePaginationControls, showPageReviews} from './forms.js'
+import {updatePaginationControls, showPageReviews, updateButtonState} from './forms.js'
 
 const reviewsInitializedEvent = new Event('reviewsInitialized');
 
