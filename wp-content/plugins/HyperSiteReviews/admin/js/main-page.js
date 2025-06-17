@@ -1,5 +1,6 @@
+document.addEventListener('DOMContentLoaded', async () => {
 
-const getSelectedLocation = () => {
+    const getSelectedLocation = () => {
     return new Promise(async (resolve, reject) => {
         const response = await fetch(window.HSRevApi.urls.selectedLocation, {
                 method: 'GET',
@@ -55,7 +56,6 @@ const getSelectedLocationReviews = (locationId, page = 1) => {
     })
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
     const firstReviewPage = document.getElementById('initial-reviews');
 
     if (window.HSRevApi) {
