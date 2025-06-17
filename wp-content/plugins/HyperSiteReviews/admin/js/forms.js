@@ -205,9 +205,9 @@ const updateButtonState = () => {
         }
         nextButton.disabled = !isAnyCheckboxCheckedOnCurrentPage();
     } else {
+        console.log(pages.length)
         nextButton.disabled = currentPage === pages.length - 1
     }
-
 };
 
 const isAnyCheckboxCheckedOnCurrentPage = () => {
