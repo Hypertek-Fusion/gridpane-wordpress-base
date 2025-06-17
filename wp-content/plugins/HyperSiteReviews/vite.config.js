@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-
+//New build
 export default defineConfig({
   build: {
     outDir: 'dist',
