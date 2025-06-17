@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // For every nth review, where n = reviews per page (rpp), append a row
                 for(let j = 0; j < rpp; j++) {
                     const review = reviews[(i * 10) + j];
+                    console.log('Review #: ', (i * 10) + j)
                     // Create new row item
                     row.innerHTML += `
                         <div class="row-item">
