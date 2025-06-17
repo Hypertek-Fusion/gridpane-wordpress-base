@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 //New build
 export default defineConfig({
   build: {
+    sourcemap: true,
     outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {

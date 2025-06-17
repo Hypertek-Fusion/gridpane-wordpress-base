@@ -7,3 +7,4 @@ document.addEventListener("DOMContentLoaded",async()=>{const d=()=>new Promise(a
                             <div class="row-item__cell" data-type="date">${new Date(n.create_time).toLocaleDateString()}</div>
                         </div>
                     `,a.appendChild(i))}if(!r)p.appendChild(a);else continue}updatePaginationControls(e.length,1,t),showPageReviews(1)}).catch(e=>{console.error("Error with promise: ",e)})});
+//# sourceMappingURL=mainPage.js.map

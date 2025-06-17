@@ -22,3 +22,4 @@ document.addEventListener("DOMContentLoaded",function(){const a=new URLSearchPar
                 <div class="row-item__cell" data-type="date">${new Date(s.create_time).toLocaleDateString()}</div>
             </div>
         `,w});if(t.innerHTML="",t.append(...h),window.HSRevData.functions.selectAllReviews){const s=document.getElementById("select-all-reviews");s.checked=r.every(l=>window.HSRevData.data.selectedReviews.has(l.review_id)),s.addEventListener("change",()=>{selectAllReviews(s,r),window.HSRevData.functions.attachCheckboxListeners(t)})}};window.HSRevData=window.HSRevData||{};window.HSRevData.functions=window.HSRevData.functions||{};window.HSRevData.functions.getLocations=H;window.HSRevData.functions.prefetchReviews=f;
+//# sourceMappingURL=admin.js.map
