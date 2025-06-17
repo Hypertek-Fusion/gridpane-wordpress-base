@@ -5,7 +5,7 @@ let prevButton = null;
 let nextButton = null;
 
 // Initialize the form and pagination functionality
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('reviewsInitialized', () => {
     initializeForm();
 });
 
