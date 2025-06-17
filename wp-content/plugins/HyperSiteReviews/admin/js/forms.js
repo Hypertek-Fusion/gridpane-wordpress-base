@@ -1,219 +1,128 @@
-let pages = null; 
+let pages = null;
 let currentPage = 0;
 let reviewsPerPage = 10; // Default reviews per page
 let prevButton = null;
 let nextButton = null;
 
-const isSetupPage = () => {
-    return new URLSearchParams(document.location.search).get('page') === 'hypersite-reviews-setup'
-}
+// Initialize the form and pagination functionality
+document.addEventListener('DOMContentLoaded', () => {
+    initializeForm();
+});
 
-document.addEventListener('reviewsInitialized', () => {
-    
-    if(isSetupPage()) {
-        pages = document.querySelectorAll('.setup-page')
-    } else {
-        pages = document.querySelectorAll('.reviews-page')
-    }
+function initializeForm() {
+    pages = document.querySelectorAll('.reviews-page');
     prevButton = document.querySelector('.page-prev');
     nextButton = document.querySelector('.page-next');
 
-    // Initialize window.HSRevData if not already done
+    // Initialize selected reviews or items
     window.HSRevData = window.HSRevData || {};
-    window.HSRevData.functions = window.HSRevData.functions || {};
     window.HSRevData.data = window.HSRevData.data || {};
-    window.HSRevData.data.selectedReviews = new Set();
+    window.HSRevData.data.selectedItems = new Set();
 
     // Prevent default form submission
     const form = document.querySelector('form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault(); // Prevents the form from being submitted
-        submitForm(); // Handle form submission
-    });
+    form && form.addEventListener('submit', onFormSubmit);
 
-    const getCheckedAccountId = () => {
-        const selectedCheckbox = pages[0].querySelector('input[type="checkbox"]:checked');
-        if (selectedCheckbox) {
-            return selectedCheckbox.closest('.row-item').dataset.accountId;
-        }
-        return null;
-    };
+    // Attach event listeners
+    attachEventListeners();
 
-    const getCheckedLocationId = () => {
-        const selectedCheckbox = pages[1].querySelector('input[type="checkbox"]:checked');
-        if (selectedCheckbox) {
-            return selectedCheckbox.closest('.row-item').dataset.locationId;
-        }
-        return null;
-    };
-
-    const attachCheckboxListeners = (container) => {
-        const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(c => {
-            c.addEventListener('change', e => {
-                const clickedCheckbox = e.target;
-                const reviewId = clickedCheckbox.value;
-                if (clickedCheckbox.checked) {
-                    window.HSRevData.data.selectedReviews.add(reviewId);
-                } else {
-                    window.HSRevData.data.selectedReviews.delete(reviewId);
-                }
-                updateHiddenInput();
-                updateButtonState();
-            });
-        });
-    };
-
-    const showPage = (index) => {
-        pages.forEach((page, i) => {
-            page.style.display = i === index ? 'block' : 'none';
-        });
-
-        prevButton.disabled = index === 0;
-        updateButtonState();
-    };
-
+    // Show the initial page
     showPage(currentPage);
+    showPageReviews(currentPage + 1); // Assuming page indices are 1-based for display
+}
 
-    prevButton.addEventListener('click', () => {
-        if (currentPage > 0) {
-            currentPage--;
-            showPage(currentPage);
-        }
-    });
+function onFormSubmit(e) {
+    e.preventDefault();
+    // Implement form submission logic, such as sending data via AJAX
+    submitForm();
+}
 
-    nextButton.addEventListener('click', () => {
-        if(isSetupPage()) {
-            if (currentPage < pages.length - 1 && isAnyCheckboxCheckedOnCurrentPage()) {
-                if (currentPage === 0) {
-                    const accountId = getCheckedAccountId();
-                    if (accountId && window.HSRevData.functions.getLocations) {
-                        if (window.HSRevData.data.accountId !== accountId) {
-                            console.log('Account changed, clearing location cache');
-                            window.HSRevData.data.locationsCache = {};
-                        }
-                        window.HSRevData.functions.getLocations(accountId);
-                        window.HSRevData.data.accountId = accountId;
-                        console.log(`Account ID set: ${accountId}`);
-                    }
-                } else if (currentPage === 1) {
-                    const locationId = getCheckedLocationId();
-                    if (locationId && window.HSRevData.functions.prefetchReviews) {
-                        if (window.HSRevData.data.locationId !== locationId) {
-                            console.log('Location changed, clearing review cache');
-                            window.HSRevData.data.reviewsCache = {};
-                        }
-                        window.HSRevData.functions.prefetchReviews(locationId);
-                        window.HSRevData.data.locationId = locationId;
-                        console.log(`Location ID set: ${locationId}`);
-                    }
-                }
-                currentPage++;
-                showPage(currentPage);
-            } else if (currentPage === 2 && isAnyCheckboxCheckedOnCurrentPage()) {
-                form.submit(); // Only submit the form when on the last page
-            }
-        } else {
-            currentPage++;
-            showPage(currentPage);
-        }
+function attachEventListeners() {
+    prevButton && prevButton.addEventListener('click', () => changePage(currentPage - 1));
+    nextButton && nextButton.addEventListener('click', () => changePage(currentPage + 1));
 
-    });
-
-    if (window.HSRevData && window.HSRevData.functions) {
-        window.HSRevData.functions.attachCheckboxListeners = attachCheckboxListeners;
-        window.HSRevData.functions.selectAllReviews = selectAllReviews;
-    }
-
-    if (pages[currentPage]) {
-        attachCheckboxListeners(pages[currentPage]);
-    }
-
-    // Pagination Functions
     const reviewsPerPageSelect = document.getElementById('reviews-per-page');
-
-
-    const changePage = (newPage) => {
-        const totalPages = Math.ceil(getTotalItems() / reviewsPerPage);
-        if (newPage > 0 && newPage <= totalPages) {
-            currentPage = newPage;
-            showPageReviews(currentPage);
-        }
-    };
-
-    document.getElementById('page-prev').addEventListener('click', () => changePage(currentPage - 1));
-    document.getElementById('page-next').addEventListener('click', () => changePage(currentPage + 1));
-    reviewsPerPageSelect.addEventListener('change', function () {
+    reviewsPerPageSelect && reviewsPerPageSelect.addEventListener('change', function () {
         reviewsPerPage = parseInt(this.value, 10);
         currentPage = 1; // Reset to first page on perPage change
         showPageReviews(currentPage);
     });
 
-    showPageReviews(currentPage);
-});
+    if (pages[currentPage]) {
+        attachCheckboxListeners(pages[currentPage]);
+    }
+}
 
-const updatePaginationControls = (totalItems, currentPage, itemsPerPage) => {
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    document.getElementById('page-prev').disabled = currentPage <= 1;
-    document.getElementById('page-next').disabled = currentPage >= totalPages;
-};
+function showPage(index) {
+    pages.forEach((page, i) => {
+        page.style.display = i === index ? 'block' : 'none';
+    });
 
-const showPageReviews = (page) => {
-    const pages = document.querySelectorAll('.reviews-page');
-    pages.forEach((pageElement, index) => {
+    prevButton.disabled = index === 0;
+    updateButtonState();
+}
+
+function changePage(newPage) {
+    const totalPages = Math.ceil(getTotalItems() / reviewsPerPage);
+    if (newPage >= 0 && newPage < totalPages) {
+        currentPage = newPage;
+        showPageReviews(currentPage + 1); // Assuming page indices are 1-based for display
+        updateButtonState();
+    }
+}
+
+function updateButtonState() {
+    if (pages) {
+        nextButton.disabled = currentPage === pages.length - 1;
+    }
+}
+
+function getTotalItems() {
+    return document.querySelectorAll('.review-row').length;
+}
+
+function showPageReviews(page) {
+    const reviewPages = document.querySelectorAll('.reviews-page');
+    reviewPages.forEach((pageElement, index) => {
         pageElement.style.display = (index + 1 === page) ? 'block' : 'none';
     });
 
-    updatePaginationControls(getTotalItems(), currentPage, reviewsPerPage);
-};
+    updatePaginationControls(getTotalItems(), currentPage + 1, reviewsPerPage);
+}
 
-const getTotalItems = () => {
-    return document.querySelectorAll('.review-row').length;
-};
+function updatePaginationControls(totalItems, currentPage, itemsPerPage) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    prevButton.disabled = currentPage <= 1;
+    nextButton.disabled = currentPage >= totalPages;
+}
 
-const selectAllReviews = (element) => {
-    const reviewCheckboxes = pages[currentPage].querySelectorAll('input[name*="selected-review-"][type="checkbox"]');
-    const locationId = window.HSRevData.data.locationId;
-    const reviews = window.HSRevData.data.reviewsCache[locationId] || [];
-
-    Array.from(reviewCheckboxes).forEach(cb => {
-        const reviewId = cb.value;
-        cb.checked = element.checked;
-        if (element.checked) {
-            window.HSRevData.data.selectedReviews.add(reviewId);
-        } else {
-            window.HSRevData.data.selectedReviews.delete(reviewId);
-        }
+function attachCheckboxListeners(container) {
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', onCheckboxChange);
     });
+}
+
+function onCheckboxChange(e) {
+    const clickedCheckbox = e.target;
+    const itemId = clickedCheckbox.value;
+
+    if (clickedCheckbox.checked) {
+        window.HSRevData.data.selectedItems.add(itemId);
+    } else {
+        window.HSRevData.data.selectedItems.delete(itemId);
+    }
 
     updateHiddenInput();
     updateButtonState();
-};
+}
 
-const updateHiddenInput = () => {
-    const hiddenInput = document.getElementById('selected_reviews');
-    const filteredReviewIds = Array.from(window.HSRevData.data.selectedReviews).filter(id => id.startsWith('AbFvOq'));
-    hiddenInput.value = filteredReviewIds.join(',');
-};
-
-const updateButtonState = () => {
-    if(isSetupPage) {
-        if (currentPage !== 2) {
-            nextButton.innerText = 'Next Page';
-        } else {
-            nextButton.innerText = 'Submit';
-        }
-        nextButton.disabled = !isAnyCheckboxCheckedOnCurrentPage();
-    } else {
-        console.log(pages.length)
-        nextButton.disabled = currentPage === pages.length - 1
+function updateHiddenInput() {
+    const hiddenInput = document.getElementById('selected_items');
+    if (hiddenInput) {
+        hiddenInput.value = Array.from(window.HSRevData.data.selectedItems).join(',');
     }
-};
+}
 
-const isAnyCheckboxCheckedOnCurrentPage = () => {
-    console.log(pages)
-    const currentCheckboxes = pages[currentPage].querySelectorAll('input:not([name="select-all-reviews"])[type="checkbox"]');
-    return Array.from(currentCheckboxes).some(cb => cb.checked);
-};
+export { updatePaginationControls, changePage, showPageReviews, updateButtonState };
 
-export { updatePaginationControls, changePage, showPageReviews, selectAllReviews, updateButtonState };
