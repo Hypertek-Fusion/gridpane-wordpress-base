@@ -90,72 +90,69 @@ class HyperSiteReviews
 
     public static function enqueue_scripts($hook)
     {
+        // Conditionally enqueue setup page styles and scripts
         if (isset($_GET['page']) && $_GET['page'] === 'hypersite-reviews-setup') {
             wp_enqueue_style(
                 'hsrev-setup-style',
                 HSREV_URL . 'admin/css/setup-page.css',
                 [],
-                null,
+                null
             );
             wp_enqueue_script(
                 'hsrev-setup-script',
-                HSREV_URL . 'admin/js/setup-page.js',
+                HSREV_URL . 'dist/setupPage.js',
                 [],
                 null,
                 true
             );
         }
-            wp_enqueue_style(
-                'hsrev-setup-style',
-                HSREV_URL . 'admin/css/main.css',
-                [],
-                null,
-            );
-            wp_enqueue_script(
-                'hsrev-setup-script',
-                HSREV_URL . 'admin/js/setup-page.js',
-                [],
-                null,
-                true
-            );
-            wp_enqueue_script(
-                'hsrev-admin-script',
-                HSREV_URL . 'admin/js/admin-scripts.js',
-                [],
-                null,
-                true
-            );
-             wp_enqueue_script(
-                'hsrev-main-page-script',
-                HSREV_URL . 'admin/js/main-page.js',
-                [],
-                null,
-                true
-            );
-            wp_enqueue_script(
-                'hsrev-form-script',
-                HSREV_URL . 'admin/js/forms.js',
-                [],
-                null,
-                true
-            );
 
+        // Always enqueue main admin styles
+        wp_enqueue_style(
+            'hsrev-main-style',
+            HSREV_URL . 'admin/css/main.css',
+            [],
+            null
+        );
 
-            // TODO
-            // Finish adding selectedLocation endpoint
+        // Enqueue Vite-bundled scripts
+        wp_enqueue_script(
+            'hsrev-admin-script',
+            HSREV_URL . 'dist/admin.js',
+            [],
+            null,
+            true
+        );
 
-            wp_localize_script('hsrev-admin-script', 'HSRevApi', [
-                'urls' => [
-                    'accounts' => rest_url('hsrev/v1/accounts'),
-                    'locations' => rest_url('hsrev/v1/locations'),
-                    'accountLocationsBase' => rest_url('hsrev/v1/accounts/%s/locations'),
-                    'totalAccountLocations' => rest_url('hsrev/v1/accounts/%s/total-locations'),
-                    'totalLocationReviews' => rest_url('hsrev/v1/accounts/%s/locations/%s/total-reviews'),
-                    'locationReviewsBase' => rest_url('hsrev/v1/locations/%s/reviews'),
-                    'selectedLocation' => rest_url('hsrev/v1/public/location')
-                ],
-                'nonce' => wp_create_nonce('wp_rest'),
-            ]);
+        wp_enqueue_script(
+            'hsrev-main-page-script',
+            HSREV_URL . 'dist/mainPage.js',
+            [],
+            null,
+            true
+        );
+
+        wp_enqueue_script(
+            'hsrev-form-script',
+            HSREV_URL . 'dist/forms.js',
+            [],
+            null,
+            true
+        );
+
+        // Localize for REST access
+        wp_localize_script('hsrev-admin-script', 'HSRevApi', [
+            'urls' => [
+                'accounts' => rest_url('hsrev/v1/accounts'),
+                'locations' => rest_url('hsrev/v1/locations'),
+                'accountLocationsBase' => rest_url('hsrev/v1/accounts/%s/locations'),
+                'totalAccountLocations' => rest_url('hsrev/v1/accounts/%s/total-locations'),
+                'totalLocationReviews' => rest_url('hsrev/v1/accounts/%s/locations/%s/total-reviews'),
+                'locationReviewsBase' => rest_url('hsrev/v1/locations/%s/reviews'),
+                'selectedLocation' => rest_url('hsrev/v1/public/location'),
+            ],
+            'nonce' => wp_create_nonce('wp_rest'),
+        ]);
     }
 
     public static function enqueue_frontend_scripts($hook) {
