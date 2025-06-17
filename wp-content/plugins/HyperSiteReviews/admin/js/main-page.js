@@ -1,4 +1,4 @@
-const firstReviewPage = document.getElementById('initial-reviews');
+
 // Random Comment
 const getSelectedLocation = () => {
     return new Promise(async (resolve, reject) => {
@@ -57,6 +57,8 @@ const getSelectedLocationReviews = (locationId, page = 1) => {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const firstReviewPage = document.getElementById('initial-reviews');
+
     if (window.HSRevApi) {
         getSelectedLocation()
         .then(data => { 
