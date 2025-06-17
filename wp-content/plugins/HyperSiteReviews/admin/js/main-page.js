@@ -76,9 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Total number of pages to generate
             const numPages = Math.ceil(reviews.length / rpp);
 
-            for(const i = 0; i < numPages; i++) {
+            for(let i = 0; i < numPages; i++) {
                 const isFirstPage = i === 0;
-
                 // Our temporary page, either the firstReviewPage, or creating a new div element
                 const page = isFirstPage ? firstReviewPage : document.createElement('div');
 
@@ -87,7 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 page.classList.add('reviews-page');
 
                 // For every nth review, where n = reviews per page (rpp), append a row
-                for(const j = 0; j < rpp; j++) {
+                for(let j = 0; j < rpp; j++) {
                     const review = reviews[(i * 10) + j];
                     // Create new row item
                     const row = document.createElement('div');
