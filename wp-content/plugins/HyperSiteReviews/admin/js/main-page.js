@@ -1,5 +1,4 @@
 const firstReviewPage = document.getElementById('initial-reviews');
-const reviewsPerPageSelect = document.getElementById('reviews-per-page');
 
 const getSelectedLocation = () => {
     return new Promise(async (resolve, reject) => {

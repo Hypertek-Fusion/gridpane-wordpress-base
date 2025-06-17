@@ -189,5 +189,5 @@ document.addEventListener('DOMContentLoaded', () => {
     showPageReviews(currentPage);
 });
 
-// Export necessary functions for import in other files
+
 export { updatePaginationControls, changePage, showPageReviews, selectAllReviews };
