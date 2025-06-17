@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     row.classList.add('rows');
                     row.innerHTML = `
                         <div class="row-item">
-                            <input type="checkbox" name="selected-review-${review.review_id}" value="${review.review_id}" ${isChecked ? 'checked' : ''}>
+                            <input type="checkbox" name="selected-review-${review.review_id}" value="${review.review_id}">
                             <div class="row-item__cell" data-type="reviewer">${review.reviewer_display_name}</div>
                             <div class="row-item__cell" data-type="rating">${review.star_rating}</div>
                             <div class="row-item__cell" data-type="comment">${review.comment}</div>
