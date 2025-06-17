@@ -178,8 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return document.querySelectorAll('.review-row').length;
     };
 
-    document.getElementById('reviews-prev').addEventListener('click', () => changePage(currentPage - 1));
-    document.getElementById('reviews-next').addEventListener('click', () => changePage(currentPage + 1));
+    document.getElementById('page-prev').addEventListener('click', () => changePage(currentPage - 1));
+    document.getElementById('page-next').addEventListener('click', () => changePage(currentPage + 1));
     reviewsPerPageSelect.addEventListener('change', function () {
         reviewsPerPage = parseInt(this.value, 10);
         currentPage = 1; // Reset to first page on perPage change
