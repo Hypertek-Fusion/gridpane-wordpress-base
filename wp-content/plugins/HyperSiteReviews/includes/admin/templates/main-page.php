@@ -37,10 +37,9 @@ if (!defined('ABSPATH')) exit;
                     <option value="10" selected>10</option>
                     <option value="20">20</option>
                 </select>
-                <button id="page-prev" class="page-prev" disabled>Previous</button>
-                <button id="page-next" class="page-next" disabled>Next</button>
+                <button id="page-prev" class="page-prev" type="button" disabled>Previous</button>
+                <button id="page-next" class="page-next" type="button" disabled>Next</button>
             </div>
-        </div>
     </form>
 </div>
 
