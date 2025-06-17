@@ -18,17 +18,23 @@ const getSelectedLocation = () => {
         })
 }
 
-const getSelectedLocationReviews = (locationId) => {
+const getSelectedLocationReviews = (locationId, page = 1) => {
+
     return new Promise(async (resolve, reject) => {
-        const response = await fetch(window.HSRevApi.urls.locationReviewsBase.replace('locations/%s', locationId) + '?' + new URLSearchParams({
-            'per_page': 100,
-        }), {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-WP-Nonce': HSRevApi.nonce
-                }
-            });
+        let reviewsBatch = []
+        let totalPages = 1
+
+        do {
+            const response = await fetch(window.HSRevApi.urls.locationReviewsBase.replace('locations/%s', locationId) + '?' + new URLSearchParams({
+                'per_page': 100,
+                'page': page
+                }), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-WP-Nonce': HSRevApi.nonce
+                    }
+                });
 
             if (!response.ok) {
                 reject('Network response was not ok ' + response.statusText);
@@ -36,7 +42,14 @@ const getSelectedLocationReviews = (locationId) => {
 
             const reviews = await response.json();
 
-            resolve(reviews);
+            totalPages = reviews['total_pages'];
+
+            reviews['reviews'].array.forEach(r => {
+                reviewsBatch.push(r)
+            });
+
+        } while (totalPages !== page );
+            resolve(reviewsBatch);
     })
 }
 
