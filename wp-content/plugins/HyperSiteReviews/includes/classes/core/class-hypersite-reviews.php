@@ -27,6 +27,25 @@ class HyperSiteReviews
             add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
             add_action('wp_enqueue_scripts', [self::class, 'enqueue_frontend_scripts']);
 
+
+            add_filter('script_loader_tag', function($tag, $handle, $src) {
+                // List of script handles to be treated as modules
+                $module_scripts = [
+                    'hsrev-setup-script',
+                    'hsrev-admin-script',
+                    'hsrev-main-page-script',
+                    'hsrev-form-script'
+                ];
+
+                // Check if the handle is in the list of module scripts
+                if (in_array($handle, $module_scripts)) {
+                    // Modify the script tag to include type="module"
+                    $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+                }
+
+                return $tag;
+            }, 10, 3);
+
             if (get_option('hsrev_setup_complete')) {
                 add_action('init', [self::class, 'register_post_type']);
             }
