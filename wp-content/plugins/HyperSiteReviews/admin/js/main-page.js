@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 for(let j = 0; j < rpp; j++) {
                     const review = reviews[(i * 10) + j];
                     console.log('Review #: ', (i * 10) + j)
+                    console.log('Review Object: ', review)
                     // Create new row item
                     row.innerHTML += `
                         <div class="row-item">
