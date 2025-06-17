@@ -14,14 +14,20 @@ function initializeForm() {
     prevButton = document.querySelector('.page-prev');
     nextButton = document.querySelector('.page-next');
 
-    // Initialize selected reviews or items
+    // Initialize selected items
     window.HSRevData = window.HSRevData || {};
     window.HSRevData.data = window.HSRevData.data || {};
     window.HSRevData.data.selectedItems = new Set();
 
-    // Prevent default form submission
+    // Prevent default form submission if needed
     const form = document.querySelector('form');
-    form && form.addEventListener('submit', onFormSubmit);
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Add logic here only if you want to handle form submission differently
+            console.log("Form submitted"); // Placeholder for form submission logic
+        });
+    }
 
     // Attach event listeners
     attachEventListeners();
@@ -29,12 +35,6 @@ function initializeForm() {
     // Show the initial page
     showPage(currentPage);
     showPageReviews(currentPage + 1); // Assuming page indices are 1-based for display
-}
-
-function onFormSubmit(e) {
-    e.preventDefault();
-    // Implement form submission logic, such as sending data via AJAX
-    submitForm();
 }
 
 function attachEventListeners() {
@@ -125,4 +125,3 @@ function updateHiddenInput() {
 }
 
 export { updatePaginationControls, changePage, showPageReviews, updateButtonState };
-
