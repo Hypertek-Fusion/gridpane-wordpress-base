@@ -1,6 +1,9 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
+// TODO
+// Fix scripts not loading when submitting form on main page
+
 class HyperSiteReviews
 {
     public static function init()
@@ -107,8 +110,10 @@ class HyperSiteReviews
         );
     }
 
+
     public static function enqueue_scripts($hook)
     {
+        error_log(print_r($hook, true));
         // Conditionally enqueue setup page styles and scripts
         if (isset($_GET['page']) && $_GET['page'] === 'hypersite-reviews-setup') {
             wp_enqueue_style(
