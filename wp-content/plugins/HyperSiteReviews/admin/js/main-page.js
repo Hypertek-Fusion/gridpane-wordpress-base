@@ -53,7 +53,7 @@ const getSelectedLocationReviews = (locationId, page = 1) => {
             });
 
             page++
-        } while (totalPages !== page );
+        } while (page <= totalPages);
             resolve(reviewsBatch);
     })
 }
