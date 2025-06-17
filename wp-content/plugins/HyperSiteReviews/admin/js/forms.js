@@ -1,10 +1,11 @@
+let currentPage = 0;
+let reviewsPerPage = 10; // Default reviews per page
+
 document.addEventListener('DOMContentLoaded', () => {
     const pages = document.querySelectorAll('.setup-page') || document.querySelectorAll('.reviews-page');
     console.log(pages)
     const prevButton = document.querySelector('.page-prev');
     const nextButton = document.querySelector('.page-next');
-    let currentPage = 0;
-    let reviewsPerPage = 10; // Default reviews per page
 
     // Initialize window.HSRevData if not already done
     window.HSRevData = window.HSRevData || {};
