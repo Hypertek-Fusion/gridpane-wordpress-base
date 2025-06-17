@@ -53,7 +53,6 @@ const getSelectedLocationReviews = (locationId, page = 1) => {
             resolve(reviewsBatch);
     })
 }
-
     const firstReviewPage = document.getElementById('initial-reviews');
 
     if (window.HSRevApi) {
@@ -64,6 +63,7 @@ const getSelectedLocationReviews = (locationId, page = 1) => {
         })
         .then(reviews => {
             const reviewsTable = document.getElementById('reviews-table')
+            const reviewsPerPageSelect = document.getElementById('reviews-per-page')
             // Reviews per page
             const rpp = parseInt(reviewsPerPageSelect.selectedOptions[0].value);
             console.log(reviews)
