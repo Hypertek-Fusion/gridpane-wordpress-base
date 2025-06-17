@@ -211,6 +211,12 @@ class HyperSiteReviews
 
     public static function main_page()
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            global $wpdb;
+
+            error_log(print_r($_POST, true));
+        }
+
         include HSREV_PATH . 'includes/admin/templates/main-page.php';
     }
 
