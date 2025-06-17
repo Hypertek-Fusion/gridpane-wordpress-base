@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-
     const getSelectedLocation = () => {
     return new Promise(async (resolve, reject) => {
         const response = await fetch(window.HSRevApi.urls.selectedLocation, {
