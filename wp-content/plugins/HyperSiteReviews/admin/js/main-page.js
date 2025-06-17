@@ -1,5 +1,7 @@
 import {updatePaginationControls, showPageReviews} from './forms.js'
 
+const reviewsInitializedEvent = new Event('reviewsInitialized');
+
 document.addEventListener('DOMContentLoaded', async () => {
     const getSelectedLocation = () => {
     return new Promise(async (resolve, reject) => {
@@ -114,6 +116,8 @@ const getSelectedLocationReviews = (locationId, page = 1) => {
                 }
 
             }
+
+            document.dispatchEvent(reviewsInitializedEvent);
 
             // Setup pagination after populating reviews
             updatePaginationControls(reviews.length, 1, rpp);
