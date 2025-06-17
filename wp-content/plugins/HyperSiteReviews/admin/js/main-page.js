@@ -81,6 +81,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Our temporary page, either the firstReviewPage, or creating a new div element
                 const page = isFirstPage ? firstReviewPage : document.createElement('div');
 
+                const row = document.createElement('div');
+                row.classList.add('rows');
+
                 // Setting the data-page attribute and reviews-page class if not already set
                 page.setAttribute('data-page', i + 1);
                 page.classList.add('reviews-page');
@@ -89,9 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 for(let j = 0; j < rpp; j++) {
                     const review = reviews[(i * 10) + j];
                     // Create new row item
-                    const row = document.createElement('div');
-                    row.classList.add('rows');
-                    row.innerHTML = `
+                    row.innerHTML += `
                         <div class="row-item">
                             <input type="checkbox" name="selected-review-${review.review_id}" value="${review.review_id}" ${parseInt(review.is_selected) ? 'checked' : ''}>
                             <div class="row-item__cell" data-type="reviewer">${review.reviewer_display_name}</div>
