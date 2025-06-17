@@ -132,6 +132,13 @@ class HyperSiteReviews
                 filemtime(HSREV_PATH . 'admin/js/main-page.js'),
                 true
             );
+            wp_enqueue_script(
+                'hsrev-form-script',
+                HSREV_URL . 'admin/js/forms.js',
+                [],
+                filemtime(HSREV_PATH . 'admin/js/forms.js'),
+                true
+            );
 
 
             // TODO

@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevButton = document.querySelector('.page-prev');
     const nextButton = document.querySelector('.page-next');
     let currentPage = 0;
+    let reviewsPerPage = 10; // Default reviews per page
 
     // Initialize window.HSRevData if not already done
     window.HSRevData = window.HSRevData || {};
@@ -17,13 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
         submitForm(); // Handle form submission
     });
 
-    // Function to check if any checkbox is selected on the current page
     const isAnyCheckboxCheckedOnCurrentPage = () => {
         const currentCheckboxes = pages[currentPage].querySelectorAll('input:not([name="select-all-reviews"])[type="checkbox"]');
         return Array.from(currentCheckboxes).some(cb => cb.checked);
     };
 
-const selectAllReviews = (element) => {
+    const selectAllReviews = (element) => {
         const reviewCheckboxes = pages[currentPage].querySelectorAll('input[name*="selected-review-"][type="checkbox"]');
         const locationId = window.HSRevData.data.locationId;
         const reviews = window.HSRevData.data.reviewsCache[locationId] || [];
@@ -31,7 +31,6 @@ const selectAllReviews = (element) => {
         Array.from(reviewCheckboxes).forEach(cb => {
             const reviewId = cb.value;
             cb.checked = element.checked;
-            
             if (element.checked) {
                 window.HSRevData.data.selectedReviews.add(reviewId);
             } else {
@@ -43,7 +42,6 @@ const selectAllReviews = (element) => {
         updateButtonState();
     };
 
-    // Function to update the hidden input field with selected reviews
     const updateHiddenInput = () => {
         const hiddenInput = document.getElementById('selected_reviews');
         const filteredReviewIds = Array.from(window.HSRevData.data.selectedReviews).filter(id => id.startsWith('AbFvOq'));
@@ -81,13 +79,11 @@ const selectAllReviews = (element) => {
             c.addEventListener('change', e => {
                 const clickedCheckbox = e.target;
                 const reviewId = clickedCheckbox.value;
-                
                 if (clickedCheckbox.checked) {
                     window.HSRevData.data.selectedReviews.add(reviewId);
                 } else {
                     window.HSRevData.data.selectedReviews.delete(reviewId);
                 }
-
                 updateHiddenInput();
                 updateButtonState();
             });
@@ -152,4 +148,46 @@ const selectAllReviews = (element) => {
     if (pages[currentPage]) {
         attachCheckboxListeners(pages[currentPage]);
     }
+
+    // Pagination Functions
+    const reviewsPerPageSelect = document.getElementById('reviews-per-page');
+    const updatePaginationControls = (totalItems, currentPage, itemsPerPage) => {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        document.getElementById('reviews-prev').disabled = currentPage <= 1;
+        document.getElementById('reviews-next').disabled = currentPage >= totalPages;
+    };
+
+    const changePage = (newPage) => {
+        const totalPages = Math.ceil(getTotalItems() / reviewsPerPage);
+        if (newPage > 0 && newPage <= totalPages) {
+            currentPage = newPage;
+            showPageReviews(currentPage);
+        }
+    };
+
+    const showPageReviews = (page) => {
+        const pages = document.querySelectorAll('.reviews-page');
+        pages.forEach((pageElement, index) => {
+            pageElement.style.display = (index + 1 === page) ? 'block' : 'none';
+        });
+
+        updatePaginationControls(getTotalItems(), currentPage, reviewsPerPage);
+    };
+
+    const getTotalItems = () => {
+        return document.querySelectorAll('.review-row').length;
+    };
+
+    document.getElementById('reviews-prev').addEventListener('click', () => changePage(currentPage - 1));
+    document.getElementById('reviews-next').addEventListener('click', () => changePage(currentPage + 1));
+    reviewsPerPageSelect.addEventListener('change', function () {
+        reviewsPerPage = parseInt(this.value, 10);
+        currentPage = 1; // Reset to first page on perPage change
+        showPageReviews(currentPage);
+    });
+
+    showPageReviews(currentPage);
 });
+
+// Export necessary functions for import in other files
+export { updatePaginationControls, changePage, showPageReviews, selectAllReviews };

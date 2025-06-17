@@ -1,3 +1,5 @@
+import { updatePaginationControls, showPageReviews } from './form.js';
+
 const firstReviewPage = document.getElementById('initial-reviews');
 const reviewsTable = document.getElementById('reviews-table')
 const reviewsPerPageSelect = document.getElementById('reviews-per-page');
@@ -115,7 +117,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else {
                     continue;
                 }
+
             }
+
+            // Setup pagination after populating reviews
+            updatePaginationControls(reviews.length, 1, rpp);
+            showPageReviews(1);
+
         })
         .catch(e => {
             console.error('Error with promise: ', e)

@@ -1,3 +1,5 @@
+import { selectAllReviews } from './form.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -270,23 +272,14 @@ const populateReviews = (page, perPage) => {
     reviewRowsContainer.innerHTML = '';
     reviewRowsContainer.append(...reviewRows);
 
-    updatePaginationControls(reviews.length, page, perPage);
-
     if (window.HSRevData.functions.selectAllReviews) {
         const selectAllReviewsCheckBox = document.getElementById('select-all-reviews');
         selectAllReviewsCheckBox.checked = paginatedReviews.every(review => window.HSRevData.data.selectedReviews.has(review.review_id));
         selectAllReviewsCheckBox.addEventListener('change', () => {
-            window.HSRevData.functions.selectAllReviews(selectAllReviewsCheckBox, paginatedReviews);
+            selectAllReviews(selectAllReviewsCheckBox, paginatedReviews);
             window.HSRevData.functions.attachCheckboxListeners(reviewRowsContainer);
         });
     }
-};
-
-// Update the pagination controls based on the current page and total reviews
-const updatePaginationControls = (total, currentPage, perPage) => {
-    const totalPages = Math.ceil(total / perPage);
-    document.getElementById('reviews-prev').disabled = currentPage <= 1;
-    document.getElementById('reviews-next').disabled = currentPage >= totalPages;
 };
 
 // Expose functions to the global scope
@@ -294,40 +287,3 @@ window.HSRevData = window.HSRevData || {};
 window.HSRevData.functions = window.HSRevData.functions || {};
 window.HSRevData.functions.getLocations = getLocations;
 window.HSRevData.functions.prefetchReviews = prefetchReviews;
-
-// Updated function to select all reviews
-window.HSRevData.functions.selectAllReviews = (selectAllCheckbox, reviews) => {
-    if (selectAllCheckbox.checked) {
-        reviews.forEach(review => window.HSRevData.data.selectedReviews.add(review.review_id));
-    } else {
-        reviews.forEach(review => window.HSRevData.data.selectedReviews.delete(review.review_id));
-    }
-};
-
-// Pagination UI setup
-document.getElementById('reviews-per-page').addEventListener('change', function() {
-    perPage = parseInt(this.value, 10);
-    reviewsPage = 1; // Reset to first page on perPage change
-    const locationId = window.HSRevData.data.locationId;
-    if (locationId) {
-        populateReviews(reviewsPage, perPage);
-    }
-});
-
-document.getElementById('reviews-prev').addEventListener('click', function() {
-    if (reviewsPage > 1) {
-        reviewsPage--;
-        const locationId = window.HSRevData.data.locationId;
-        if (locationId) {
-            populateReviews(reviewsPage, perPage);
-        }
-    }
-});
-
-document.getElementById('reviews-next').addEventListener('click', function() {
-    reviewsPage++;
-    const locationId = window.HSRevData.data.locationId;
-    if (locationId) {
-        populateReviews(reviewsPage, perPage);
-    }
-});
