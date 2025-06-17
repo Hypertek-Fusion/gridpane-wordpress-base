@@ -1,4 +1,4 @@
-import { updatePaginationControls, showPageReviews } from './form.js';
+import { updatePaginationControls, showPageReviews } from './forms.js';
 
 const firstReviewPage = document.getElementById('initial-reviews');
 const reviewsTable = document.getElementById('reviews-table')
