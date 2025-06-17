@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) exit;
 <div id="main-wrapper">
 <h3>Reviews</h3>
 <div id="main-page-table">
-    <form>
+    <form method="post">
         <div id="reviews-table">
             <div class="select-table__heading-row">
                 <div class="review-select-table__heading"><input id="select-all-reviews" type="checkbox" name="select-all-reviews"></div>
