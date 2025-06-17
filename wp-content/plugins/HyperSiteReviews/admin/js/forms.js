@@ -4,7 +4,7 @@ let reviewsPerPage = 10; // Default reviews per page
 let prevButton = null;
 let nextButton = null;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('reviewsInitialized', () => {
     let params = new URLSearchParams(document.location.search);
     const pagePath = params.get('page');
 
@@ -198,7 +198,6 @@ const updateButtonState = () => {
 };
 
 const isAnyCheckboxCheckedOnCurrentPage = () => {
-    console.log(pages)
     const currentCheckboxes = pages[currentPage].querySelectorAll('input:not([name="select-all-reviews"])[type="checkbox"]');
     return Array.from(currentCheckboxes).some(cb => cb.checked);
 };
