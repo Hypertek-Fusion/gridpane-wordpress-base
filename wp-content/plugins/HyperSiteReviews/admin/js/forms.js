@@ -162,15 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const showPageReviews = (page) => {
-        const pages = document.querySelectorAll('.reviews-page');
-        pages.forEach((pageElement, index) => {
-            pageElement.style.display = (index + 1 === page) ? 'block' : 'none';
-        });
-
-        updatePaginationControls(getTotalItems(), currentPage, reviewsPerPage);
-    };
-
     const getTotalItems = () => {
         return document.querySelectorAll('.review-row').length;
     };
@@ -190,6 +181,15 @@ const updatePaginationControls = (totalItems, currentPage, itemsPerPage) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     document.getElementById('page-prev').disabled = currentPage <= 1;
     document.getElementById('page-next').disabled = currentPage >= totalPages;
+};
+
+const showPageReviews = (page) => {
+    const pages = document.querySelectorAll('.reviews-page');
+    pages.forEach((pageElement, index) => {
+        pageElement.style.display = (index + 1 === page) ? 'block' : 'none';
+    });
+
+    updatePaginationControls(getTotalItems(), currentPage, reviewsPerPage);
 };
 
 

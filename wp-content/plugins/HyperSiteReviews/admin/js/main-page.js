@@ -1,4 +1,4 @@
-import {updatePaginationControls} from './forms.js'
+import {updatePaginationControls, showPageReviews} from './forms.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
     const getSelectedLocation = () => {
