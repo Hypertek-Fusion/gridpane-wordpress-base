@@ -65,7 +65,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     }
 
     foreach($reviews_batch as $review) {
-      echo $review;
+      echo print_r($review, true);
       echo '<br>';
     }
   }
