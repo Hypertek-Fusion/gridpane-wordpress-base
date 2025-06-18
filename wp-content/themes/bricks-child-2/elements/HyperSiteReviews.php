@@ -53,7 +53,10 @@ class Prefix_Element_Test extends \Bricks\Element {
 
     for($i = 0; $i < $pages; $i++) {
         $reviews = GoogleDataHandler::get_selected_reviews($location_id, $i + 1, $per_page);
-        array_merge($reviews_batch, $reviews["reviews"]);
+        
+        error_log(print_r($reviews, true));
+        
+        //array_merge($reviews_batch, $reviews["reviews"]);
     }
 
     foreach($reviews_batch as $review) {
