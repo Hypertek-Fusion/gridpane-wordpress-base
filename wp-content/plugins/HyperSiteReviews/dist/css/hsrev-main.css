@@ -1,8 +1,10 @@
 .star-ratings-wrapper {
-    --icon-size: 32px;
+   display: flex;
+   column-gap: 5px;
 }
 
 .star-ratings-wrapper svg {
+     --icon-size: 32px;
     width: var(--icon-size);
     height: var(--icon-size);
 }
