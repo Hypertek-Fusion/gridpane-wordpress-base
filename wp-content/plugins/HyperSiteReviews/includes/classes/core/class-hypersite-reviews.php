@@ -52,7 +52,7 @@ class HyperSiteReviews
             add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
             add_action('wp_enqueue_scripts', [self::class, 'enqueue_frontend_scripts']);
 
-            add_action('template_redirect', 'handle_get_redirect_from_post');
+            add_action('template_redirect', [self::class, 'handle_get_redirect_from_post']);
             function handle_get_redirect_from_post() {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     self::handle_post_request();
