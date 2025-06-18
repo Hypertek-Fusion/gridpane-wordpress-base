@@ -6,6 +6,28 @@ if (!defined('ABSPATH')) exit;
 
 class HyperSiteReviews
 {
+
+    private static function get_page() {
+        $query_strings = $_SERVER['QUERY_STRING'];
+
+        parse_str($query_strings, $output);
+        
+        return $output['page'] ? $output['page'] : null;
+    }
+
+    private static function is_page($needle) {
+        try {
+            $page_param = self::get_page();
+
+            if(null === $page_param) throw new Exception('No page parameter found.');
+
+            return $page_param === $needle;
+        } catch (Exception $e) {
+            error_log('Error validating current page in is_page: ' . $e->getMessage());
+            return false;
+        }
+    }
+
     public static function init()
     {
         try {
@@ -31,17 +53,10 @@ class HyperSiteReviews
             add_action('wp_enqueue_scripts', [self::class, 'enqueue_frontend_scripts']);
 
             /*
-            add_action('template_redirect', 'my_plugin_handle_form');
-            function my_plugin_handle_form() {
-                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['my_plugin_form_submitted'])) {
-                    // Process form data
-                    $name = sanitize_text_field($_POST['name']);
-
-                    // Maybe save data, send email, etc.
-
-                    // Redirect to same page with success flag
-                    wp_redirect(add_query_arg('submitted', '1', get_permalink()));
-                    exit;
+            add_action('template_redirect', 'handle_get_redirect_from_post');
+            function handle_get_redirect_from_post() {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    HyperSiteReviews::handle_post_request();
                 }
             }
             */
@@ -228,14 +243,22 @@ class HyperSiteReviews
         }
     }
 
+    /*
+public static function handle_post_request() {
+    $page = self::get_page();
+
+    switch ($page) {
+        case 'hypersite-reviews-setup': 
+    }
+}
+    */
+
 public static function main_page()
 {
     include HSREV_PATH . 'includes/admin/templates/main-page.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         global $wpdb;
-
-        error_log(print_r($_SERVER, true));
 
         // Extracting selected reviews
         $selected_reviews = array_keys($_POST);
@@ -275,12 +298,8 @@ public static function main_page()
         // Log the final state of selected reviews
         $final_selected_reviews = $wpdb->get_col("SELECT review_id FROM {$wpdb->prefix}reviews WHERE is_selected = TRUE");
 
-        nocache_headers();
         wp_safe_redirect(admin_url('admin.php?page=hypersite-reviews'));
-        exit;
     }
-
-    
 }
 
     public static function setup_page()
