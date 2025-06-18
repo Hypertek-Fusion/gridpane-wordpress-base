@@ -45,7 +45,7 @@ class Prefix_Element_Test extends \Bricks\Element {
 
     $location_id = GoogleDataHandler::get_selected_location_id();
     $total_selected_reviews = GoogleDataHandler::get_total_selected_reviews($location_id);    
-    $pages = ceil($total_selected_reviews / $per_page);
+    $pages = ceil( $per_page / $total_selected_reviews);
 
     error_log('Per Page: '. $per_page);
     error_log('Location Id: '. $location_id);
