@@ -53,11 +53,7 @@ class HyperSiteReviews
             add_action('wp_enqueue_scripts', [self::class, 'enqueue_frontend_scripts']);
 
             add_action('template_redirect', [self::class, 'handle_get_redirect_from_post']);
-            function handle_get_redirect_from_post() {
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    self::handle_post_request();
-                }
-            }
+
 
             add_filter('script_loader_tag', function($tag, $handle, $src) {
                 // List of script handles to be treated as modules
@@ -137,7 +133,6 @@ class HyperSiteReviews
             [self::class, 'debug_settings_page']
         );
     }
-
 
     public static function enqueue_scripts($hook)
     {
@@ -241,106 +236,112 @@ class HyperSiteReviews
         }
     }
 
-public static function handle_post_request() {
-    global $wpdb;
-
-    $page = self::get_page();
-
-    switch ($page) {
-        case 'hypersite-reviews-setup':
-            // Unselect all accounts
-            $wpdb->query("UPDATE {$wpdb->prefix}accounts SET is_selected = FALSE");
-
-            // Set the selected account to selected
-            if (!empty($_POST['selected-account'])) {
-                $selected_account = $_POST['selected-account'];
-                $wpdb->update(
-                    "{$wpdb->prefix}accounts",
-                    array('is_selected' => TRUE),
-                    array('account_id' => $selected_account)
-                );
-            }
-
-            // Unselect all locations
-            $wpdb->query("UPDATE {$wpdb->prefix}locations SET is_selected = FALSE");
-
-            // Set the selected location to selected
-            if (!empty($_POST['selected-location'])) {
-                $selected_location = $_POST['selected-location'];
-                $wpdb->update(
-                    "{$wpdb->prefix}locations",
-                    array('is_selected' => TRUE),
-                    array('location_id' => $selected_location)
-                );
-            }
-
-            $selected_reviews = explode(',', $_POST['selected_reviews']);
-
-            $placeholders = implode(', ', array_fill(0, count($selected_reviews), '%s'));
-
-            // Prepare and execute the SQL statement
-            $sql = $wpdb->prepare(
-                "UPDATE wp_reviews SET is_selected = TRUE WHERE review_id IN ($placeholders)",
-                $selected_reviews
-            );
-
-            $wpdb->query($sql);
-
-            update_option('hsrev_setup_complete', true);
-            wp_redirect(admin_url('admin.php?page=hypersite-reviews'));
-            break;
-
-        case 'hypersite-reviews':
-            // Extracting selected reviews
-            $selected_reviews = array_keys($_POST);
-            $selected_reviews = array_map(function($key) {
-                return str_replace('selected-review-', '', $key);
-            }, $selected_reviews);
-            
-
-            // Retrieve currently selected reviews from the database
-            $current_selected_reviews = $wpdb->get_col("SELECT review_id FROM {$wpdb->prefix}reviews WHERE is_selected = TRUE");
-            
-
-            // Determine reviews to select/unselect
-            $reviews_to_select = array_diff($selected_reviews, $current_selected_reviews);
-            $reviews_to_unselect = array_diff($current_selected_reviews, $selected_reviews);
-
-            // Update reviews to be selected
-            if (!empty($reviews_to_select)) {
-                $placeholders_select = implode(', ', array_fill(0, count($reviews_to_select), '%s'));
-                $sql_select = $wpdb->prepare(
-                    "UPDATE {$wpdb->prefix}reviews SET is_selected = TRUE WHERE review_id IN ($placeholders_select)",
-                    ...$reviews_to_select
-                );
-                $wpdb->query($sql_select);
-            }
-
-            // Update reviews to be unselected
-            if (!empty($reviews_to_unselect)) {
-                $placeholders_unselect = implode(', ', array_fill(0, count($reviews_to_unselect), '%s'));
-                $sql_unselect = $wpdb->prepare(
-                    "UPDATE {$wpdb->prefix}reviews SET is_selected = FALSE WHERE review_id IN ($placeholders_unselect)",
-                    ...$reviews_to_unselect
-                );
-                $wpdb->query($sql_unselect);
-            }
-
-            // Log the final state of selected reviews
-            $final_selected_reviews = $wpdb->get_col("SELECT review_id FROM {$wpdb->prefix}reviews WHERE is_selected = TRUE");
-
-            wp_safe_redirect(admin_url('admin.php?page=hypersite-reviews'));
-    }
-}
-
-public static function main_page()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        self::handle_post_request();
+    public static function handle_get_redirect_from_post() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            self::handle_post_request();
+        }
     }
 
-    include HSREV_PATH . 'includes/admin/templates/main-page.php';
-}
+    public static function handle_post_request() {
+        global $wpdb;
+
+        $page = self::get_page();
+
+        switch ($page) {
+            case 'hypersite-reviews-setup':
+                // Unselect all accounts
+                $wpdb->query("UPDATE {$wpdb->prefix}accounts SET is_selected = FALSE");
+
+                // Set the selected account to selected
+                if (!empty($_POST['selected-account'])) {
+                    $selected_account = $_POST['selected-account'];
+                    $wpdb->update(
+                        "{$wpdb->prefix}accounts",
+                        array('is_selected' => TRUE),
+                        array('account_id' => $selected_account)
+                    );
+                }
+
+                // Unselect all locations
+                $wpdb->query("UPDATE {$wpdb->prefix}locations SET is_selected = FALSE");
+
+                // Set the selected location to selected
+                if (!empty($_POST['selected-location'])) {
+                    $selected_location = $_POST['selected-location'];
+                    $wpdb->update(
+                        "{$wpdb->prefix}locations",
+                        array('is_selected' => TRUE),
+                        array('location_id' => $selected_location)
+                    );
+                }
+
+                $selected_reviews = explode(',', $_POST['selected_reviews']);
+
+                $placeholders = implode(', ', array_fill(0, count($selected_reviews), '%s'));
+
+                // Prepare and execute the SQL statement
+                $sql = $wpdb->prepare(
+                    "UPDATE wp_reviews SET is_selected = TRUE WHERE review_id IN ($placeholders)",
+                    $selected_reviews
+                );
+
+                $wpdb->query($sql);
+
+                update_option('hsrev_setup_complete', true);
+                wp_redirect(admin_url('admin.php?page=hypersite-reviews'));
+                break;
+
+            case 'hypersite-reviews':
+                // Extracting selected reviews
+                $selected_reviews = array_keys($_POST);
+                $selected_reviews = array_map(function($key) {
+                    return str_replace('selected-review-', '', $key);
+                }, $selected_reviews);
+                
+
+                // Retrieve currently selected reviews from the database
+                $current_selected_reviews = $wpdb->get_col("SELECT review_id FROM {$wpdb->prefix}reviews WHERE is_selected = TRUE");
+                
+
+                // Determine reviews to select/unselect
+                $reviews_to_select = array_diff($selected_reviews, $current_selected_reviews);
+                $reviews_to_unselect = array_diff($current_selected_reviews, $selected_reviews);
+
+                // Update reviews to be selected
+                if (!empty($reviews_to_select)) {
+                    $placeholders_select = implode(', ', array_fill(0, count($reviews_to_select), '%s'));
+                    $sql_select = $wpdb->prepare(
+                        "UPDATE {$wpdb->prefix}reviews SET is_selected = TRUE WHERE review_id IN ($placeholders_select)",
+                        ...$reviews_to_select
+                    );
+                    $wpdb->query($sql_select);
+                }
+
+                // Update reviews to be unselected
+                if (!empty($reviews_to_unselect)) {
+                    $placeholders_unselect = implode(', ', array_fill(0, count($reviews_to_unselect), '%s'));
+                    $sql_unselect = $wpdb->prepare(
+                        "UPDATE {$wpdb->prefix}reviews SET is_selected = FALSE WHERE review_id IN ($placeholders_unselect)",
+                        ...$reviews_to_unselect
+                    );
+                    $wpdb->query($sql_unselect);
+                }
+
+                // Log the final state of selected reviews
+                $final_selected_reviews = $wpdb->get_col("SELECT review_id FROM {$wpdb->prefix}reviews WHERE is_selected = TRUE");
+
+                wp_safe_redirect(admin_url('admin.php?page=hypersite-reviews'));
+        }
+    }
+
+    public static function main_page()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            self::handle_post_request();
+        }
+
+        include HSREV_PATH . 'includes/admin/templates/main-page.php';
+    }
 
     public static function setup_page()
     {
