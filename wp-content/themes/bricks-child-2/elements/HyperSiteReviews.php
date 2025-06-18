@@ -70,6 +70,10 @@ class Prefix_Element_Test extends \Bricks\Element {
 
     echo "Total Reviews: " . $total_overall_reviews;
 
+    ?>
+  <div class="testimonials-wrapper">
+  <?php
+
     foreach($reviews_batch as $review) {
 ?>
     <div class="testimonial-card">
@@ -98,6 +102,10 @@ class Prefix_Element_Test extends \Bricks\Element {
     </div>
 <?php
     }
+
+?>
+  </div>
+<?php
   }
 }
 

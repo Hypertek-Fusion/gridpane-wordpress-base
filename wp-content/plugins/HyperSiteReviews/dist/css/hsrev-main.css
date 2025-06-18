@@ -8,3 +8,17 @@
     width: var(--icon-size);
     height: var(--icon-size);
 }
+
+.testimonials-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.testimonial-card__top-wrapper {
+    display: flex;
+}
+
+.testimonial-card__author-name {
+    font-size: var(--text-l);
+    font-weight: 600;
+}
