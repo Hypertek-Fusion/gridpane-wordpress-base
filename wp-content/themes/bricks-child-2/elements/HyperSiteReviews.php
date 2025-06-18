@@ -33,8 +33,12 @@ class Prefix_Element_Test extends \Bricks\Element {
 
   // Methods: Frontend-specific
   public function enqueue_scripts() {
-    if (!wp_script_is('hypersite-reviews', 'enqueued')) {
+    if (!wp_script_is('hypersite-reviews-script', 'enqueued')) {
         wp_enqueue_script('hypersite-reviews-script', HSREV_URL . 'public/js/hypersite-reviews.js', [], '1.0', true);
+       
+    }
+
+    if (!wp_script_is('hypersite-reviews-stylesheet', 'enqueued')) {
         wp_enqueue_style('hypersite-reviews-stylesheet', HSREV_URL . 'public/css/hsrev-main.css', [], '1.0', true);
     }
   }
