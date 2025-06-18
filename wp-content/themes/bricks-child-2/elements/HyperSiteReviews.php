@@ -78,7 +78,7 @@ class Prefix_Element_Test extends \Bricks\Element {
           <img class="testimonial-card__author-profile-icon" src="<?php echo $review['reviewer_profile_photo_url']; ?>">
         </div>
         <div class="testimonial-card__author-name-wrapper">
-          <p class="testimonial-card__author-name"></p>
+          <p class="testimonial-card__author-name"><?php echo $review["reviewer_display_name"]; ?></p>
           <div class="star-ratings-wrapper">
             <?php
               for($i = 0; $i < 5; $i++) {
