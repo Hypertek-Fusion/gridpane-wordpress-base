@@ -47,6 +47,11 @@ class Prefix_Element_Test extends \Bricks\Element {
     $total_selected_reviews = GoogleDataHandler::get_total_selected_reviews($location_id);    
     $pages = ceil($total_selected_reviews / $per_page);
 
+    error_log('Per Page: '. $per_page);
+    error_log('Location Id: '. $location_id);
+    error_log('Total reviews: '. $total_selected_reviews);
+    error_log('Pages: ' . $pages);
+
     $this->set_attribute('_root', 'class', $root_classes);
 
     echo "<div {$this->render_attributes( '_root' )}>";
@@ -54,9 +59,9 @@ class Prefix_Element_Test extends \Bricks\Element {
     for($i = 0; $i < $pages; $i++) {
         $reviews = GoogleDataHandler::get_selected_reviews($location_id, $i + 1, $per_page);
         
-        error_log(print_r($reviews, true));
+        // error_log(print_r($reviews, true));
         
-        //array_merge($reviews_batch, $reviews["reviews"]);
+        $reviews_batch = array_merge($reviews_batch, $reviews["reviews"]);
     }
 
     foreach($reviews_batch as $review) {
