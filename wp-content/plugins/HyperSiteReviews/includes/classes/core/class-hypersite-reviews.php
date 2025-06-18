@@ -128,7 +128,6 @@ class HyperSiteReviews
 
     public static function enqueue_scripts($hook)
     {
-        error_log(print_r($hook, true));
         // Conditionally enqueue setup page styles and scripts
         if (isset($_GET['page']) && $_GET['page'] === 'hypersite-reviews-setup') {
             wp_enqueue_style(
@@ -236,7 +235,7 @@ public static function main_page()
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         global $wpdb;
 
-        error_log(print_r($_POST, true));
+        error_log(print_r($_SERVER, true));
 
         // Extracting selected reviews
         $selected_reviews = array_keys($_POST);
