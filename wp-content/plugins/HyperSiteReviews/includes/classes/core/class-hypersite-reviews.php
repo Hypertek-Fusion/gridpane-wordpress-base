@@ -265,6 +265,7 @@ public static function main_page()
         $final_selected_reviews = $wpdb->get_col("SELECT review_id FROM {$wpdb->prefix}reviews WHERE is_selected = TRUE");
         error_log('Final Selected Reviews: ' . print_r($final_selected_reviews, true));
 
+        nocache_headers();
         wp_safe_redirect(admin_url('admin.php?page=hypersite-reviews'));
         exit;
     }
