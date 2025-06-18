@@ -48,6 +48,11 @@ class Prefix_Element_Test extends \Bricks\Element {
     $pages = ceil( $total_selected_reviews / $per_page);
     $total_overall_reviews = GoogleDataHandler::get_location_reviews_length($location_id);
 
+
+    // Prefetched Assets
+    $google_logo = file_get_contents(HSREV_URL . 'public/images/google-logo-borderless.svg');
+    $star_svg = file_get_contents(HSREV_URL . 'public/images/star-fill.svg');
+
     error_log('Per Page: '. $per_page);
     error_log('Location Id: '. $location_id);
     error_log('Total reviews: '. $total_selected_reviews);
@@ -79,7 +84,7 @@ class Prefix_Element_Test extends \Bricks\Element {
           <div class="star-ratings-wrapper">
             <?php
               for($i = 0; $i < 5; $i++) {
-                echo HSREV_URL . 'public/images/star-fill.svg';
+                echo $star_svg;
               }
             ?>
           </div>
@@ -90,7 +95,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       </div>
       <div class="testimonial-card__bottom-wrapper">
         <p><?php echo date('Y-m-d', strtotime($review["create_time"])); ?></p>
-        <?php echo HSREV_URL . 'public/images/google-logo-borderless.svg'; ?>
+        <?php echo $google_logo; ?>
       </div>
     </div>
 <?php
