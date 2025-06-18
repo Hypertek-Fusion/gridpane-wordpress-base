@@ -30,6 +30,21 @@ class HyperSiteReviews
             add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
             add_action('wp_enqueue_scripts', [self::class, 'enqueue_frontend_scripts']);
 
+            /*
+            add_action('template_redirect', 'my_plugin_handle_form');
+            function my_plugin_handle_form() {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['my_plugin_form_submitted'])) {
+                    // Process form data
+                    $name = sanitize_text_field($_POST['name']);
+
+                    // Maybe save data, send email, etc.
+
+                    // Redirect to same page with success flag
+                    wp_redirect(add_query_arg('submitted', '1', get_permalink()));
+                    exit;
+                }
+            }
+            */
 
             add_filter('script_loader_tag', function($tag, $handle, $src) {
                 // List of script handles to be treated as modules
@@ -229,17 +244,14 @@ public static function main_page()
             return str_replace('selected-review-', '', $key);
         }, $selected_reviews);
         
-        error_log('Selected Reviews: ' . print_r($selected_reviews, true));
 
         // Retrieve currently selected reviews from the database
         $current_selected_reviews = $wpdb->get_col("SELECT review_id FROM {$wpdb->prefix}reviews WHERE is_selected = TRUE");
-        error_log('Current Selected Reviews: ' . print_r($current_selected_reviews, true));
+        
 
         // Determine reviews to select/unselect
         $reviews_to_select = array_diff($selected_reviews, $current_selected_reviews);
         $reviews_to_unselect = array_diff($current_selected_reviews, $selected_reviews);
-        error_log('Reviews to Select: ' . print_r($reviews_to_select, true));
-        error_log('Reviews to Unselect: ' . print_r($reviews_to_unselect, true));
 
         // Update reviews to be selected
         if (!empty($reviews_to_select)) {
@@ -263,7 +275,6 @@ public static function main_page()
 
         // Log the final state of selected reviews
         $final_selected_reviews = $wpdb->get_col("SELECT review_id FROM {$wpdb->prefix}reviews WHERE is_selected = TRUE");
-        error_log('Final Selected Reviews: ' . print_r($final_selected_reviews, true));
 
         nocache_headers();
         wp_safe_redirect(admin_url('admin.php?page=hypersite-reviews'));
