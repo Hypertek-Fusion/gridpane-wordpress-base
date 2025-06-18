@@ -77,11 +77,11 @@ class Prefix_Element_Test extends \Bricks\Element {
         <div class="testimonial-card__author-name-wrapper">
           <p class="testimonial-card__author-name"></p>
           <div class="star-ratings-wrapper">
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
+            <?php
+              for($i = 0; $i < 5; $i++) {
+                echo HSREV_URL . 'public/images/star-fill.svg';
+              }
+            ?>
           </div>
         </div>
       </div>
@@ -90,7 +90,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       </div>
       <div class="testimonial-card__bottom-wrapper">
         <p><?php echo date('Y-m-d', strtotime($review["create_time"])); ?></p>
-        <p>G</p>
+        <?php echo HSREV_URL . 'public/images/google-logo-borderless.svg'; ?>
       </div>
     </div>
 <?php
