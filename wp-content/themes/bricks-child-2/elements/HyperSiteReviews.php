@@ -39,9 +39,26 @@ class Prefix_Element_Test extends \Bricks\Element {
   }
   public function render() {
     $root_classes[] = 'hypersite-reviews';
+    $reviews_batch = [];
+
+    $per_page = 100;
+
+    $location_id = GoogleDataHandler::get_selected_location_id();
+    $total_selected_reviews = GoogleDataHandler::get_total_selected_reviews($location_id);    
+    $pages = ceil($total_selected_reviews / $per_page);
 
     $this->set_attribute('_root', 'class', $root_classes);
 
     echo "<div {$this->render_attributes( '_root' )}>";
+
+    for($i = 0; $i < $pages; $i++) {
+        $reviews = GoogleDataHandler::get_selected_reviews($location_id, $i + 1, $per_page);
+        array_merge($reviews_batch, $reviews["reviews"]);
+    }
+
+    foreach($reviews_batch as $review) {
+      echo $review;
+      echo '<br>';
+    }
   }
 }
