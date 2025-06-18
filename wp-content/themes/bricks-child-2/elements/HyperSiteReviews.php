@@ -46,6 +46,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $location_id = GoogleDataHandler::get_selected_location_id();
     $total_selected_reviews = GoogleDataHandler::get_total_selected_reviews($location_id);    
     $pages = ceil( $total_selected_reviews / $per_page);
+    $total_overall_reviews = GoogleDataHandler::get_location_reviews_length($location_id);
 
     error_log('Per Page: '. $per_page);
     error_log('Location Id: '. $location_id);
@@ -64,9 +65,37 @@ class Prefix_Element_Test extends \Bricks\Element {
         $reviews_batch = array_merge($reviews_batch, $reviews);
     }
 
+    echo "Total Reviews: " . $total_overall_reviews;
+
     foreach($reviews_batch as $review) {
-      echo print_r($review, true);
-      echo '<br>';
+?>
+    <div class="testimonial-card">
+      <div class="testimonial-card__top-wrapper">
+        <div class="testimonial-card__author-profile-icon-wrapper">
+          <img class="testimonial-card__author-profile-icon" src="<?php echo $review['reviewer_profile_photo_url']; ?>">
+        </div>
+        <div class="testimonial-card__author-name-wrapper">
+          <p class="testimonial-card__author-name"></p>
+          <div class="star-ratings-wrapper">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card__content-wrapper">
+        <p class="testimonial-card__content"><?php echo $review["comment"]; ?></p>
+      </div>
+      <div class="testimonial-card__bottom-wrapper">
+        <p><?php echo date('Y-m-d', strtotime($review["create_time"])); ?></p>
+        <p>G</p>
+      </div>
+    </div>
+<?php
     }
   }
 }
+
+?>
