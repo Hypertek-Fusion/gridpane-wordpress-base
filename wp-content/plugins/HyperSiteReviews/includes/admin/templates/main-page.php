@@ -11,7 +11,14 @@ if (!defined('ABSPATH')) exit;
                 <div class="row-item__cell" data-type="date"><?php echo date('m/d/Y', strtotime($review['create_time'])); ?></div>
 
 */
-?>
+
+if($_SERVER['REQUEST_METHOD'] === 'POST') : ?>
+
+<div>
+    <p>Settings saved.</p>
+</div>
+
+<?php endif; ?>
 
 <div id="main-wrapper">
 <h3>Reviews</h3>
