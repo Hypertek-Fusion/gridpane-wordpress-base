@@ -50,7 +50,7 @@ class HyperSiteReviews
                 HyperSiteReviews::register_api_routes();
             });
             add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
-            add_action('wp_enqueue_scripts', [self::class, 'enqueue_frontend_scripts']);
+            // add_action('wp_enqueue_scripts', [self::class, 'enqueue_frontend_scripts']);
 
             add_action('template_redirect', [self::class, 'handle_get_redirect_from_post']);
 
@@ -201,6 +201,7 @@ class HyperSiteReviews
         ]);
     }
 
+    /*
     public static function enqueue_frontend_scripts($hook) {
         if (!wp_script_is('hypersite-reviews', 'enqueued')) {
             wp_enqueue_script(
@@ -219,6 +220,7 @@ class HyperSiteReviews
             ]);
         }
     }
+        */
 
     public static function maybe_redirect_to_setup()
     {

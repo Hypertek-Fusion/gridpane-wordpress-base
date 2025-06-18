@@ -33,11 +33,6 @@ class Prefix_Element_Test extends \Bricks\Element {
 
   // Methods: Frontend-specific
   public function enqueue_scripts() {
-    if (!wp_script_is('hypersite-reviews-script', 'enqueued')) {
-        wp_enqueue_script('hypersite-reviews-script', HSREV_URL . 'public/js/hypersite-reviews.js', [], '1.0', true);
-       
-    }
-
     if (!wp_script_is('hypersite-reviews-stylesheet', 'enqueued')) {
         wp_enqueue_style('hypersite-reviews-stylesheet', HSREV_URL . 'public/css/hsrev-main.css', [], '1.0', true);
     }
@@ -69,8 +64,6 @@ class Prefix_Element_Test extends \Bricks\Element {
 
     for($i = 0; $i < $pages; $i++) {
         $reviews = GoogleDataHandler::get_selected_reviews($location_id, $i + 1, $per_page);
-        
-        // error_log(print_r($reviews, true));
         
         $reviews_batch = array_merge($reviews_batch, $reviews);
     }
