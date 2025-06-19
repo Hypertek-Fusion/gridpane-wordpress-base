@@ -52,7 +52,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       ],
       'inlineEditing' => false,
       'default' => 'repeat(3, 1fr)',
-      'required' => ['display', '=', 'grid']
+      'required' => ['selectDisplayType', '=', 'grid']
     ];
   }
 
