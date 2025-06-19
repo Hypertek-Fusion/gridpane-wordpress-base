@@ -22,9 +22,20 @@ class Prefix_Element_Test extends \Bricks\Element {
       'title' => esc_html__( 'Display', 'bricks' ),
       'tab' => 'content',
     ];
+    $this->control_groups['card'] = [
+      'title' => esc_html__( 'Card', 'bricks' ),
+      'tab' => 'content',
+    ];
+    $this->control_groups['author'] = [
+      'title' => esc_html__( 'Author', 'bricks' ),
+      'tab' => 'content',
+    ];
+    $this->control_groups['logo'] = [
+      'title' => esc_html__( 'Brand Logo', 'bricks' ),
+      'tab' => 'content',
+    ];
   }
   public function set_controls() {
-
     // Display type
     $this->controls['selectDisplayType'] = [
       'group' => 'display',
@@ -42,6 +53,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'default' => 'grid',
     ];
 
+    // Columns (only if display type is Grid)
     $this->controls['gridColumns'] = [
       'group' => 'display',
       'label' => esc_html__( 'Grid Template Columns', 'bricks' ),
@@ -55,6 +67,119 @@ class Prefix_Element_Test extends \Bricks\Element {
       'inlineEditing' => false,
       'default' => 'repeat(3, 1fr)',
       'required' => ['selectDisplayType', '=', ['grid','']]
+    ];
+
+    // Grid row gap
+    $this->controls['rowGap'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Row Gap', 'bricks' ),
+      'type' => 'text',
+      'css' => [
+        [
+        'property' => 'row-gap',
+        'selector' => '.testimonials-grid',
+        ]
+      ],
+      'inlineEditing' => false,
+      'small' => true,
+      'default' => '12px',
+      'required' => ['selectDisplayType', '=', ['grid','']]
+    ];
+
+    // Grid column gap
+    $this->controls['columnGap'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Column Gap', 'bricks' ),
+      'type' => 'text',
+      'css' => [
+        [
+        'property' => 'column-gap',
+        'selector' => '.testimonials-grid',
+        ]
+      ],
+      'inlineEditing' => false,
+      'small' => true,
+      'default' => '12px',
+      'required' => ['selectDisplayType', '=', ['grid','']]
+    ];
+
+    // Card Padding
+    $this->controls['cardPadding'] = [
+      'group' => 'card',
+      'label' => esc_html__( 'Padding', 'bricks' ),
+      'type' => 'dimensions',
+      'css' => [
+        [
+          'property' => 'padding',
+          'selector' => '.testimonial-card',
+        ]
+      ],
+      'default' => [
+        'top' => '30px',
+        'right' => '30px',
+        'bottom' => '30px',
+        'left' => '30px',
+      ]
+    ];
+
+    // Card Box Shadow
+    $this->controls['cardShadow'] = [
+      'group' => 'card',
+      'label' => esc_html__( 'Box Shadow', 'bricks' ),
+      'type' => 'box-shadow',
+      'css' => [
+        [
+          'property' => 'box-shadow',
+          'selector' => '.testimonial-card',
+        ],
+      ],
+      'inline' => true,
+      'small' => true,
+      'default' => [
+        'values' => [
+          'offsetX' => 0,
+          'offsetY' => 0,
+          'blur' => 0,
+          'spread' => 0,
+        ],
+        'color' => [
+          'rgb' => 'rgba(0, 0, 0, 0)',
+        ],
+      ],
+    ];
+
+    // Author Typography
+    $this->controls['authorTypography'] = [
+      'group' => 'author',
+      'label' => esc_html__( 'Typography', 'bricks' ),
+      'type' => 'typography',
+      'css' => [
+        [
+          'property' => 'typography',
+          'selector' => '.testimonial-card__author-name',
+        ],
+      ],
+      'inline' => true
+    ];
+
+    // Profile Image Size ( Affects width and height )
+    $this->controls['logoSize'] = [
+      'group' => 'author',
+      'label' => esc_html__( 'Profile Logo Size', 'bricks' ),
+      'type' => 'text',
+      'css' => [
+        [
+        'property' => 'width',
+        'selector' => '.testimonial-card__author-profile-icon',
+        ],
+        [
+        'property' => 'height',
+        'selector' => '.testimonial-card__author-profile-icon',
+        ]
+      ],
+      'inlineEditing' => false,
+      'small' => true,
+      'default' => '16px'
     ];
   }
 
