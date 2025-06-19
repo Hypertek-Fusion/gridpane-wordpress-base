@@ -131,7 +131,11 @@ class Prefix_Element_Test extends \Bricks\Element {
 
     ?>
   <div class="testimonials">
-    <div class="testimonials-grid">
+    <?php if($this->settings['display' === 'grid']): ?>
+      <div class="testimonials-grid">
+    <?php else : ?>
+      <div class="testimonials-slider"></div>
+    <?php endif; ?>
   <?php
 
     foreach($reviews_batch as $review) {
