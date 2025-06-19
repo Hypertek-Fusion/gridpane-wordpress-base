@@ -18,19 +18,16 @@ class Prefix_Element_Test extends \Bricks\Element {
   }
   public function get_keywords() {}
   public function set_control_groups() {
-    $this->control_groups['text'] = [ // Unique group identifier (lowercase, no spaces)
-      'title' => esc_html__( 'Text', 'bricks' ), // Localized control group title
-      'tab' => 'content', // Set to either "content" or "style"
-    ];
-
-    $this->control_groups['settings'] = [
-      'title' => esc_html__( 'Settings', 'bricks' ),
+    $this->control_groups['display'] = [
+      'title' => esc_html__( 'Display', 'bricks' ),
       'tab' => 'content',
     ];
   }
   public function set_controls() {
+
+    // Display type
     $this->controls['selectDisplayType'] = [
-      'tab' => 'content',
+      'group' => 'display',
       'label' => esc_html__( 'Display Type', 'bricks' ),
       'type' => 'select',
       'options' => [
@@ -38,13 +35,12 @@ class Prefix_Element_Test extends \Bricks\Element {
         'slider' => 'Slider'
       ],
       'inline' => true,
-      'placeholder' => esc_html__( 'Select tag', 'bricks' ),
+      'placeholder' => esc_html__( 'Grid', 'bricks' ),
       'multiple' => false, 
       'searchable' => false,
       'clearable' => false,
       'default' => 'grid',
     ];
-
   }
 
   // Methods: Frontend-specific
