@@ -47,8 +47,10 @@ class Prefix_Element_Test extends \Bricks\Element {
       'label' => esc_html__( 'Grid Template Columns', 'bricks' ),
       'type' => 'text',
       'css' => [
+        [
         'property' => 'grid-template-columns',
         'selector' => '.testimonials-grid',
+        ]
       ],
       'inlineEditing' => false,
       'default' => 'repeat(3, 1fr)',
