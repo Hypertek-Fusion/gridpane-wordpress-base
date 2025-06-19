@@ -139,6 +139,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     }
 
 ?>
+    </div>
   </div>
 <?php
   }
