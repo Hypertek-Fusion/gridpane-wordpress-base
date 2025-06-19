@@ -54,7 +54,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       ],
       'inlineEditing' => false,
       'default' => 'repeat(3, 1fr)',
-      'required' => ['selectDisplayType', '=', 'grid']
+      'required' => ['selectDisplayType', '=', ['grid','']]
     ];
   }
 
