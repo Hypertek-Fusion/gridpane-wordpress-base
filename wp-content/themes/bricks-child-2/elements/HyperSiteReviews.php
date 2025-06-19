@@ -131,6 +131,8 @@ class Prefix_Element_Test extends \Bricks\Element {
 
     ?>
   <div class="testimonials">
+    <?php echo isset($this->settings['selectDisplayType']) ? 'set' : 'not set'; ?>
+    <?php echo empty($this->settings['selectDisplayType']) ? 'empty' : 'not empty'; ?>
     <?php if($this->settings['selectDisplayType'] === 'grid' || $this->settings['selectDisplayType'] === ''): ?>
       <div class="testimonials-grid">
     <?php else : ?>
