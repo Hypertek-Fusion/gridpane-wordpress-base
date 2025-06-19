@@ -41,6 +41,19 @@ class Prefix_Element_Test extends \Bricks\Element {
       'clearable' => false,
       'default' => 'grid',
     ];
+
+    $this->controls['gridColumns'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Grid Template Columns', 'bricks' ),
+      'type' => 'text',
+      'css' => [
+        'property' => 'grid-template-columns',
+        'selector' => '.testimonials-grid',
+      ],
+      'inlineEditing' => false,
+      'default' => 'repeat(3, 1fr)',
+      'required' => ['display', '=', 'grid']
+    ];
   }
 
   // Methods: Frontend-specific
@@ -115,7 +128,8 @@ class Prefix_Element_Test extends \Bricks\Element {
     echo "<div {$this->render_attributes( '_root' )}>";
 
     ?>
-  <div class="testimonials-wrapper">
+  <div class="testimonials">
+    <div class="testimonials-grid">
   <?php
 
     foreach($reviews_batch as $review) {
