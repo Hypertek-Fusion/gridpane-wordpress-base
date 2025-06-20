@@ -203,7 +203,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     $this->controls['sliderAutoPlay'] = [
-      'tab' => 'content',
+      'group' => 'display',
       'label' => esc_html__( 'Auto Play', 'bricks' ),
       'type' => 'checkbox',
       'inline' => true,
@@ -293,7 +293,7 @@ class Prefix_Element_Test extends \Bricks\Element {
 
     // Slider Padding
     $this->controls['slidePadding'] = [
-      'group' => 'card',
+      'group' => 'display',
       'label' => esc_html__( 'Padding', 'bricks' ),
       'type' => 'dimensions',
       'default' => [
@@ -306,7 +306,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     $this->controls['enableArrows'] = [
-      'tab' => 'content',
+      'group' => 'display',
       'label' => esc_html__( 'Arrows', 'bricks' ),
       'type' => 'checkbox',
       'inline' => true,
@@ -316,7 +316,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     $this->controls['enablePagination'] = [
-      'tab' => 'content',
+      'group' => 'display',
       'label' => esc_html__( 'Pagination', 'bricks' ),
       'type' => 'checkbox',
       'inline' => true,
@@ -326,7 +326,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     $this->controls['sliderPauseHover'] = [
-      'tab' => 'content',
+      'group' => 'display',
       'label' => esc_html__( 'Pause Hover', 'bricks' ),
       'type' => 'checkbox',
       'inline' => true,
@@ -336,7 +336,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     $this->controls['sliderPauseFocus'] = [
-      'tab' => 'content',
+      'group' => 'display',
       'label' => esc_html__( 'Pause Focus', 'bricks' ),
       'type' => 'checkbox',
       'inline' => true,
