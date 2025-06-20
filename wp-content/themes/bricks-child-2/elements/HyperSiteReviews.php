@@ -38,6 +38,10 @@ class Prefix_Element_Test extends \Bricks\Element {
       'title' => esc_html__( 'Testimonial', 'bricks' ),
       'tab' => 'content',
     ];
+    $this->control_groups['date'] = [
+      'title' => esc_html__( 'Date', 'bricks' ),
+      'tab' => 'content',
+    ];
   }
   public function set_controls() {
 
@@ -421,6 +425,19 @@ class Prefix_Element_Test extends \Bricks\Element {
       'default' => '12px'
     ];
 
+    $this->controls['dateTypography'] = [
+      'group' => 'date',
+      'label' => esc_html__( 'Typography', 'bricks' ),
+      'type' => 'typography',
+      'css' => [
+        [
+          'property' => 'typography',
+          'selector' => '.testimonial-card__creation-date',
+        ],
+      ],
+      'inline' => true
+    ];
+
   }
 
   // Methods: Frontend-specific
@@ -482,7 +499,7 @@ class Prefix_Element_Test extends \Bricks\Element {
           <p class="testimonial-card__content"><?php echo $review["comment"]; ?></p>
         </div>
         <div class="testimonial-card__bottom-wrapper">
-          <p><?php echo date('Y-m-d', strtotime($review["create_time"])); ?></p>
+          <p class="testimonial-card__creation-date"><?php echo date('Y-m-d', strtotime($review["create_time"])); ?></p>
           <?php echo $google_logo; ?>
         </div>
       </div>
