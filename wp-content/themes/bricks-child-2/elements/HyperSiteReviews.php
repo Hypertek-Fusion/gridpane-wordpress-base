@@ -81,7 +81,8 @@ class Prefix_Element_Test extends \Bricks\Element {
         ]
       ],
       'inlineEditing' => false,
-      'small' => true,
+      'inline' => true,
+      'small' => false,
       'default' => '12px',
       'required' => ['selectDisplayType', '=', ['grid','']]
     ];
@@ -97,8 +98,9 @@ class Prefix_Element_Test extends \Bricks\Element {
         'selector' => '.testimonials-grid',
         ]
       ],
-      'inlineEditing' => false,
-      'small' => true,
+      'inlineEditing' => true,
+      'inline' => true,
+      'small' => false,
       'default' => '12px',
       'required' => ['selectDisplayType', '=', ['grid','']]
     ];
