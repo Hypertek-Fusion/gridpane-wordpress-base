@@ -128,6 +128,38 @@ class Prefix_Element_Test extends \Bricks\Element {
       ]
     ];
 
+    $this->controls['cardBorder'] = [
+      'group' => 'card',
+      'label' => esc_html__( 'Border', 'bricks' ),
+      'type' => 'border',
+      'css' => [
+        [
+          'property' => 'border',
+          'selector' => '.testimonial-card',
+        ],
+      ],
+      'inline' => true,
+      'small' => true,
+      'default' => [
+        'width' => [
+          'top' => 0,
+          'right' => 0,
+          'bottom' => 0,
+          'left' => 0,
+        ],
+        'style' => 'solid',
+        'color' => [
+          'hex' => '#ffff00',
+        ],
+        'radius' => [
+          'top' => 1,
+          'right' => 1,
+          'bottom' => 1,
+          'left' => 1,
+        ],
+      ],
+    ];
+
     // Card Box Shadow
     $this->controls['cardShadow'] = [
       'group' => 'card',
