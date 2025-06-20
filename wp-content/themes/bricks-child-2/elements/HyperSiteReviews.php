@@ -123,6 +123,228 @@ class Prefix_Element_Test extends \Bricks\Element {
       'required' => ['selectDisplayType', '=', ['grid','']]
     ];
 
+    // Slider settings
+    /*
+      Settings to allow editing in the builder
+        pauseOnHover
+        pauseOnFocus
+      
+      Settings to be set within element
+
+    */
+
+    // Slider Type
+    $this->controls['sliderDisplay'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Type', 'bricks' ),
+      'type' => 'select',
+      'options' => [
+        'loop'  => 'Grid',
+        'slide' => 'Slider',
+        'fade'  => 'Fade',
+      ],
+      'inline' => true,
+      'placeholder' => esc_html__( 'Grid', 'bricks' ),
+      'multiple' => false, 
+      'searchable' => false,
+      'clearable' => false,
+      'default' => 'grid',
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    // Slider Speed
+    $this->controls['sliderSpeed'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Speed', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'step' => '1',
+      'units' => false,
+      'inline' => true,
+      'default' => 400,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    // Slider Rewind Speed
+    $this->controls['sliderRewindSpeed'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Rewind Speed', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'step' => '1',
+      'units' => false,
+      'inline' => true,
+      'default' => $this->settings['sliderSpeed'] ?? 400,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    // Slider Height
+    $this->controls['sliderHeight'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Height', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'step' => '1',
+      'inline' => true,
+      'default' => '350px',
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    // Slider Height Ratio
+    $this->controls['sliderHeightRatio'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Height Ratio', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'step' => '1',
+      'inline' => true,
+      'default' => '350px',
+      'required' => ['sliderHeight', '=', '']
+    ];
+
+    $this->controls['sliderAutoPlay'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Auto Play', 'bricks' ),
+      'type' => 'checkbox',
+      'inline' => true,
+      'small' => true,
+      'default' => false,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    // Slider Speed
+    $this->controls['sliderAutoPlayInterval'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Auto Play Interval', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'step' => '1',
+      'units' => false,
+      'inline' => true,
+      'default' => 400,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+    
+    // Slider Start
+    // TODO - Ensure that if this number is larger than the number of slides, we default to 1
+    $this->controls['sliderStartSlide'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Start Index', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'step' => '1',
+      'units' => false,
+      'inline' => true,
+      'default' => '',
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    // Slider Per Page
+    $this->controls['sliderPerPage'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Per Page', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'step' => '1',
+      'units' => false,
+      'inline' => true,
+      'default' => 1,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    // Slider Per Move
+    $this->controls['sliderPerMove'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Per Move', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'step' => '1',
+      'units' => false,
+      'inline' => true,
+      'default' => 1,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    // Slider Flick Max Move
+    $this->controls['sliderFlickMaxMove'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Flick Max Move', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'step' => '1',
+      'units' => false,
+      'inline' => true,
+      'default' => '',
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    // Slider Gap
+    $this->controls['sliderGap'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Gap', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'step' => '1',
+      'units' => false,
+      'inline' => true,
+      'default' => 1,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    // Slider Padding
+    $this->controls['slidePadding'] = [
+      'group' => 'card',
+      'label' => esc_html__( 'Padding', 'bricks' ),
+      'type' => 'dimensions',
+      'default' => [
+        'top' => '30px',
+        'right' => '30px',
+        'bottom' => '30px',
+        'left' => '30px',
+        'required' => ['selectDisplayType', '=', 'slider']
+      ]
+    ];
+
+    $this->controls['enableArrows'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Arrows', 'bricks' ),
+      'type' => 'checkbox',
+      'inline' => true,
+      'small' => true,
+      'default' => false,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    $this->controls['enablePagination'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Pagination', 'bricks' ),
+      'type' => 'checkbox',
+      'inline' => true,
+      'small' => true,
+      'default' => false,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    $this->controls['sliderPauseHover'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Pause Hover', 'bricks' ),
+      'type' => 'checkbox',
+      'inline' => true,
+      'small' => true,
+      'default' => false,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
+    $this->controls['sliderPauseFocus'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Pause Focus', 'bricks' ),
+      'type' => 'checkbox',
+      'inline' => true,
+      'small' => true,
+      'default' => false,
+      'required' => ['selectDisplayType', '=', 'slider']
+    ];
+
     // Card Padding
     $this->controls['cardPadding'] = [
       'group' => 'card',
@@ -223,7 +445,7 @@ class Prefix_Element_Test extends \Bricks\Element {
 
     // Top Bar column gap
     $this->controls['topBarColumnGap'] = [
-      'group' => 'display',
+      'group' => 'card',
       'label' => esc_html__( 'Column Gap', 'bricks' ),
       'type' => 'text',
       'css' => [
@@ -437,7 +659,6 @@ class Prefix_Element_Test extends \Bricks\Element {
       ],
       'inline' => true
     ];
-
   }
 
   // Methods: Frontend-specific
