@@ -168,10 +168,27 @@ class Prefix_Element_Test extends \Bricks\Element {
       'inline' => true
     ];
 
+    $this->controls['authorColor'] = [
+      'group' => 'author',
+      'label' => esc_html__( 'Color', 'bricks' ),
+      'type' => 'color',
+      'inline' => true,
+      'css' => [
+        [
+          'property' => 'typography',
+          'selector' => '.testimonial-card__author-name',
+        ]
+      ],
+      'default' => [
+        'hex' => '#000000',
+        'rgb' => 'rgba(0,0,0, 1)',
+      ],
+    ];
+
 
     // Testimonial Typography
     $this->controls['testimonialTypography'] = [
-      'group' => 'Testimonial',
+      'group' => 'testimonial',
       'label' => esc_html__( 'Typography', 'bricks' ),
       'type' => 'typography',
       'css' => [
@@ -183,15 +200,15 @@ class Prefix_Element_Test extends \Bricks\Element {
       'inline' => true
     ];
 
-    $this->controls['ratingFill'] = [
-      'tab' => 'content',
-      'label' => esc_html__( 'Fill', 'bricks' ),
+    $this->controls['testimonialColor'] = [
+      'group' => 'testimonial',
+      'label' => esc_html__( 'Color', 'bricks' ),
       'type' => 'color',
       'inline' => true,
       'css' => [
         [
-          'property' => 'fill',
-          'selector' => '.star-ratings-wrapper > svg > path',
+          'property' => 'typography',
+          'selector' => '.testimonial-card__content',
         ]
       ],
       'default' => [
@@ -282,7 +299,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     $this->controls['ratingFill'] = [
-      'tab' => 'content',
+      'group' => 'images',
       'label' => esc_html__( 'Fill', 'bricks' ),
       'type' => 'color',
       'inline' => true,
