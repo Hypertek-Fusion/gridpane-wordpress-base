@@ -205,11 +205,11 @@ class Prefix_Element_Test extends \Bricks\Element {
       'css' => [
         [
         'property' => 'width',
-        'selector' => '.testimonial-card__author-profile-icon',
+        'selector' => '.testimonial-card__bottom-wrapper > svg',
         ],
         [
         'property' => 'height',
-        'selector' => '.testimonial-card__author-profile-icon',
+        'selector' => '.testimonial-card__bottom-wrapper > svg',
         ]
       ],
       'inlineEditing' => false,
@@ -232,11 +232,11 @@ class Prefix_Element_Test extends \Bricks\Element {
       'css' => [
         [
         'property' => 'width',
-        'selector' => '.testimonial-card__author-profile-icon',
+        'selector' => '.star-ratings-wrapper > svg',
         ],
         [
         'property' => 'height',
-        'selector' => '.testimonial-card__author-profile-icon',
+        'selector' => '.star-ratings-wrapper > svg',
         ]
       ],
       'inlineEditing' => false,
