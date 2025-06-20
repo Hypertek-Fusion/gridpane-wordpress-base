@@ -22,3 +22,8 @@
 .testimonials-grid {
     display: grid;
 }
+
+.testimonial-card__bottom-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
