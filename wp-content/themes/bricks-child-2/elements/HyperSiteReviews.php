@@ -34,6 +34,10 @@ class Prefix_Element_Test extends \Bricks\Element {
       'title' => esc_html__( 'Images', 'bricks' ),
       'tab' => 'content',
     ];
+    $this->control_groups['testimonial'] = [
+      'title' => esc_html__( 'Testimonial', 'bricks' ),
+      'tab' => 'content',
+    ];
   }
   public function set_controls() {
     // Display type
@@ -164,6 +168,38 @@ class Prefix_Element_Test extends \Bricks\Element {
       'inline' => true
     ];
 
+
+    // Testimonial Typography
+    $this->controls['testimonialTypography'] = [
+      'group' => 'Testimonial',
+      'label' => esc_html__( 'Typography', 'bricks' ),
+      'type' => 'typography',
+      'css' => [
+        [
+          'property' => 'typography',
+          'selector' => '.testimonial-card__content',
+        ],
+      ],
+      'inline' => true
+    ];
+
+    $this->controls['ratingFill'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Fill', 'bricks' ),
+      'type' => 'color',
+      'inline' => true,
+      'css' => [
+        [
+          'property' => 'fill',
+          'selector' => '.star-ratings-wrapper > svg > path',
+        ]
+      ],
+      'default' => [
+        'hex' => '#000000',
+        'rgb' => 'rgba(0,0,0, 1)',
+      ],
+    ];
+
     $this->controls['authorLogoSeparator'] = [
       'group' => 'images',
 			'label' => esc_html__( 'Author Logo', 'bricks' ),
@@ -257,7 +293,7 @@ class Prefix_Element_Test extends \Bricks\Element {
         ]
       ],
       'default' => [
-        'hex' => '#3ce77b',
+        'hex' => '#ffc1a1',
         'rgb' => 'rgba(255,193,10, 1)',
       ],
     ];
