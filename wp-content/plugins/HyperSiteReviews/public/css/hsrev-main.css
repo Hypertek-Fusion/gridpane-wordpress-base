@@ -1,6 +1,5 @@
 .star-ratings-wrapper {
    display: flex;
-   column-gap: 5px;
 }
 
 .star-ratings-wrapper svg {
@@ -25,6 +24,7 @@
 .testimonial-card__bottom-wrapper {
     display: flex;
     justify-content: space-between;
+    margin-top: auto;
 }
 
 .testimonial-card {
