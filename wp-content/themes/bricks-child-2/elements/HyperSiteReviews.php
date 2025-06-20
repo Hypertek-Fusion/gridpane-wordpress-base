@@ -40,6 +40,16 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
   }
   public function set_controls() {
+
+    $this->controls['reviewsToShow'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Number of Reviews', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'inline' => true,
+      'default' => 6,
+    ];
+
     // Display type
     $this->controls['selectDisplayType'] = [
       'group' => 'display',
@@ -394,8 +404,10 @@ class Prefix_Element_Test extends \Bricks\Element {
     <?php endif; ?>
   <?php
 
-    foreach($reviews_batch as $review) {
-      echo $output_card($review);
+    $greater_value = $this->settings['reviewsToShow'] > count($reviews_batch) ? $reviews_batch : $this->settings['reviewsToShow'];
+
+    for($i = 0; $i < $greater_value; $i++) {
+      echo $output_card($reviews_batch[$i]);
     }
 
 ?>
