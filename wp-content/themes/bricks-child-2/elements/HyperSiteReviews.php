@@ -518,7 +518,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     <?php else : ?>
       <div class="testimonials-slider splide" role="group">
         <div class="splide__track">
-          <ul class="splide__slide">
+          <ul class="splide__list">
     <?php endif; ?>
   <?php
 
