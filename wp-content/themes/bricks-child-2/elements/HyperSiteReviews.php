@@ -164,7 +164,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'inline' => true
     ];
 
-    $this->controls['linkSeparator'] = [
+    $this->controls['authorLogoSeparator'] = [
       'group' => 'images',
 			'label' => esc_html__( 'Author Logo', 'bricks' ),
 			'type'  => 'separator',
@@ -191,7 +191,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'default' => '16px'
     ];
 
-      $this->controls['linkSeparator'] = [
+      $this->controls['brandLogoSeparator'] = [
       'group' => 'images',
 			'label' => esc_html__( 'Brand Logo', 'bricks' ),
 			'type'  => 'separator',
@@ -218,7 +218,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'default' => '16px'
     ];
 
-    $this->controls['linkSeparator'] = [
+    $this->controls['ratingsLogoSeparator'] = [
       'group' => 'images',
 			'label' => esc_html__( 'Ratings', 'bricks' ),
 			'type'  => 'separator',
