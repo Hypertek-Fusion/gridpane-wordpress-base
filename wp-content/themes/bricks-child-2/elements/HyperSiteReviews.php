@@ -451,7 +451,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'css' => [
         [
         'property' => 'column-gap',
-        'selector' => '.testimonials-grid',
+        'selector' => '.testimonial-card__top-wrapper',
         ]
       ],
       'inlineEditing' => false,
