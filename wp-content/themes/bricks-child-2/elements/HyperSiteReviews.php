@@ -446,11 +446,11 @@ class Prefix_Element_Test extends \Bricks\Element {
         wp_enqueue_style('hypersite-reviews-stylesheet', HSREV_URL . 'public/css/hsrev-main.css', [], '1.0', false);
     }
 
-    if(!wp_script_is('bricks-splide', 'enqueued')) {
+    if(!wp_script_is('bricks-splide', 'enqueued') && $this->settings['selectDisplayType'] === 'slider') {
       wp_enqueue_script( 'bricks-splide' );
     }
 
-    if(!wp_style_is('bricks-splide', 'enqueued')) {
+    if(!wp_style_is('bricks-splide', 'enqueued') && $this->settings['selectDisplayType'] === 'slider') {
       wp_enqueue_style( 'bricks-splide' );
     }
   }
@@ -516,17 +516,29 @@ class Prefix_Element_Test extends \Bricks\Element {
     <?php if($this->settings['selectDisplayType'] === 'grid' || !isset($this->settings['selectDisplayType'])): ?>
       <div class="testimonials-grid">
     <?php else : ?>
-      <div class="testimonials-slider"></div>
+      <div class="testimonials-slider splide" role="group">
+        <div class="splide__track">
+          <ul class="splide__slide">
     <?php endif; ?>
   <?php
 
     $greater_value = $this->settings['reviewsToShow'] > count($reviews_batch) ? count($reviews_batch) : $this->settings['reviewsToShow'];
 
     for($i = 0; $i < $greater_value; $i++) {
-      echo $output_card($reviews_batch[$i]);
+      if($this->settings['selectDisplayType'] === 'slider') {
+        echo '<li class="splide__slide">';
+        echo $output_card($reviews_batch[$i]);
+        echo '</li>'
+      } else {
+        echo $output_card($reviews_batch[$i]);
+      }
     }
 
 ?>
+    <?php if($this->settings['selectDisplayType'] === 'slider'): ?>
+        </ul>
+      </div>
+    <?php endif; ?>
     </div>
   </div>
 <?php
