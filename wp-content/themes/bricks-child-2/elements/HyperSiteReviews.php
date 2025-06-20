@@ -528,7 +528,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       if($this->settings['selectDisplayType'] === 'slider') {
         echo '<li class="splide__slide">';
         echo $output_card($reviews_batch[$i]);
-        echo '</li>'
+        echo '</li>';
       } else {
         echo $output_card($reviews_batch[$i]);
       }
