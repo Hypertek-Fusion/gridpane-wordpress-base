@@ -404,7 +404,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     <?php endif; ?>
   <?php
 
-    $greater_value = $this->settings['reviewsToShow'] > count($reviews_batch) ? $reviews_batch : $this->settings['reviewsToShow'];
+    $greater_value = $this->settings['reviewsToShow'] > count($reviews_batch) ? count($reviews_batch) : $this->settings['reviewsToShow'];
 
     for($i = 0; $i < $greater_value; $i++) {
       echo $output_card($reviews_batch[$i]);
