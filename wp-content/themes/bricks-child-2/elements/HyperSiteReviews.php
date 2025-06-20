@@ -84,7 +84,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     // Grid row gap
-    $this->controls['rowGap'] = [
+    $this->controls['gridRowGap'] = [
       'group' => 'display',
       'label' => esc_html__( 'Row Gap', 'bricks' ),
       'type' => 'text',
@@ -102,7 +102,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     // Grid column gap
-    $this->controls['columnGap'] = [
+    $this->controls['gridColumnGap'] = [
       'group' => 'display',
       'label' => esc_html__( 'Column Gap', 'bricks' ),
       'type' => 'text',
@@ -136,6 +136,23 @@ class Prefix_Element_Test extends \Bricks\Element {
         'bottom' => '30px',
         'left' => '30px',
       ]
+    ];
+
+    // Grid row gap
+    $this->controls['cardRowGap'] = [
+      'group' => 'card',
+      'label' => esc_html__( 'Row Gap', 'bricks' ),
+      'type' => 'text',
+      'css' => [
+        [
+        'property' => 'row-gap',
+        'selector' => '.testimonial-card',
+        ]
+      ],
+      'inlineEditing' => false,
+      'inline' => true,
+      'small' => false,
+      'default' => '12px',
     ];
 
     $this->controls['cardBorder'] = [
@@ -200,6 +217,23 @@ class Prefix_Element_Test extends \Bricks\Element {
       ],
     ];
 
+        // Grid column gap
+    $this->controls['topBarColumnGap'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Column Gap', 'bricks' ),
+      'type' => 'text',
+      'css' => [
+        [
+        'property' => 'column-gap',
+        'selector' => '.testimonials-grid',
+        ]
+      ],
+      'inlineEditing' => false,
+      'inline' => true,
+      'small' => false,
+      'default' => '12px'
+    ];
+
     // Card Box Shadow
     $this->controls['cardShadow'] = [
       'group' => 'card',
@@ -252,6 +286,25 @@ class Prefix_Element_Test extends \Bricks\Element {
         ],
       ],
       'inline' => true
+    ];
+
+        // Card Padding
+    $this->controls['testimonialMargin'] = [
+      'group' => 'card',
+      'label' => esc_html__( 'Margin', 'bricks' ),
+      'type' => 'dimensions',
+      'css' => [
+        [
+          'property' => 'margin',
+          'selector' => '.testimonial-card__content',
+        ]
+      ],
+      'default' => [
+        'top' => '30px',
+        'right' => '30px',
+        'bottom' => '30px',
+        'left' => '30px',
+      ]
     ];
 
     $this->controls['authorLogoSeparator'] = [

@@ -9,7 +9,6 @@
     height: var(--icon-size);
 }
 
-
 .testimonial-card__top-wrapper {
     display: flex;
 }
@@ -26,4 +25,9 @@
 .testimonial-card__bottom-wrapper {
     display: flex;
     justify-content: space-between;
+}
+
+.testimonial-card {
+    display: flex;
+    flex-direction: column;
 }
