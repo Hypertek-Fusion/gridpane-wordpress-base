@@ -30,8 +30,8 @@ class Prefix_Element_Test extends \Bricks\Element {
       'title' => esc_html__( 'Author', 'bricks' ),
       'tab' => 'content',
     ];
-    $this->control_groups['logo'] = [
-      'title' => esc_html__( 'Brand Logo', 'bricks' ),
+    $this->control_groups['images'] = [
+      'title' => esc_html__( 'Images', 'bricks' ),
       'tab' => 'content',
     ];
   }
@@ -98,7 +98,7 @@ class Prefix_Element_Test extends \Bricks\Element {
         'selector' => '.testimonials-grid',
         ]
       ],
-      'inlineEditing' => true,
+      'inlineEditing' => false,
       'inline' => true,
       'small' => false,
       'default' => '12px',
@@ -164,10 +164,15 @@ class Prefix_Element_Test extends \Bricks\Element {
       'inline' => true
     ];
 
+    $this->controls['linkSeparator'] = [
+			'label' => esc_html__( 'Author Logo', 'bricks' ),
+			'type'  => 'separator',
+		];
+
     // Profile Image Size ( Affects width and height )
-    $this->controls['logoSize'] = [
-      'group' => 'author',
-      'label' => esc_html__( 'Profile Logo Size', 'bricks' ),
+    $this->controls['authorLogoSize'] = [
+      'group' => 'images',
+      'label' => esc_html__( 'Size', 'bricks' ),
       'type' => 'text',
       'css' => [
         [
@@ -180,9 +185,63 @@ class Prefix_Element_Test extends \Bricks\Element {
         ]
       ],
       'inlineEditing' => false,
-      'small' => true,
+      'inline' => true,
+      'small' => false,
       'default' => '16px'
     ];
+
+        $this->controls['linkSeparator'] = [
+			'label' => esc_html__( 'Brand Logo', 'bricks' ),
+			'type'  => 'separator',
+		];
+
+    // Profile Image Size ( Affects width and height )
+    $this->controls['brandLogoSize'] = [
+      'group' => 'images',
+      'label' => esc_html__( 'Size', 'bricks' ),
+      'type' => 'text',
+      'css' => [
+        [
+        'property' => 'width',
+        'selector' => '.testimonial-card__author-profile-icon',
+        ],
+        [
+        'property' => 'height',
+        'selector' => '.testimonial-card__author-profile-icon',
+        ]
+      ],
+      'inlineEditing' => false,
+      'inline' => true,
+      'small' => false,
+      'default' => '16px'
+    ];
+
+        $this->controls['linkSeparator'] = [
+			'label' => esc_html__( 'Ratings', 'bricks' ),
+			'type'  => 'separator',
+		];
+
+    // Profile Image Size ( Affects width and height )
+    $this->controls['ratingSize'] = [
+      'group' => 'images',
+      'label' => esc_html__( 'Size', 'bricks' ),
+      'type' => 'text',
+      'css' => [
+        [
+        'property' => 'width',
+        'selector' => '.testimonial-card__author-profile-icon',
+        ],
+        [
+        'property' => 'height',
+        'selector' => '.testimonial-card__author-profile-icon',
+        ]
+      ],
+      'inlineEditing' => false,
+      'inline' => true,
+      'small' => false,
+      'default' => '16px'
+    ];
+
   }
 
   // Methods: Frontend-specific
