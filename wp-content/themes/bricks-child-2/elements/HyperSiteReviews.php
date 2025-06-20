@@ -217,7 +217,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       ],
     ];
 
-        // Grid column gap
+    // Top Bar column gap
     $this->controls['topBarColumnGap'] = [
       'group' => 'display',
       'label' => esc_html__( 'Column Gap', 'bricks' ),
@@ -403,6 +403,22 @@ class Prefix_Element_Test extends \Bricks\Element {
         'hex' => '#ffc1a1',
         'rgb' => 'rgba(255,193,10, 1)',
       ],
+    ];
+
+    $this->controls['ratingColumnGap'] = [
+      'group' => 'images',
+      'label' => esc_html__( 'Column Gap', 'bricks' ),
+      'type' => 'text',
+      'css' => [
+        [
+        'property' => 'column-gap',
+        'selector' => '.star-ratings-wrapper',
+        ]
+      ],
+      'inlineEditing' => false,
+      'inline' => true,
+      'small' => false,
+      'default' => '12px'
     ];
 
   }
