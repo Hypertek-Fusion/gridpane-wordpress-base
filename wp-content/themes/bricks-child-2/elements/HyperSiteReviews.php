@@ -170,6 +170,36 @@ class Prefix_Element_Test extends \Bricks\Element {
       ],
     ];
 
+    $this->controls['topBarSeparator'] = [
+      'group' => 'card',
+			'label' => esc_html__( 'Top Bar', 'bricks' ),
+			'type'  => 'separator',
+		];
+
+    $this->controls['topBarAlignItems'] = [
+      'group' => 'card',
+      'label' => esc_html__( 'Align items', 'bricks' ),
+      'type'  => 'align-items',
+      'css'   => [
+        [
+          'property' => 'align-items',
+          'selector' => '.testimonial-card__top-wrapper',
+        ],
+      ],
+    ];
+
+    $this->controls['topBarJustifyContent'] = [
+      'group' => 'card',
+      'label' => esc_html__( 'Justify content', 'bricks' ),
+      'type'  => 'justify-content',
+      'css'   => [
+        [
+          'property' => 'justify-content',
+          'selector' => '.testimonial-card__top-wrapper',
+        ],
+      ],
+    ];
+
     // Card Box Shadow
     $this->controls['cardShadow'] = [
       'group' => 'card',
