@@ -245,6 +245,23 @@ class Prefix_Element_Test extends \Bricks\Element {
       'default' => '16px'
     ];
 
+    $this->controls['ratingFill'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Fill', 'bricks' ),
+      'type' => 'color',
+      'inline' => true,
+      'css' => [
+        [
+          'property' => 'fill',
+          'selector' => '.star-ratings-wrapper > svg > path',
+        ]
+      ],
+      'default' => [
+        'hex' => '#3ce77b',
+        'rgb' => 'rgba(255,193,10, 1)',
+      ],
+    ];
+
   }
 
   // Methods: Frontend-specific
