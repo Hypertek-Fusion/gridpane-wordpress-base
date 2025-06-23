@@ -134,7 +134,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     // Slider settings
 
     // Slider Type
-    $this->controls['sliderDisplay'] = [
+    $this->controls['sliderType'] = [
       'group' => 'display',
       'label' => esc_html__( 'Type', 'bricks' ),
       'type' => 'select',
@@ -292,7 +292,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     // Slider Flick Max Move
-    $this->controls['sliderFlickMaxMove'] = [
+    $this->controls['sliderFlickMaxPages'] = [
       'group' => 'display',
       'label' => esc_html__( 'Flick Max Move', 'bricks' ),
       'placeholder' => esc_html__( '1', 'bricks' ),
@@ -322,7 +322,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     // Slider Padding
-    $this->controls['slidePadding'] = [
+    $this->controls['sliderPadding'] = [
       'group' => 'display',
       'label' => esc_html__( 'Padding', 'bricks' ),
       'placeholder' => esc_html__( '30px', 'bricks' ),
@@ -337,7 +337,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       ]
     ];
 
-    $this->controls['enableArrows'] = [
+    $this->controls['sliderArrows'] = [
       'group' => 'display',
       'label' => esc_html__( 'Arrows', 'bricks' ),
       'type' => 'checkbox',
@@ -347,7 +347,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'required' => ['selectDisplayType', '=', 'slider']
     ];
 
-    $this->controls['enablePagination'] = [
+    $this->controls['sliderPagination'] = [
       'group' => 'display',
       'label' => esc_html__( 'Pagination', 'bricks' ),
       'type' => 'checkbox',
@@ -357,7 +357,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'required' => ['selectDisplayType', '=', 'slider']
     ];
 
-    $this->controls['sliderPauseHover'] = [
+    $this->controls['sliderPauseOnHover'] = [
       'group' => 'display',
       'label' => esc_html__( 'Pause Hover', 'bricks' ),
       'type' => 'checkbox',
@@ -367,7 +367,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'required' => ['selectDisplayType', '=', 'slider']
     ];
 
-    $this->controls['sliderPauseFocus'] = [
+    $this->controls['sliderPauseOnFocus'] = [
       'group' => 'display',
       'label' => esc_html__( 'Pause Focus', 'bricks' ),
       'type' => 'checkbox',
@@ -715,7 +715,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $reviews_batch = [];
 
     $slider_options = array(
-        'type' => $this->settings['sliderDisplay'] ?? 'slide',
+        'type' => $this->settings['sliderType'] ?? 'slide',
         'speed' => $this->settings['sliderSpeed'] ?? 400,
         'rewind' => $this->settings['sliderRewindSpeed'] ?? 400,
         'height' => $this->settings['sliderHeight'] ?? '350px',
@@ -725,13 +725,13 @@ class Prefix_Element_Test extends \Bricks\Element {
         'start' => $this->settings['sliderStartSlide'] ?? 0,
         'perPage' => $this->settings['sliderPerPage'] ?? 1,
         'perMove' => $this->settings['sliderPerMove'] ?? 1,
-        'flickMaxPages' => $this->settings['sliderFlickMaxMove'] ?? 1,
+        'flickMaxPages' => $this->settings['sliderFlickMaxPage'] ?? 1,
         'gap' => $this->settings['sliderGap'] ?? '30px',
         'padding' => $this->settings['slidePadding'] ?? '30px',
-        'arrows' => $this->settings['enableArrows'] ?? false,
-        'pagination' => $this->settings['enablePagination'] ?? false,
-        'pauseOnHover' => $this->settings['sliderPauseHover'] ?? false,
-        'pauseOnFocus' => $this->settings['sliderPauseFocus'] ?? false
+        'arrows' => $this->settings['sliderArrows'] ?? false,
+        'pagination' => $this->settings['sliderPagination'] ?? false,
+        'pauseOnHover' => $this->settings['sliderPauseOnHover'] ?? false,
+        'pauseOnFocus' => $this->settings['sliderPauseOnFocus'] ?? false
     );
 
     $breakpoints = [];
@@ -742,10 +742,8 @@ class Prefix_Element_Test extends \Bricks\Element {
             $breakpoint_width = $breakpoint['width'] ?? false;
             $setting_value    = $this->settings[ $setting_key ] ?? false;
 
-            error_log(print_r($option, true));
-            error_log(print_r($setting_key, true));
-            error_log(print_r($breakpoint_width, true));
-            error_log(print_r($setting_value, true));
+            $setting_key = str_replace('slider', '', $setting_key);
+            $setting_key = lcfirst($setting_key);
 
             // Spacing requires a unit
             if ( $option === 'gap' ) {
