@@ -1,5 +1,8 @@
 <?php 
 // element-test.php
+
+use Bricks\Breakpoints;
+
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class Prefix_Element_Test extends \Bricks\Element {
@@ -803,6 +806,10 @@ class Prefix_Element_Test extends \Bricks\Element {
     <?php endif; ?>
     </div>
   </div>
+
+  <pre>
+      <?php echo print_r(Breakpoints::$breakpoints, true);?>
+  </pre>
 <?php
   }
 }
