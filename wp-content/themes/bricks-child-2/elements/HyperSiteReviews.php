@@ -745,6 +745,8 @@ class Prefix_Element_Test extends \Bricks\Element {
             $setting_key = str_replace('slider', '', $setting_key);
             $setting_key = lcfirst($setting_key);
 
+            error_log($setting_key);
+
             // Spacing requires a unit
             if ( $option === 'gap' ) {
               // Add default unit
