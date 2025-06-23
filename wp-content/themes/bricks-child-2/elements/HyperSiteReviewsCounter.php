@@ -5,7 +5,7 @@ use Bricks\Breakpoints;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class Prefix_Element_Test extends \Bricks\Element {
+class HyperSiteReviewsCounter extends \Bricks\Element {
   // Element properties
   public $category     = 'HyperSite';
   public $name         = 'HyperSite Reviews - Counter';
