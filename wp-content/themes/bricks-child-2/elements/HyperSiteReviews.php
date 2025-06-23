@@ -124,14 +124,6 @@ class Prefix_Element_Test extends \Bricks\Element {
     ];
 
     // Slider settings
-    /*
-      Settings to allow editing in the builder
-        pauseOnHover
-        pauseOnFocus
-      
-      Settings to be set within element
-
-    */
 
     // Slider Type
     $this->controls['sliderDisplay'] = [
@@ -156,6 +148,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $this->controls['sliderSpeed'] = [
       'group' => 'display',
       'label' => esc_html__( 'Speed', 'bricks' ),
+      'placeholder' => esc_html__( '400', 'bricks' ),
       'type' => 'number',
       'min' => 0,
       'step' => '1',
@@ -172,6 +165,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'type' => 'number',
       'min' => 0,
       'step' => '1',
+      'placeholder' => esc_html__( $this->settings['sliderSpeed'] ?? 400, 'bricks' ),
       'units' => false,
       'inline' => true,
       'default' => $this->settings['sliderSpeed'] ?? 400,
@@ -182,6 +176,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $this->controls['sliderHeight'] = [
       'group' => 'display',
       'label' => esc_html__( 'Height', 'bricks' ),
+      'placeholder' => esc_html__( '350px', 'bricks' ),
       'type' => 'number',
       'min' => 0,
       'step' => '1',
@@ -194,6 +189,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $this->controls['sliderHeightRatio'] = [
       'group' => 'display',
       'label' => esc_html__( 'Height Ratio', 'bricks' ),
+      'placeholder' => esc_html__( '0.75/1', 'bricks' ),
       'type' => 'number',
       'min' => 0,
       'step' => '1',
@@ -216,6 +212,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $this->controls['sliderAutoPlayInterval'] = [
       'group' => 'display',
       'label' => esc_html__( 'Auto Play Interval', 'bricks' ),
+      'placeholder' => esc_html__( '400', 'bricks' ),
       'type' => 'number',
       'min' => 0,
       'step' => '1',
@@ -230,6 +227,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $this->controls['sliderStartSlide'] = [
       'group' => 'display',
       'label' => esc_html__( 'Start Index', 'bricks' ),
+      'placeholder' => esc_html__( '1', 'bricks' ),
       'type' => 'number',
       'min' => 0,
       'step' => '1',
@@ -243,6 +241,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $this->controls['sliderPerPage'] = [
       'group' => 'display',
       'label' => esc_html__( 'Per Page', 'bricks' ),
+      'placeholder' => esc_html__( '1', 'bricks' ),
       'type' => 'number',
       'min' => 0,
       'step' => '1',
@@ -256,6 +255,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $this->controls['sliderPerMove'] = [
       'group' => 'display',
       'label' => esc_html__( 'Per Move', 'bricks' ),
+      'placeholder' => esc_html__( '1', 'bricks' ),
       'type' => 'number',
       'min' => 0,
       'step' => '1',
@@ -269,12 +269,13 @@ class Prefix_Element_Test extends \Bricks\Element {
     $this->controls['sliderFlickMaxMove'] = [
       'group' => 'display',
       'label' => esc_html__( 'Flick Max Move', 'bricks' ),
+      'placeholder' => esc_html__( '1', 'bricks' ),
       'type' => 'number',
       'min' => 0,
       'step' => '1',
       'units' => false,
       'inline' => true,
-      'default' => '',
+      'default' => '1',
       'required' => ['selectDisplayType', '=', 'slider']
     ];
 
@@ -282,6 +283,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $this->controls['sliderGap'] = [
       'group' => 'display',
       'label' => esc_html__( 'Gap', 'bricks' ),
+      'placeholder' => esc_html__( '30px', 'bricks' ),
       'type' => 'number',
       'min' => 0,
       'step' => '1',
@@ -295,6 +297,7 @@ class Prefix_Element_Test extends \Bricks\Element {
     $this->controls['slidePadding'] = [
       'group' => 'display',
       'label' => esc_html__( 'Padding', 'bricks' ),
+      'placeholder' => esc_html__( '30px', 'bricks' ),
       'type' => 'dimensions',
       'default' => [
         'top' => '30px',
