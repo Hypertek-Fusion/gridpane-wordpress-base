@@ -702,11 +702,11 @@ class Prefix_Element_Test extends \Bricks\Element {
         wp_enqueue_style('hypersite-reviews-stylesheet', HSREV_URL . 'public/css/hsrev-main.css', [], '1.0', false);
     }
 
-    if(!wp_script_is('bricks-splide', 'enqueued') && (!isset($this->settings['selectDisplayType']) || $this->settings['selectDisplayType'] === 'slider') {
+    if(!wp_script_is('bricks-splide', 'enqueued') && (!isset($this->settings['selectDisplayType']) || $this->settings['selectDisplayType'] === 'slider')) {
       wp_enqueue_script( 'bricks-splide' );
     }
 
-    if(!wp_style_is('bricks-splide', 'enqueued') && (!isset($this->settings['selectDisplayType']) || $this->settings['selectDisplayType'] === 'slider') {
+    if(!wp_style_is('bricks-splide', 'enqueued') && (!isset($this->settings['selectDisplayType']) || $this->settings['selectDisplayType'] === 'slider')) {
       wp_enqueue_style( 'bricks-splide' );
     }
   }
