@@ -54,6 +54,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'type' => 'number',
       'min' => 0,
       'inline' => true,
+      'breakpoints' => true,
       'default' => 6,
     ];
 
@@ -69,6 +70,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'inline' => true,
       'placeholder' => esc_html__( 'Grid', 'bricks' ),
       'multiple' => false, 
+      'breakpoints' => true,
       'searchable' => false,
       'clearable' => false,
       'default' => 'grid',
@@ -79,6 +81,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'group' => 'display',
       'label' => esc_html__( 'Grid Template Columns', 'bricks' ),
       'type' => 'text',
+      'breakpoints' => true,
       'css' => [
         [
         'property' => 'grid-template-columns',
@@ -95,6 +98,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'group' => 'display',
       'label' => esc_html__( 'Row Gap', 'bricks' ),
       'type' => 'text',
+      'breakpoints' => true,
       'css' => [
         [
         'property' => 'row-gap',
@@ -113,6 +117,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'group' => 'display',
       'label' => esc_html__( 'Column Gap', 'bricks' ),
       'type' => 'text',
+      'breakpoints' => true,
       'css' => [
         [
         'property' => 'column-gap',
@@ -155,6 +160,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'type' => 'number',
       'min' => 0,
       'step' => '1',
+      'breakpoints' => true,
       'units' => false,
       'inline' => true,
       'default' => 400,
@@ -170,6 +176,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'step' => '1',
       'placeholder' => esc_html__( $this->settings['sliderSpeed'] ?? 400, 'bricks' ),
       'units' => false,
+      'breakpoints' => true,
       'inline' => true,
       'default' => $this->settings['sliderSpeed'] ?? 400,
       'required' => ['selectDisplayType', '=', 'slider']
@@ -184,6 +191,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'min' => 0,
       'step' => '1',
       'inline' => true,
+      'breakpoints' => true,
       'default' => '350px',
       'required' => [['selectDisplayType', '=', 'slider'], ['sliderAutoHeight', '=', false]]
     ];
@@ -197,6 +205,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'min' => 0,
       'step' => '1',
       'inline' => true,
+      'breakpoints' => true,
       'default' => '0.75/1',
       'required' => [['selectDisplayType', '=', 'slider'], ['sliderHeight', '=', ''], ['sliderAutoHeight', '=', false]]
     ];
@@ -229,6 +238,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'type' => 'number',
       'min' => 0,
       'step' => '1',
+      'breakpoints' => true,
       'units' => false,
       'inline' => true,
       'default' => 400,
@@ -244,6 +254,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'type' => 'number',
       'min' => 0,
       'step' => '1',
+      'breakpoints' => true,
       'units' => false,
       'inline' => true,
       'default' => 1,
@@ -258,6 +269,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'type' => 'number',
       'min' => 0,
       'step' => '1',
+      'breakpoints' => true,
       'units' => false,
       'inline' => true,
       'default' => 1,
@@ -272,6 +284,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'type' => 'number',
       'min' => 0,
       'step' => '1',
+      'breakpoints' => true,
       'units' => false,
       'inline' => true,
       'default' => 1,
@@ -286,6 +299,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'type' => 'number',
       'min' => 0,
       'step' => '1',
+      'breakpoints' => true,
       'units' => false,
       'inline' => true,
       'default' => '1',
@@ -300,6 +314,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'type' => 'number',
       'min' => 0,
       'step' => '1',
+      'breakpoints' => true,
       'units' => false,
       'inline' => true,
       'default' => '30px',
@@ -312,6 +327,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'label' => esc_html__( 'Padding', 'bricks' ),
       'placeholder' => esc_html__( '30px', 'bricks' ),
       'type' => 'dimensions',
+      'breakpoints' => true,
       'default' => [
         'top' => '30px',
         'right' => '30px',
@@ -366,6 +382,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'group' => 'card',
       'label' => esc_html__( 'Padding', 'bricks' ),
       'type' => 'dimensions',
+      'breakpoints' => true,
       'css' => [
         [
           'property' => 'padding',
@@ -392,6 +409,7 @@ class Prefix_Element_Test extends \Bricks\Element {
         ]
       ],
       'inlineEditing' => false,
+      'breakpoints' => true,
       'inline' => true,
       'small' => false,
       'default' => '12px',
@@ -408,6 +426,7 @@ class Prefix_Element_Test extends \Bricks\Element {
         ],
       ],
       'inline' => true,
+      'breakpoints' => true,
       'small' => true,
       'default' => [
         'width' => [
