@@ -198,8 +198,8 @@ class Prefix_Element_Test extends \Bricks\Element {
       'min' => 0,
       'step' => '1',
       'inline' => true,
-      'default' => '350px',
-      'required' => ['sliderHeight', '=', '']
+      'default' => '0.75/1',
+      'required' => [['selectDisplayType', '=', 'slider'], ['sliderHeight', '=', '']]
     ];
 
     $this->controls['sliderAutoPlay'] = [
@@ -235,7 +235,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'step' => '1',
       'units' => false,
       'inline' => true,
-      'default' => '',
+      'default' => 1,
       'required' => ['selectDisplayType', '=', 'slider']
     ];
 
@@ -287,7 +287,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'step' => '1',
       'units' => false,
       'inline' => true,
-      'default' => 1,
+      'default' => '30px',
       'required' => ['selectDisplayType', '=', 'slider']
     ];
 
@@ -679,6 +679,26 @@ class Prefix_Element_Test extends \Bricks\Element {
     $root_classes[] = 'hypersite-reviews';
     $reviews_batch = [];
 
+    $slider_options = array(
+        'type' => $this->settings['sliderDisplay'] ?? 'slide',
+        'speed' => $this->settings['sliderSpeed'] ?? 400,
+        'rewind' => $this->settings['sliderRewindSpeed'] ?? 400,
+        'height' => $this->settings['sliderHeight'] ?? '350px',
+        'heightRatio' => $this->settings['sliderHeightRatio'] ?? '0.75/1',
+        'autoplay' => $this->settings['sliderAutoPlay'] ?? false,
+        'interval' => $this->settings['sliderAutoPlayInterval'] ?? 400,
+        'start' => $this->settings['sliderStartSlide'] ?? 0,
+        'perPage' => $this->settings['sliderPerPage'] ?? 1,
+        'perMove' => $this->settings['sliderPerMove'] ?? 1,
+        'flickMaxPages' => $this->settings['sliderFlickMaxMove'] ?? 1,
+        'gap' => $this->settings['sliderGap'] ?? '30px',
+        'padding' => $this->settings['slidePadding'] ?? '30px',
+        'arrows' => $this->settings['enableArrows'] ?? false,
+        'pagination' => $this->settings['enablePagination'] ?? false,
+        'pauseOnHover' => $this->settings['sliderPauseHover'] ?? false,
+        'pauseOnFocus' => $this->settings['sliderPauseFocus'] ?? false
+    );
+
     $per_page = 100;
 
     $location_id = GoogleDataHandler::get_selected_location_id();
@@ -759,6 +779,17 @@ class Prefix_Element_Test extends \Bricks\Element {
     <?php if($this->settings['selectDisplayType'] === 'slider'): ?>
         </ul>
       </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const splide = new Splide('.splide', {
+            <?php foreach($slider_options as $key => $value) {
+              echo $key . ':' . $value;
+            } ?>
+          });
+          splide.mount();
+        })
+      </script>
     <?php endif; ?>
     </div>
   </div>
