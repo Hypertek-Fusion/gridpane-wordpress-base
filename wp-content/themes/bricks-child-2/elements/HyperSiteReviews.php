@@ -182,7 +182,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'step' => '1',
       'inline' => true,
       'default' => '350px',
-      'required' => ['selectDisplayType', '=', 'slider']
+      'required' => [['selectDisplayType', '=', 'slider'], ['sliderAutoHeight', '=', false]]
     ];
 
     // Slider Height Ratio
@@ -195,7 +195,17 @@ class Prefix_Element_Test extends \Bricks\Element {
       'step' => '1',
       'inline' => true,
       'default' => '0.75/1',
-      'required' => [['selectDisplayType', '=', 'slider'], ['sliderHeight', '=', '']]
+      'required' => [['selectDisplayType', '=', 'slider'], ['sliderHeight', '=', ''], ['sliderAutoHeight', '=', false]]
+    ];
+
+    // Slider Auto Height
+    $this->controls['sliderAutoHeight'] = [
+      'group' => 'display',
+      'label' => esc_html__( 'Auto Height', 'bricks' ),
+      'type' => 'checkbox',
+      'inline' => true,
+      'default' => false,
+      'required' => [['selectDisplayType', '=', 'slider']]
     ];
 
     $this->controls['sliderAutoPlay'] = [
