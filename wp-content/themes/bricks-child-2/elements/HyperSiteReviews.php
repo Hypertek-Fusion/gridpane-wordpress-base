@@ -738,14 +738,11 @@ class Prefix_Element_Test extends \Bricks\Element {
 
     foreach ( Breakpoints::$breakpoints as $breakpoint ) {
           foreach ( array_keys( $slider_options ) as $option ) {
-            $option = ucfirst($option);
-            $option = 'slider' . $option;
-            $setting_key      = $breakpoint['key'] === 'desktop' ? $option : "$option:{$breakpoint['key']}";
+            $formatted_option = ucfirst($option);
+            $formatted_option = 'slider' . $formatted_option;
+            $setting_key      = $breakpoint['key'] === 'desktop' ? $formatted_option : "$formatted_option:{$breakpoint['key']}";
             $breakpoint_width = $breakpoint['width'] ?? false;
             $setting_value    = $this->settings[ $setting_key ] ?? false;
-
-            //$setting_key = str_replace('slider', '', $setting_key);
-            //$setting_key = lcfirst($setting_key);
 
             // Spacing requires a unit
             if ( $option === 'gap' ) {
