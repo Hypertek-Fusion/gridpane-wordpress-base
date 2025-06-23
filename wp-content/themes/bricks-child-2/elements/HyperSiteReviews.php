@@ -759,6 +759,8 @@ class Prefix_Element_Test extends \Bricks\Element {
             }
           }
     }
+
+    error_log(print_r($breakpoints, true));
     
     if ( count( $breakpoints ) ) {
 			$slider_options['breakpoints'] = $breakpoints;
