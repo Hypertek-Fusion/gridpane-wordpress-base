@@ -700,6 +700,13 @@ class GoogleDataHandler
         ));
     }
 
+    public static function get_location_reviews_total($location_id) {
+        global $wpdb;
+        return $wpdb->get_var($wpdb->prepare(
+            "SELECT total_reviews FROM {$wpdb->prefix}locations WHERE location_id = %s",
+            $location_id
+        ));
+    }
 
     public static function get_initial_google_locations()
     {
