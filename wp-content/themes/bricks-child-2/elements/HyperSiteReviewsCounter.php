@@ -51,6 +51,7 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'searchable' => false,
       'clearable' => false,
       'default' => 'top',
+      'required' => ['contentDirection', '=', 'column']
     ];
 
     $this->controls['starsHorizontalPlacement'] = [
@@ -68,6 +69,7 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'searchable' => false,
       'clearable' => false,
       'default' => 'top',
+      'required' => [['contentDirection', '=', ''], ['contentDirection', '=', 'row']]
     ];
   }
 
