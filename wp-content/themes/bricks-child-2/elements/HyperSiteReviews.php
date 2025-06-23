@@ -734,6 +734,36 @@ class Prefix_Element_Test extends \Bricks\Element {
         'pauseOnFocus' => $this->settings['sliderPauseFocus'] ?? false
     );
 
+    $breakpoints = [];
+
+    foreach ( Breakpoints::$breakpoints as $breakpoint ) {
+          foreach ( array_keys( $slider_options ) as $option ) {
+            $setting_key      = $breakpoint['key'] === 'desktop' ? $option : "$option:{$breakpoint['key']}";
+            $breakpoint_width = $breakpoint['width'] ?? false;
+            $setting_value    = $settings[ $setting_key ] ?? false;
+
+            // Spacing requires a unit
+            if ( $option === 'gap' ) {
+              // Add default unit
+              if ( is_numeric( $setting_value ) ) {
+                $setting_value = "{$setting_value}px";
+              }
+            }
+
+            if ( $option === 'perPage' && isset( $breakpoint['base'] ) && $setting_value ) {
+              $slider_options['perPage'] = intval( $setting_value );
+            }
+
+            if ( $breakpoint_width && $setting_value !== false ) {
+              $breakpoints[ $breakpoint_width ][ $option ] = $setting_value;
+            }
+          }
+    }
+    
+    if ( count( $breakpoints ) ) {
+			$slider_options['breakpoints'] = $breakpoints;
+		}
+
     $per_page = 100;
 
     $location_id = GoogleDataHandler::get_selected_location_id();
