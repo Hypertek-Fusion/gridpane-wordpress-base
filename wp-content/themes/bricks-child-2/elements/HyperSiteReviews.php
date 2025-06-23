@@ -193,7 +193,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       'inline' => true,
       'breakpoints' => true,
       'default' => '350px',
-      'required' => [['selectDisplayType', '=', 'slider'], ['sliderAutoHeight', '=', false]]
+      'required' => [['selectDisplayType', '=', 'slider'], ['sliderAutoHeight', '=', false], ['sliderHeightRatio', '=', '']]
     ];
 
     // Slider Height Ratio
