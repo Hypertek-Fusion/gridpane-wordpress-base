@@ -702,11 +702,11 @@ class Prefix_Element_Test extends \Bricks\Element {
         wp_enqueue_style('hypersite-reviews-stylesheet', HSREV_URL . 'public/css/hsrev-main.css', [], '1.0', false);
     }
 
-    if(!wp_script_is('bricks-splide', 'enqueued') && $this->settings['selectDisplayType'] === 'slider') {
+    if(!wp_script_is('bricks-splide', 'enqueued') && (!isset($this->settings['selectDisplayType']) || $this->settings['selectDisplayType'] === 'slider') {
       wp_enqueue_script( 'bricks-splide' );
     }
 
-    if(!wp_style_is('bricks-splide', 'enqueued') && $this->settings['selectDisplayType'] === 'slider') {
+    if(!wp_style_is('bricks-splide', 'enqueued') && (!isset($this->settings['selectDisplayType']) || $this->settings['selectDisplayType'] === 'slider') {
       wp_enqueue_style( 'bricks-splide' );
     }
   }
@@ -741,6 +741,11 @@ class Prefix_Element_Test extends \Bricks\Element {
             $setting_key      = $breakpoint['key'] === 'desktop' ? $option : "$option:{$breakpoint['key']}";
             $breakpoint_width = $breakpoint['width'] ?? false;
             $setting_value    = $this->settings[ $setting_key ] ?? false;
+
+            error_log(print_r($option, true));
+            error_log(print_r($setting_key, true));
+            error_log(print_r($breakpoint_width, true));
+            error_log(print_r($setting_value, true));
 
             // Spacing requires a unit
             if ( $option === 'gap' ) {
