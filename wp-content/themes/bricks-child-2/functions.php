@@ -15,7 +15,8 @@ add_action( 'wp_enqueue_scripts', function() {
 add_action( 'init', function() {
   $element_files = [
     __DIR__ . '/elements/title.php',
-    __DIR__ . '/elements/HyperSiteReviews.php',
+    __DIR__ . '/elements/HyperSiteReviewsMain.php',
+    __DIR__ . '/elements/HyperSiteReviewsCounter.php',
   ];
 
   foreach ( $element_files as $file ) {
