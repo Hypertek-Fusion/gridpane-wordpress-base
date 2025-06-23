@@ -859,12 +859,6 @@ class Prefix_Element_Test extends \Bricks\Element {
     <?php endif; ?>
     </div>
   </div>
-
-  <pre>
-      <?php echo print_r(Breakpoints::$breakpoints, true);?>
-      <?php echo print_r($this->settings, true);?>
-      <?php echo print_r($slider_options, true);?>
-  </pre>
 <?php
   }
 }
