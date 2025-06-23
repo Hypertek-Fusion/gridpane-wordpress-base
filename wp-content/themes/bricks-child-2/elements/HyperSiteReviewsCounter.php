@@ -44,4 +44,5 @@ class Prefix_Element_Test extends \Bricks\Element {
 
     echo "<div {$this->render_attributes( '_root' )}>";
 
+    }
 }
