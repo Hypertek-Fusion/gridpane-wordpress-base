@@ -783,9 +783,7 @@ class Prefix_Element_Test extends \Bricks\Element {
       <script>
         document.addEventListener('DOMContentLoaded', () => {
           const splide = new Splide('.splide', {
-            <?php foreach($slider_options as $key => $value) {
-              echo $key . ':' . $value;
-            } ?>
+            <?php echo json_encode($slider_options) ?>
           });
           splide.mount();
         })
