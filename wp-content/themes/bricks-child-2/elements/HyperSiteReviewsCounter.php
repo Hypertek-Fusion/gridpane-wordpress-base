@@ -37,7 +37,7 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
     ];
 
     $this->controls['starsVerticalPlacement'] = [
-      'group' => 'display',
+      'tab'   => 'content',
       'label' => esc_html__( 'Stars Placement (Vertical)', 'bricks' ),
       'type' => 'select',
       'options' => [
@@ -55,7 +55,7 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
     ];
 
     $this->controls['starsHorizontalPlacement'] = [
-      'group' => 'display',
+      'tab'   => 'content',
       'label' => esc_html__( 'Stars Placement (Horizontal)', 'bricks' ),
       'type' => 'select',
       'options' => [
