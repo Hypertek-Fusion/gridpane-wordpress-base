@@ -35,4 +35,5 @@
 
 .testimonials-slider .splide__slide {
     display: flex;
+    padding: 10px;
 }

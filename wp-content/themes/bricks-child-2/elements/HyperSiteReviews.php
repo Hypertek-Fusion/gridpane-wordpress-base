@@ -321,22 +321,6 @@ class Prefix_Element_Test extends \Bricks\Element {
       'required' => ['selectDisplayType', '=', 'slider']
     ];
 
-    // Slider Padding
-    $this->controls['sliderPadding'] = [
-      'group' => 'display',
-      'label' => esc_html__( 'Padding', 'bricks' ),
-      'placeholder' => esc_html__( '30px', 'bricks' ),
-      'type' => 'dimensions',
-      'breakpoints' => true,
-      'default' => [
-        'top' => '30px',
-        'right' => '30px',
-        'bottom' => '30px',
-        'left' => '30px',
-        'required' => ['selectDisplayType', '=', 'slider']
-      ]
-    ];
-
     $this->controls['sliderArrows'] = [
       'group' => 'display',
       'label' => esc_html__( 'Arrows', 'bricks' ),
