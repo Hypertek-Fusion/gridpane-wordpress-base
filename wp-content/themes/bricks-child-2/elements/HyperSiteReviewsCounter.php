@@ -53,6 +53,8 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'default' => 'top',
       'required' => ['contentDirection', '=', 'column']
     ];
+     
+    // TODO FIX HORIZONTAL PLACEMENT CONDITION
 
     $this->controls['starsHorizontalPlacement'] = [
       'tab'   => 'content',
@@ -69,7 +71,7 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'searchable' => false,
       'clearable' => false,
       'default' => 'top',
-      'required' => [['contentDirection', '=', ''], ['contentDirection', '=', 'row']]
+      'required' => [['contentDirection', '!=', 'column']]
     ];
   }
 
