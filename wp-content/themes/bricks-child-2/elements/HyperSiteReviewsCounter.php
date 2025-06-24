@@ -96,6 +96,46 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'default' => '30px',
     ];
 
+    // Main flexbox gap
+    $this->controls['mainGap'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Gap', 'bricks' ),
+      'placeholder' => esc_html__( '10px', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'css' => [
+        [
+          'property' => 'column-gap',
+          'selector' => '.google-reviews-count',
+        ],
+      ],
+      'step' => '1',
+      'breakpoints' => true,
+      'units' => true,
+      'inline' => true,
+      'default' => '10px',
+    ];
+
+    // Stars flexbox gap
+    $this->controls['starsGap'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Gap (Stars)', 'bricks' ),
+      'placeholder' => esc_html__( '10px', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'css' => [
+        [
+          'property' => 'column-gap',
+          'selector' => '.google-reviews-count__stars-wrapper',
+        ],
+      ],
+      'step' => '1',
+      'breakpoints' => true,
+      'units' => true,
+      'inline' => true,
+      'default' => '10px',
+    ];
+
     // Text that will go before the reviews
     $this->controls['prefixText'] = [
       'tab'   => 'content',

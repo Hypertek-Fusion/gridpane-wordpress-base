@@ -41,3 +41,7 @@
 .google-reviews-count__content-wrapper {
     display: flex;
 }
+
+.google-reviews-count {
+    display: flex;
+}
