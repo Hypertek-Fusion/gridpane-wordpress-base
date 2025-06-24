@@ -31,7 +31,7 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
     'css'   => [
         [
             'property' => 'flex-direction',
-            'selector' => '.flexbox-wrapper'
+            'selector' => '.google-reviews-count__content-wrapper'
         ],
         ],
     ];
