@@ -73,6 +73,24 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'default' => 'left',
       'required' => [['contentDirection', '!=', 'column']]
     ];
+
+    // Text that will go before the reviews
+    $this->controls['prefixText'] = [
+      'tab'   => 'content',
+      'label' => esc_html__( 'Prefix Text', 'bricks' ),
+      'type' => 'text',
+      'breakpoints' => true,
+      'inlineEditing' => true,
+    ];
+
+    // Text that will go after the reviews
+    $this->controls['suffixText'] = [
+      'tab'   => 'content',
+      'label' => esc_html__( 'Suffix Text', 'bricks' ),
+      'type' => 'text',
+      'breakpoints' => true,
+      'inlineEditing' => true,
+    ];
   }
 
   // Methods: Frontend-specific
@@ -88,6 +106,19 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
     $google_logo = file_get_contents(HSREV_URL . 'public/images/google-logo-borderless.svg');
     $star_svg = file_get_contents(HSREV_URL . 'public/images/star-fill.svg');
 
+    $location_id = GoogleDataHandler::get_selected_location_id();
+    $reviews_count = GoogleDataHandler::get_location_reviews_total($location_id);
+
+    $output_text = function() use ($reviews_count) {
+      $prefix_text = isset($this->settings['prefixText']) ? $this->settings['prefixText'] . ' ' : '';
+      $suffix_text = isset($this->settings['suffixText']) ? ' ' . $this->settings['suffixText'] : '';
+      ob_start();
+      ?>
+        <p><?php echo $prefix_text . $reviews_count . ' ' . $suffix_text; ?></p>
+      <?php
+      return ob_get_clean();
+    };
+
     $this->set_attribute('_root', 'class', $root_classes);
 
     echo "<div {$this->render_attributes( '_root' )}>";
@@ -96,11 +127,21 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
         <div class="google-reviews-count__logo-wrapper">
             <?php echo $google_logo; ?>
         </div>
+        <div class="google-reviews-count__content-wrapper">
+          <?php if($this->settings['starsVerticalPlacement'] === 'top' || $this->settings['starsVerticalPlacement'] === 'left') {
+            for($i = 0; $i < 5; $i++){
+              echo $star_svg;
+            }
+              echo $output_text();
+            } else {
+              echo $output_text();
+              for($i = 0; $i < 5; $i++) {
+                echo $star_svg;
+              }
+            }
+          ?>
+        </div>
     </div>
-
-    <pre>
-        <?php echo print_r($this->settings, true); ?>
-    </pre>
 <?php
     }
 }
