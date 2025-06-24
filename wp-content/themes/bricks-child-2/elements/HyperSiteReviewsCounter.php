@@ -50,7 +50,6 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'breakpoints' => true,
       'searchable' => false,
       'clearable' => false,
-      'default' => 'top',
       'required' => ['contentDirection', '=', 'column']
     ];
      
@@ -70,7 +69,6 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'breakpoints' => true,
       'searchable' => false,
       'clearable' => false,
-      'default' => 'top',
       'required' => [['contentDirection', '!=', 'column']]
     ];
   }
