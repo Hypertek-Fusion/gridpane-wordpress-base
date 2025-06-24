@@ -53,8 +53,6 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'default' => 'top',
       'required' => ['contentDirection', '=', 'column']
     ];
-     
-    // TODO FIX HORIZONTAL PLACEMENT CONDITION
 
     $this->controls['starsHorizontalPlacement'] = [
       'tab'   => 'content',
@@ -72,6 +70,30 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'clearable' => false,
       'default' => 'left',
       'required' => [['contentDirection', '!=', 'column']]
+    ];
+
+    // Stars size
+    $this->controls['starSize'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Star Icon Size', 'bricks' ),
+      'placeholder' => esc_html__( '30px', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'css' => [
+        [
+          'property' => 'width',
+          'selector' => '.google-reviews-count__content-wrapper svg',
+        ],
+        [
+          'property' => 'height',
+          'selector' => 'google-reviews-count__content-wrapper svg',
+        ]
+      ],
+      'step' => '1',
+      'breakpoints' => true,
+      'units' => true,
+      'inline' => true,
+      'default' => '30px',
     ];
 
     // Text that will go before the reviews
