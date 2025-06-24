@@ -37,3 +37,7 @@
     display: flex;
     padding: 10px;
 }
+
+.google-reviews-count__content-wrapper {
+    display: flex;
+}
