@@ -150,16 +150,21 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
             <?php echo $google_logo; ?>
         </div>
         <div class="google-reviews-count__content-wrapper">
+          
           <?php if($this->settings['starsVerticalPlacement'] === 'top' || $this->settings['starsVerticalPlacement'] === 'left') {
+            echo '<div class="google-reviews-count__stars-wrapper">';
             for($i = 0; $i < 5; $i++){
               echo $star_svg;
             }
+            echo '</div>';
               echo $output_text();
             } else {
               echo $output_text();
+              echo '<div class="google-reviews-count__stars-wrapper">';
               for($i = 0; $i < 5; $i++) {
                 echo $star_svg;
               }
+              echo '</div>';
             }
           ?>
         </div>
