@@ -93,7 +93,7 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'breakpoints' => true,
       'units' => true,
       'inline' => true,
-      'default' => '30px',
+      'default' => 30,
     ];
 
     // Text that will go before the reviews
