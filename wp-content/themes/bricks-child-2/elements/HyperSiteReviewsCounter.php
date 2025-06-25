@@ -96,6 +96,30 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'default' => '30px',
     ];
 
+        // Stars size
+    $this->controls['logoSize'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Logo Icon Size', 'bricks' ),
+      'placeholder' => esc_html__( '30px', 'bricks' ),
+      'type' => 'number',
+      'min' => 0,
+      'css' => [
+        [
+          'property' => 'width',
+          'selector' => '.google-reviews-count__logo-wrapper svg',
+        ],
+        [
+          'property' => 'height',
+          'selector' => 'google-reviews-count__logo-wrapper svg',
+        ]
+      ],
+      'step' => '1',
+      'breakpoints' => true,
+      'units' => true,
+      'inline' => true,
+      'default' => '30px',
+    ];
+
     // Main flexbox gap
     $this->controls['mainGap'] = [
       'tab' => 'content',
@@ -136,6 +160,23 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'default' => '10px',
     ];
 
+    $this->controls['starFill'] = [
+      'tab' => 'content',
+      'label' => esc_html__( 'Fill', 'bricks' ),
+      'type' => 'color',
+      'inline' => true,
+      'css' => [
+        [
+          'property' => 'fill',
+          'selector' => '.google-reviews-count__stars-wrapper > svg > path',
+        ]
+      ],
+      'default' => [
+        'hex' => '#ffc1a1',
+        'rgb' => 'rgba(255,193,10, 1)',
+      ],
+    ];
+
     // Text that will go before the reviews
     $this->controls['prefixText'] = [
       'tab'   => 'content',
@@ -152,6 +193,19 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       'type' => 'text',
       'breakpoints' => true,
       'inlineEditing' => true,
+    ];
+
+    $this->controls['typography'] = [
+      'group' => 'date',
+      'label' => esc_html__( 'Typography', 'bricks' ),
+      'type' => 'typography',
+      'css' => [
+        [
+          'property' => 'typography',
+          'selector' => '.google-reviews-count__content',
+        ],
+      ],
+      'inline' => true
     ];
   }
 
@@ -176,7 +230,7 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       $suffix_text = isset($this->settings['suffixText']) ? ' ' . $this->settings['suffixText'] : '';
       ob_start();
       ?>
-        <p><?php echo $prefix_text . $reviews_count . '+' . $suffix_text; ?></p>
+        <p class="google-reviews-count__content"><?php echo $prefix_text . $reviews_count . '+' . $suffix_text; ?></p>
       <?php
       return ob_get_clean();
     };
