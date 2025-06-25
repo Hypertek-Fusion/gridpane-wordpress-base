@@ -160,7 +160,7 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
     ];
 
     $this->controls['typography'] = [
-      'group' => 'date',
+      'tab'   => 'content',
       'label' => esc_html__( 'Typography', 'bricks' ),
       'type' => 'typography',
       'css' => [
