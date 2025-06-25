@@ -36,42 +36,6 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
         ],
     ];
 
-    $this->controls['starsVerticalPlacement'] = [
-      'tab'   => 'content',
-      'label' => esc_html__( 'Stars Placement (Vertical)', 'bricks' ),
-      'type' => 'select',
-      'options' => [
-        'top' => 'Top',
-        'bottom' => 'Bottom'
-      ],
-      'inline' => true,
-      'placeholder' => esc_html__( 'Grid', 'bricks' ),
-      'multiple' => false, 
-      'breakpoints' => true,
-      'searchable' => false,
-      'clearable' => false,
-      'default' => 'top',
-      'required' => ['contentDirection', '=', 'column']
-    ];
-
-    $this->controls['starsHorizontalPlacement'] = [
-      'tab'   => 'content',
-      'label' => esc_html__( 'Stars Placement (Horizontal)', 'bricks' ),
-      'type' => 'select',
-      'options' => [
-        'left' => 'Left',
-        'right' => 'Right'
-      ],
-      'inline' => true,
-      'placeholder' => esc_html__( 'Grid', 'bricks' ),
-      'multiple' => false, 
-      'breakpoints' => true,
-      'searchable' => false,
-      'clearable' => false,
-      'default' => 'left',
-      'required' => [['contentDirection', '!=', 'column']]
-    ];
-
     // Stars size
     $this->controls['starSize'] = [
       'tab' => 'content',
@@ -244,23 +208,12 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
             <?php echo $google_logo; ?>
         </div>
         <div class="google-reviews-count__content-wrapper">
-          
-          <?php if($this->settings['starsVerticalPlacement'] === 'top' || $this->settings['starsVerticalPlacement'] === 'left') {
-            echo '<div class="google-reviews-count__stars-wrapper">';
-            for($i = 0; $i < 5; $i++){
-              echo $star_svg;
-            }
-            echo '</div>';
-              echo $output_text();
-            } else {
-              echo $output_text();
-              echo '<div class="google-reviews-count__stars-wrapper">';
-              for($i = 0; $i < 5; $i++) {
-                echo $star_svg;
-              }
-              echo '</div>';
-            }
-          ?>
+            <div class="google-reviews-count__stars-wrapper">
+              <?php for($i = 0; $i < 5; $i++): ?>
+                <?php echo $star_svg; ?>
+              <?php endfor; ?>
+            </div>
+              <?php echo $output_text(); ?>
         </div>
     </div>
 <?php
