@@ -11,7 +11,7 @@ class HyperSiteReviewsMain extends \Bricks\Element {
   public $name         = 'HyperSite Reviews';
   public $icon         = 'fas fa-comment';
   public $css_selector = 'hypersite-reviews';
-  public $scripts      = ['hsrev-frontend-widget, bricksSplide'];
+  public $scripts      = ['hsrev-frontend-widget, bricks-splide'];
   public $nestable     = false; // true || @since 1.5
 
   // Methods: Builder-specific
