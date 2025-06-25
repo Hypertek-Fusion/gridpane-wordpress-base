@@ -176,7 +176,7 @@ class HyperSiteReviewsCounter extends \Bricks\Element {
       $suffix_text = isset($this->settings['suffixText']) ? ' ' . $this->settings['suffixText'] : '';
       ob_start();
       ?>
-        <p><?php echo $prefix_text . $reviews_count . ' ' . $suffix_text; ?></p>
+        <p><?php echo $prefix_text . $reviews_count . '+' . $suffix_text; ?></p>
       <?php
       return ob_get_clean();
     };
